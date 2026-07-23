@@ -78,18 +78,30 @@ export const createOutlet = async (payload) => {
 };
 
 /**
- * Update outlet
+ * Update outlet details, timings, categories and products
  */
-export const updateOutlet = async (outletId, payload) => {
+export const updateOutlet = async (payload) => {
   try {
+    console.log("Update Outlet Payload:", payload);
+
     const response = await api.put(
-      `/api/fm/outlets/${outletId}`,
-      payload
+      "/api/fm/outlets/editAndUpdateOutletProducts",
+      payload,
+      {
+        params: {
+          outletId: payload.outletId,
+          userType: "MERCHANT",
+        },
+      }
     );
+
+    console.log("Update Outlet Response:", response.data);
 
     return response.data;
   } catch (error) {
     console.error("Error updating outlet:", error);
+    console.error("Status:", error.response?.status);
+    console.error("Response:", error.response?.data);
     throw error;
   }
 };

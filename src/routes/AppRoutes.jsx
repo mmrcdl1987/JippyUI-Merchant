@@ -8,6 +8,7 @@ import {
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ViewOutlet from "../pages/outlets/ViewOutlet";
+import EditOutlet from "../pages/outlets/EditOutlet";
 
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -20,6 +21,7 @@ import Orders from "../pages/orders/Orders";
 import Coupons from "../pages/coupons/Coupons";
 import Payments from "../pages/payments/Payments";
 import Subscription from "../pages/subscription/Subscription";
+
 
 const AppRoutes = () => {
   return (
@@ -46,6 +48,7 @@ const AppRoutes = () => {
           <Route path="/outlets" element={<Outlets />} />
           <Route path="/outlets/create" element={<CreateOutlet />} />
           <Route path="/outlets/view/:id" element={<ViewOutlet />} />
+          <Route path="/outlets/edit/:id" element={<EditOutlet />} />
 
           {/* Other Modules */}
           <Route path="/foods" element={<Foods />} />

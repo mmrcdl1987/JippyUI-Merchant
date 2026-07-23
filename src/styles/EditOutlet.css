@@ -1,0 +1,337 @@
+/* Container & Global Setup */
+.edit-outlet-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #2d3748;
+}
+
+/* Header Bar */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.header-bar h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #cbd5e0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #f7fafc;
+  border-color: #a0aec0;
+  color: #2d3748;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 35px;
+  background-color: #f8fafc;
+  padding: 24px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.form-section h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #2b6cb0;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.form-section hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Inputs, Selects, Textareas */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
+.form-group input[type="time"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #2d3748;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="text"]:hover,
+.form-group input[type="email"]:hover,
+.form-group input[type="tel"]:hover,
+.form-group input[type="number"]:hover,
+.form-group input[type="time"]:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #a0aec0;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.form-group input.read-only {
+  background-color: #edf2f7;
+  color: #718096;
+  cursor: not-allowed;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  padding-top: 24px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #3182ce;
+}
+
+/* Timings & Sub-Tables */
+.timings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.timings-table th,
+.timings-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.timings-table th {
+  background-color: #edf2f7;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #4a5568;
+  letter-spacing: 0.05em;
+}
+
+.timings-table td input[type="time"] {
+  padding: 6px 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.timings-table td input[type="time"]:disabled {
+  background-color: #f7fafc;
+  color: #a0aec0;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+.timings-table.sub-table {
+  max-width: 500px;
+  margin-top: 8px;
+}
+
+.timings-table.sub-table td {
+  padding: 8px 12px;
+}
+
+/* Categories Accordion & Products */
+.category-block {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background-color: #edf2f7;
+}
+
+.accordion-toggle {
+  background: none;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2d3748;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-availability {
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.products-container {
+  padding: 20px;
+}
+
+.product-card {
+  border: 1px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 16px;
+  background-color: #faf5ff;
+}
+
+/* Sub-sections (Variants & Product Timings) */
+.subsection {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.subsection h4 {
+  margin: 0 0 12px 0;
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+.variants-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-group.inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group.inline input {
+  width: 100px;
+}
+
+/* Action Buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #edf2f7;
+}
+
+.cancel-btn {
+  padding: 12px 24px;
+  border: 1px solid #cbd5e0;
+  background-color: #ffffff;
+  color: #4a5568;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #edf2f7;
+  color: #1a202c;
+}
+
+.submit-btn {
+  padding: 12px 28px;
+  border: none;
+  background-color: #3182ce;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(49, 130, 206, 0.4);
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #2b6cb0;
+  box-shadow: 0 4px 10px rgba(49, 130, 206, 0.5);
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 60px;
+  font-size: 1.2rem;
+  color: #718096;
+}
