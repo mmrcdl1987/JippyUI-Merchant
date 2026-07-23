@@ -1,0 +1,218 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b00, #ff944d);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 35px;
+  margin: 20px 0;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.register-header h2 {
+  font-size: 32px;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.register-header p {
+  color: #777;
+  font-size: 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.input-group input,
+.input-group select {
+  height: 48px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 15px;
+  color: #222;
+  background: #ffffff;
+  caret-color: #000;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.15);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 45px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 18px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 35px;
+}
+
+.cancel-btn {
+  height: 48px;
+  padding: 0 28px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  transition: .3s;
+}
+
+.cancel-btn:hover {
+  background: #f4f4f4;
+}
+
+.register-btn {
+  height: 48px;
+  padding: 0 30px;
+  border: none;
+  border-radius: 8px;
+  background: #ff6b00;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.register-btn:hover {
+  background: #e45f00;
+}
+
+.register-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.error-box {
+  background: #ffe6e6;
+  color: #d60000;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.success-box {
+  background: #e7ffe7;
+  color: #0b8b2d;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+
+  .register-card {
+    padding: 25px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .register-btn {
+    width: 100%;
+  }
+}
+.input-group input::placeholder {
+  color: #999;
+}
+
+.input-group input {
+  -webkit-text-fill-color: #222;
+}
+.form-section {
+  grid-column: 1 / -1;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.form-section h3 {
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ff6b35;
+  color: #ff6b35;
+  font-size: 18px;
+  font-weight: 600;
+}
+.required {
+  color: #e53935;
+}
+
+.select-field {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.select-field:focus {
+  border-color: #ff6b35;
+}

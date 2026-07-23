@@ -1,0 +1,65 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import ViewOutlet from "../pages/outlets/ViewOutlet";
+
+import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+
+import Dashboard from "../pages/dashboard/Dashboard";
+import Outlets from "../pages/outlets/Outlets";
+import CreateOutlet from "../pages/outlets/CreateOutlet";
+import Foods from "../pages/foods/Foods";
+import Orders from "../pages/orders/Orders";
+import Coupons from "../pages/coupons/Coupons";
+import Payments from "../pages/payments/Payments";
+import Subscription from "../pages/subscription/Subscription";
+
+const AppRoutes = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Redirect Root */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Protected Routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Outlets */}
+          <Route path="/outlets" element={<Outlets />} />
+          <Route path="/outlets/create" element={<CreateOutlet />} />
+          <Route path="/outlets/view/:id" element={<ViewOutlet />} />
+
+          {/* Other Modules */}
+          <Route path="/foods" element={<Foods />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/coupons" element={<Coupons />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/subscription" element={<Subscription />} />
+        </Route>
+
+        {/* Page Not Found */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default AppRoutes;
