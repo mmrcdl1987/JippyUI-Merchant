@@ -1,0 +1,128 @@
+.merchant-add-subscription-container{
+    max-width:1100px;
+    margin:30px auto;
+    background:#ffffff;
+    border-radius:16px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+}
+
+.merchant-add-subscription-header{
+    margin-bottom:30px;
+}
+
+.merchant-add-subscription-header h2{
+    font-size:28px;
+    color:#1e293b;
+    margin-bottom:8px;
+}
+
+.merchant-add-subscription-header p{
+    color:#64748b;
+    font-size:15px;
+}
+
+.merchant-add-subscription-form{
+    width:100%;
+}
+
+.merchant-add-subscription-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+}
+
+.merchant-add-subscription-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.merchant-add-subscription-group label{
+    font-size:14px;
+    font-weight:600;
+    color:#334155;
+    margin-bottom:8px;
+}
+
+.merchant-add-subscription-group input{
+    height:48px;
+    border:1px solid #dbe3ec;
+    border-radius:10px;
+    padding:0 14px;
+    font-size:15px;
+    color:#1e293b;
+    background:#fff;
+    outline:none;
+    transition:.3s;
+}
+
+.merchant-add-subscription-group input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+}
+
+.merchant-add-subscription-group input::placeholder{
+    color:#94a3b8;
+}
+
+.merchant-add-subscription-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:35px;
+}
+
+.merchant-add-subscription-cancel{
+    padding:12px 24px;
+    border:1px solid #cbd5e1;
+    background:#ffffff;
+    color:#475569;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.merchant-add-subscription-cancel:hover{
+    background:#f1f5f9;
+}
+
+.merchant-add-subscription-save{
+    padding:12px 24px;
+    border:none;
+    background:#2563eb;
+    color:#ffffff;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.merchant-add-subscription-save:hover{
+    background:#1d4ed8;
+}
+
+@media (max-width:768px){
+
+    .merchant-add-subscription-container{
+        margin:15px;
+        padding:20px;
+    }
+
+    .merchant-add-subscription-grid{
+        grid-template-columns:1fr;
+        gap:18px;
+    }
+
+    .merchant-add-subscription-buttons{
+        flex-direction:column;
+    }
+
+    .merchant-add-subscription-cancel,
+    .merchant-add-subscription-save{
+        width:100%;
+    }
+
+}

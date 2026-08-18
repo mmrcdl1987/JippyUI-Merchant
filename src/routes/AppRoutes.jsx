@@ -18,9 +18,10 @@ import Outlets from "../pages/outlets/Outlets";
 import CreateOutlet from "../pages/outlets/CreateOutlet";
 import Foods from "../pages/foods/Foods";
 import Orders from "../pages/orders/Orders";
-import Coupons from "../pages/coupons/Coupons";
+import Promotions from "../pages/promotions/Promotions";
 import Payments from "../pages/payments/Payments";
 import Subscription from "../pages/subscription/Subscription";
+import AddSubscription from "../pages/subscription/AddSubscription";
 
 
 const AppRoutes = () => {
@@ -53,9 +54,13 @@ const AppRoutes = () => {
           {/* Other Modules */}
           <Route path="/foods" element={<Foods />} />
           <Route path="/orders" element={<Orders />} />
-          <Route path="/coupons" element={<Coupons />} />
+          <Route path="/promotions" element={<Promotions />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/subscription" element={<Subscription />} />
+          <Route
+  path="/add-subscription"
+  element={<AddSubscription />}
+/>
         </Route>
 
         {/* Page Not Found */}

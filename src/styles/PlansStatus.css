@@ -1,0 +1,192 @@
+/* ==========================================
+   Plans Status
+========================================== */
+
+.merchant-plans-status-container{
+    width:100%;
+    max-width:1100px;
+    margin:35px auto;
+    padding:35px 40px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    box-sizing:border-box;
+}
+
+.merchant-plans-status-title{
+    font-size:35px;
+    font-weight:700;
+    /* color:#0f766e; */
+    color:red;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.merchant-plans-status-description{
+    text-align:center;
+    color:#64748b;
+    font-size:15px;
+    margin-bottom:30px;
+}
+
+/* Tabs */
+
+.merchant-plans-status-tabs{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.merchant-plans-status-tab{
+    padding:12px 28px;
+    border:1px solid #dbe4ee;
+    background:#fff;
+    color:#475569;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.25s;
+}
+
+.merchant-plans-status-tab:hover{
+    border-color:#14b8a6;
+    color:#0f766e;
+}
+
+.merchant-plans-status-tab.active{
+    background:#14b8a6;
+    color:#fff;
+    border-color:#14b8a6;
+}
+
+/* Plans List */
+
+.merchant-plans-status-list{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+/* Cards */
+
+.merchant-plans-status-card{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:18px 20px;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fff;
+    transition:.25s;
+}
+
+.merchant-plans-status-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    border-color:#14b8a6;
+}
+
+.merchant-plans-status-icon{
+    width:58px;
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:#f0fdfa;
+    color:#0f766e;
+    font-size:24px;
+    border:1px solid #bfe8e2;
+}
+
+.merchant-plans-status-content{
+    flex:1;
+}
+
+.merchant-plans-status-content h4{
+    margin:0;
+    font-size:18px;
+    color:#1e293b;
+    font-weight:700;
+}
+
+.merchant-plans-status-content p{
+    margin:6px 0 0;
+    color:#64748b;
+    font-size:14px;
+}
+
+.merchant-plans-status-badge{
+    padding:7px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.merchant-plans-status-badge.active{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.merchant-plans-status-badge.scheduled{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.merchant-plans-status-badge.ended{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.merchant-plans-status-arrow{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:#f8fafc;
+    color:#64748b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:.25s;
+    font-size:15px;
+}
+
+.merchant-plans-status-arrow:hover{
+    background:#14b8a6;
+    color:#fff;
+}
+
+@media (max-width:768px){
+
+    .merchant-plans-status-container{
+        padding:25px;
+    }
+
+    .merchant-plans-status-tabs{
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .merchant-plans-status-tab{
+        width:100%;
+    }
+
+    .merchant-plans-status-card{
+        flex-wrap:wrap;
+        gap:14px;
+    }
+
+    .merchant-plans-status-content{
+        width:100%;
+    }
+
+    .merchant-plans-status-arrow{
+        margin-left:auto;
+    }
+}

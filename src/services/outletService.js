@@ -208,3 +208,61 @@ export const getAreas = async (cityId) => {
     throw error;
   }
 };
+
+
+
+// Get All Outlets
+export const getAllOutlets = async () => {
+  try {
+
+    const response = await api.get("/api/fm/outlets");
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error("Error fetching outlets:", error);
+    throw error;
+
+  }
+};
+
+
+
+
+
+
+export const getOutletFoods = async (outletId) => {
+  try {
+    const response = await api.get(
+      "/api/fm/outlets/getOutletDetails",
+      {
+        params: {
+          outletId,
+          userType: "Merchant",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching outlet foods:", error);
+    throw error;
+  }
+};
+
+//Edit and Update Outlet Products
+export const editAndUpdateOutletProducts = async (outletId, data) => {
+  const response = await api.put(
+    "/api/fm/outlets/editAndUpdateOutletProducts",
+    data,
+    {
+      params: {
+        outletId,
+        userType: "Merchant",
+      },
+    }
+  );
+
+  return response.data;
+};

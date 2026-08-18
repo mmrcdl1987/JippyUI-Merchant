@@ -1,0 +1,577 @@
+/* ===========================
+   FOODS PAGE - PART 1
+=========================== */
+
+.merchant-foods-container{
+    width:100%;
+    min-height:100vh;
+    background:#f6f8fc;
+    padding:30px;
+    box-sizing:border-box;
+}
+
+.merchant-foods-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+}
+
+.merchant-foods-title{
+    margin:0;
+    font-size:32px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.merchant-foods-subtitle{
+    margin-top:8px;
+    color:#64748b;
+    font-size:16px;
+}
+
+/* ===========================
+   SEARCH BAR
+=========================== */
+
+.merchant-foods-search{
+    width:430px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 22px;
+    background:linear-gradient(135deg,#eef4ff,#ffffff);
+    border:2px solid #4a8de4;
+    border-radius:18px;
+    transition:.3s;
+    box-shadow:0 6px 20px rgba(59,130,246,.08);
+}
+
+.merchant-foods-search:hover{
+    border-color:#60a5fa;
+}
+
+.merchant-foods-search:focus-within{
+    border-color:#2563eb;
+    box-shadow:0 0 0 5px rgba(37,99,235,.12);
+}
+
+.merchant-foods-search svg{
+    font-size:22px;
+    color:#2563eb;
+}
+
+.merchant-foods-search input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:16px;
+    color:#1e293b;
+}
+
+.merchant-foods-search input::placeholder{
+    color:#94a3b8;
+}
+
+/* ===========================
+   TOTAL OUTLETS
+=========================== */
+
+.merchant-foods-count{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    /* background:linear-gradient(135deg,#ae431f,#931d1d); */
+    background-color:rgb(239, 104, 58);
+    color: white;
+    padding:16px 30px;
+    border-radius:15px;
+    font-size:21px;
+    font-weight:700;
+    margin-bottom:30px;
+    box-shadow:0 10px 28px rgba(37,99,235,.22);
+}
+
+/* ===========================
+   LOADING
+=========================== */
+
+.merchant-foods-loading{
+    width:100%;
+    padding:80px;
+    text-align:center;
+    color:#64748b;
+    font-size:19px;
+    font-weight:600;
+}
+
+/* ===========================
+   OUTLET GRID
+=========================== */
+
+.merchant-foods-outlets-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+    gap:28px;
+}
+
+/* ===========================
+   OUTLET CARD
+=========================== */
+
+.merchant-foods-outlet-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:20px;
+    padding:28px;
+    transition:.3s;
+    box-shadow:0 6px 22px rgba(15,23,42,.05);
+}
+
+.merchant-foods-outlet-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 35px rgba(15,23,42,.12);
+}
+
+.merchant-foods-outlet-icon{
+    width:72px;
+    height:72px;
+    border-radius:18px;
+background: linear-gradient(135deg, #f4fbf6, #e7f5ec);
+color: #355e3b;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    margin-bottom:20px;
+}
+
+.merchant-foods-outlet-name{
+    margin:0 0 18px;
+    font-size:23px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.merchant-foods-info-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:15px;
+    color:#475569;
+    font-size:15px;
+    line-height:1.6;
+}
+
+.merchant-foods-info-row svg{
+    /* color:#2563eb; */
+    color: #355e3b;
+    margin-top:4px;
+    min-width:18px;
+}
+
+.merchant-foods-menu-count{
+    margin-top:20px;
+    margin-bottom:18px;
+    padding:12px 16px;
+    border-radius:12px;
+    background:#eef4ff;
+    color:#2563eb;
+    font-weight:700;
+    font-size:15px;
+}
+
+/* ===========================
+   STATUS
+=========================== */
+
+.merchant-foods-status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+.merchant-foods-status.active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.merchant-foods-status.inactive{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.merchant-foods-open-btn{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    color:#ffffff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+}
+
+.merchant-foods-open-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 28px rgba(37,99,235,.30);
+}
+
+/* ===========================
+   SELECTED OUTLET
+=========================== */
+
+.merchant-foods-selected-outlet{
+    width:100%;
+}
+
+.merchant-foods-back-btn{
+    border:none;
+    background:#ffffff;
+    border:1px solid #dbeafe;
+    color:#2563eb;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:13px 22px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:28px;
+    transition:.3s;
+}
+
+.merchant-foods-back-btn:hover{
+    background:#eef4ff;
+}
+
+.merchant-foods-selected-title{
+    margin:0 0 30px;
+    font-size:32px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+/* ===========================
+   CATEGORY CARD
+=========================== */
+
+.merchant-foods-category-card{
+    background:#ffffff;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid #e2e8f0;
+    margin-bottom:22px;
+    box-shadow:0 6px 20px rgba(15,23,42,.05);
+}
+
+/* ===========================
+   CATEGORY HEADER
+=========================== */
+
+.merchant-foods-category-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 24px;
+    cursor:pointer;
+    transition:.25s;
+    background:linear-gradient(90deg,#eef4ff,#f8fbff);
+}
+
+.merchant-foods-category-header:hover{
+    background:linear-gradient(90deg,#dbeafe,#eef2ff);
+}
+
+.merchant-foods-category-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-size:18px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.merchant-foods-category-left svg{
+    width:44px;
+    height:44px;
+    padding:11px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    color:#ffffff;
+}
+
+.merchant-foods-expand-btn{
+    width:44px;
+    height:44px;
+    border:none;
+    border-radius:50%;
+    background:#ffffff;
+    color:#2563eb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:17px;
+    transition:.25s;
+    box-shadow:0 3px 10px rgba(15,23,42,.08);
+}
+
+.merchant-foods-expand-btn:hover{
+    background:#2563eb;
+    color:#ffffff;
+}
+
+/* ===========================
+   TABLE
+=========================== */
+
+.merchant-foods-table-wrapper{
+    width:100%;
+    overflow-x:auto;
+    border-top:1px solid #e2e8f0;
+}
+
+.merchant-foods-table{
+    width:100%;
+    border-collapse:collapse;
+    background:#ffffff;
+    table-layout:fixed;
+}
+
+/* ===========================
+   TABLE HEADER
+=========================== */
+
+.merchant-foods-table thead{
+    background:linear-gradient(90deg,#2563eb,#4f46e5);
+}
+
+.merchant-foods-table th{
+    padding:18px 20px;
+    color:#ffffff;
+    font-size:15px;
+    font-weight:700;
+    text-align:left;
+    white-space:nowrap;
+}
+
+/* ===========================
+   TABLE BODY
+=========================== */
+
+.merchant-foods-table td{
+    padding:18px 20px;
+    font-size:18px;
+    color:#334155;
+    border-bottom:1px solid #edf2f7;
+    vertical-align:middle;
+    text-align:left;
+}
+
+.merchant-foods-table tbody tr{
+    transition:.25s;
+}
+
+.merchant-foods-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+/* ===========================
+   STATUS PILLS
+=========================== */
+
+.merchant-foods-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:110px;
+    padding:8px 14px;
+    border-radius:50px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.merchant-foods-pill.available{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.merchant-foods-pill.unavailable{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
+.merchant-foods-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+}
+
+.merchant-foods-edit-btn{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    background:#dbeafe;
+    color:#2563eb;
+    cursor:pointer;
+    transition:.25s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+}
+
+.merchant-foods-edit-btn:hover{
+    background:#2563eb;
+    color:#ffffff;
+    transform:scale(1.08);
+}
+
+.merchant-foods-delete-btn{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    background:#fee2e2;
+    color:#dc2626;
+    cursor:pointer;
+    transition:.25s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+}
+
+.merchant-foods-delete-btn:hover{
+    background:#dc2626;
+    color:#ffffff;
+    transform:scale(1.08);
+}
+
+.merchant-foods-table th:first-child,
+.merchant-foods-table td:first-child{
+    text-align:left;
+    padding-left:30px;
+}
+
+.merchant-foods-table th:nth-child(2),
+.merchant-foods-table td:nth-child(2){
+    text-align:left;
+}
+
+.merchant-foods-table th:nth-child(3),
+.merchant-foods-table td:nth-child(3),
+.merchant-foods-table th:nth-child(4),
+.merchant-foods-table td:nth-child(4),
+.merchant-foods-table th:nth-child(5),
+.merchant-foods-table td:nth-child(5),
+.merchant-foods-table th:nth-child(6),
+.merchant-foods-table td:nth-child(6){
+    text-align:center;
+}
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+    .merchant-foods-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .merchant-foods-search{
+        width:100%;
+    }
+
+    .merchant-foods-outlets-grid{
+        grid-template-columns:1fr;
+    }
+
+    .merchant-foods-selected-title{
+        font-size:26px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .merchant-foods-container{
+        padding:18px;
+    }
+
+    .merchant-foods-title{
+        font-size:26px;
+    }
+
+    .merchant-foods-category-header{
+        padding:16px;
+    }
+
+    .merchant-foods-category-left{
+        font-size:16px;
+    }
+
+    .merchant-foods-category-left svg{
+        width:38px;
+        height:38px;
+        padding:9px;
+    }
+
+    .merchant-foods-table th,
+    .merchant-foods-table td{
+        padding:12px;
+        font-size:13px;
+    }
+
+    .merchant-foods-open-btn{
+        height:48px;
+        font-size:14px;
+    }
+
+    .merchant-foods-back-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+    .merchant-foods-actions{
+        gap:8px;
+    }
+
+    .merchant-foods-edit-btn,
+    .merchant-foods-delete-btn{
+        width:36px;
+        height:36px;
+        font-size:14px;
+    }
+
+}
