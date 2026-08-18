@@ -7,6 +7,7 @@ const Outlets = () => {
   const navigate = useNavigate();
   const [outlets, setOutlets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null); // State to hold backend error message
   
   // Search and Filter States
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,18 +23,34 @@ const Outlets = () => {
 
   const loadOutlets = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       const data = await getOutletsByMerchant();
       console.log("Outlets Data:", data);
-      setOutlets(data || []);
+
+      // Handle backend returning success: false object
+      if (data && data.success === false) {
+        setErrorMsg(data.message);
+        setOutlets([]);
+      } else {
+        setOutlets(data || []);
+      }
     } catch (error) {
       console.error("Failed to fetch outlets", error);
+      // Capture backend error message from standard Axios/Fetch error responses
+      if (error.response?.data?.message) {
+        setErrorMsg(error.response.data.message);
+      } else if (error.message) {
+        setErrorMsg(error.message);
+      } else {
+        setErrorMsg("An unexpected error occurred while fetching outlets.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // 1. Filter Logic (Search by Name/Phone/City and Status mapping `isApproved`)
+  // 1. Filter Logic
   const filteredOutlets = outlets.filter((outlet) => {
     const matchesSearch =
       outlet.outletName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,15 +80,32 @@ const Outlets = () => {
         <h2>Outlets</h2>
         <div className="header-actions">
           <button onClick={loadOutlets} className="btn-refresh">🔄 Refresh</button>
-          {/* <button onClick={() => navigate("/outlets/add")} className="btn-add">+ Add Outlet</button> */}
-        <button
-  onClick={() => navigate("/outlets/create")}
-  className="btn-add"
->
-  + Create Outlet
-</button>
+          <button
+            onClick={() => navigate("/outlets/create")}
+            className="btn-add"
+          >
+            + Create Outlet
+          </button>
         </div>
       </div>
+
+      {/* Backend Error / Warning Banner */}
+      {errorMsg && (
+        <div className="backend-error-banner" style={{
+          backgroundColor: "#fff3cd",
+          color: "#856404",
+          padding: "15px 20px",
+          borderRadius: "6px",
+          border: "1px solid #ffeeba",
+          marginBottom: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px"
+        }}>
+          <strong>⚠️ Notice</strong>
+          <span>{errorMsg}</span>
+        </div>
+      )}
 
       {/* Search and Filters Strip */}
       <div className="filters-strip">
@@ -138,7 +172,9 @@ const Outlets = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="empty-cell">No outlets found.</td>
+                    <td colSpan="7" className="empty-cell">
+                      {errorMsg ? errorMsg : "No outlets found."}
+                    </td>
                   </tr>
                 )}
               </tbody>
