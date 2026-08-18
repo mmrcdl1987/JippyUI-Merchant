@@ -1,0 +1,181 @@
+/* ==========================================
+   Merchant Slot Booking
+========================================== */
+
+.merchant-slot-booking-main-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 35px 40px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+}
+
+.merchant-slot-booking-title {
+    font-size: 35px;
+    font-weight: 700;
+    /* color: #0f766e; */
+    color:red;
+    margin-bottom: 8px;
+}
+
+.merchant-slot-booking-description {
+    font-size: 18px;
+    color: #64748b;
+    margin-bottom: 30px;
+    line-height: 1.7;
+}
+
+.merchant-slot-booking-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.merchant-slot-booking-form-group {
+    width: 100%;
+}
+
+.merchant-slot-booking-label {
+    display: block;
+    margin-bottom: 10px;
+     color:#2563eb;
+    font-size:17px;
+    font-weight:600;
+}
+
+.merchant-slot-booking-input{
+    width:100%;
+    height:46px;
+    padding:0 14px;
+    border:1px solid #dbe4ee;
+    border-radius:8px;
+    background:#ffffff;
+    color:#334155;
+    font-size:15px;
+    box-sizing:border-box;
+    appearance:none;
+    -webkit-appearance:none;
+}
+
+.merchant-slot-booking-input{
+    width:100%;
+    height:46px;
+    padding:0 14px;
+    border:1px solid #dbe4ee;
+    border-radius:8px;
+    background:#ffffff;
+    color:#334155;
+    font-size:15px;
+    box-sizing:border-box;
+    transition:all .25s ease;
+}
+
+.merchant-slot-booking-input:hover{
+    border-color:#14b8a6;
+    background:#f8fffe;
+}
+
+.merchant-slot-booking-input:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 0 4px rgba(20,184,166,.15);
+    background:#ffffff;
+}
+
+.merchant-slot-booking-date{
+    width:100%;
+}
+
+.merchant-slot-booking-date::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.merchant-slot-booking-bottom-fields{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(320px,1fr));
+    gap:24px;
+}
+
+.merchant-slot-booking-time-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+
+    width:fit-content;
+    margin:14px auto;
+
+    padding:14px 24px;
+
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+}
+
+.merchant-slot-booking-time-row:hover {
+    background: #f4fffd;
+    border-color: #99f6e4;
+    transition:all .25s ease;
+
+}
+
+.merchant-slot-booking-submit-button {
+    width: 160px;
+    height: 42px;
+    margin: 20px auto 0 !important;
+    border-radius: 8px !important;
+    background: #14b8a6 !important;
+    color: white !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+     border-color:#14b8a6;
+    transform:translateY(-2px);
+}
+
+.merchant-slot-booking-submit-button:hover {
+    background: #0f766e !important;
+}
+
+.merchant-slot-booking-radio-container{
+    display:flex;
+    justify-content:center;
+}
+
+.merchant-slot-booking-radio-container .MuiRadioGroup-root{
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    gap:45px;
+}
+
+.merchant-slot-booking-discount-input{
+    width:70px;
+    height:38px;
+    padding:0 8px;
+    border:1px solid #dbe4ee;
+    border-radius:8px;
+    background:#ffffff;
+    color:#334155;
+    text-align:center;
+    font-size:14px;
+    box-sizing:border-box;
+    transition:all .25s ease;
+}
+
+.merchant-slot-booking-discount-input:hover{
+    border-color:#14b8a6;
+    background:#f8fffe;
+}
+
+.merchant-slot-booking-discount-input:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 0 3px rgba(20,184,166,.15);
+}

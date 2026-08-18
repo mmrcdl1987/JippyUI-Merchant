@@ -1,0 +1,317 @@
+/* ==========================================
+   Create Plan
+========================================== */
+
+.merchant-create-plan-container{
+    width:100%;
+    max-width:1100px;
+    margin:35px auto;
+    padding:35px 40px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    box-sizing:border-box;
+}
+
+.merchant-create-plan-title{
+    font-size:35px;
+    font-weight:700;
+    /* color:#0f766e; */
+    color:red;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.merchant-create-plan-description{
+    text-align:center;
+    color:#64748b;
+    font-size:15px;
+    margin-bottom:35px;
+}
+
+.merchant-create-plan-form{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.merchant-create-plan-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.merchant-create-plan-group label{
+    color:#2563eb;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* Center Applies On */
+
+.merchant-create-plan-group:has(.merchant-create-plan-radio){
+    align-items:center;
+}
+
+.merchant-create-plan-group:has(.merchant-create-plan-radio) > label{
+    width:100%;
+    text-align:center;
+}
+
+/* Two Columns */
+
+.merchant-create-plan-two-column{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+}
+
+/* Inputs */
+
+.merchant-create-plan-input{
+    width:100%;
+    height:46px;
+    padding:0 14px;
+    border:1px solid #dbe4ee;
+    border-radius:8px;
+    background:#fff;
+    font-size:15px;
+    color:#334155;
+    transition:.25s;
+    box-sizing:border-box;
+}
+
+.merchant-create-plan-input:hover{
+    border-color:#14b8a6;
+    background:#f8fffe;
+}
+
+.merchant-create-plan-input:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 0 4px rgba(20,184,166,.15);
+}
+
+/* Applies On Radio */
+
+.merchant-create-plan-radio{
+    display:inline-flex !important;
+    width:auto !important;
+    margin:8px auto 0 !important;
+    flex-direction:row !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:24px !important;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-root{
+    display:inline-flex !important;
+    align-items:center;
+    margin:0 !important;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-label{
+    white-space:nowrap;
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:.25s;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
+    color:#0f766e;
+}
+
+.merchant-create-plan-radio .Mui-checked + .MuiFormControlLabel-label{
+    color:#0f766e;
+    font-weight:600;
+}
+
+.merchant-create-plan-radio .MuiRadio-root{
+    color:#94a3b8;
+}
+
+.merchant-create-plan-radio .MuiRadio-root.Mui-checked{
+    color:#14b8a6;
+}
+
+/* Submit Button */
+
+.merchant-create-plan-submit{
+    width:180px;
+    height:44px;
+    margin:20px auto 0 !important;
+    background:#14b8a6 !important;
+    border-radius:8px !important;
+    text-transform:none !important;
+    font-size:15px !important;
+    font-weight:600 !important;
+}
+
+.merchant-create-plan-submit:hover{
+    background:#0f766e !important;
+}
+
+/* Responsive */
+
+@media (max-width:768px){
+
+    .merchant-create-plan-container{
+        padding:25px;
+    }
+
+    .merchant-create-plan-two-column{
+        grid-template-columns:1fr;
+    }
+
+    .merchant-create-plan-radio{
+        width:100% !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:flex-start !important;
+        gap:10px !important;
+    }
+
+    .merchant-create-plan-radio .MuiFormControlLabel-root{
+        margin:0 !important;
+    }
+
+    .merchant-create-plan-submit{
+        width:100%;
+    }
+}
+
+/* Plan Type Radio */
+
+.merchant-create-plan-type-radio{
+    display:inline-flex !important;
+    width:auto !important;
+    margin:8px auto 0 !important;
+    flex-direction:row !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:24px !important;
+}
+
+.merchant-create-plan-type-radio .MuiFormControlLabel-root{
+    display:inline-flex !important;
+    align-items:center;
+    margin:0 !important;
+}
+
+.merchant-create-plan-type-radio .MuiFormControlLabel-label{
+    white-space:nowrap;
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:.25s;
+}
+
+.merchant-create-plan-type-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
+    color:#0f766e;
+}
+
+.merchant-create-plan-type-radio .Mui-checked + .MuiFormControlLabel-label{
+    color:#0f766e;
+    font-weight:600;
+}
+
+.merchant-create-plan-type-radio .MuiRadio-root{
+    color:#94a3b8;
+}
+
+.merchant-create-plan-type-radio .MuiRadio-root.Mui-checked{
+    color:#14b8a6;
+}
+
+/* Applies On Radio */
+
+.merchant-create-plan-radio{
+    display:inline-flex !important;
+    width:auto !important;
+    margin:8px auto 0 !important;
+    flex-direction:row !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:24px !important;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-root{
+    display:inline-flex !important;
+    align-items:center;
+    margin:0 !important;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-label{
+    white-space:nowrap;
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:.25s;
+}
+
+.merchant-create-plan-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
+    color:#0f766e;
+}
+
+.merchant-create-plan-radio .Mui-checked + .MuiFormControlLabel-label{
+    color:#0f766e;
+    font-weight:600;
+}
+
+.merchant-create-plan-radio .MuiRadio-root{
+    color:#94a3b8;
+}
+
+.merchant-create-plan-radio .MuiRadio-root.Mui-checked{
+    color:#14b8a6;
+}
+
+/* Submit Button */
+
+.merchant-create-plan-submit{
+    width:180px;
+    height:44px;
+    margin:20px auto 0 !important;
+    background:#14b8a6 !important;
+    border-radius:8px !important;
+    text-transform:none !important;
+    font-size:15px !important;
+    font-weight:600 !important;
+}
+
+.merchant-create-plan-submit:hover{
+    background:#0f766e !important;
+}
+
+/* Responsive */
+
+@media (max-width:768px){
+
+    .merchant-create-plan-container{
+        padding:25px;
+    }
+
+    .merchant-create-plan-two-column{
+        grid-template-columns:1fr;
+    }
+
+    .merchant-create-plan-type-radio,
+    .merchant-create-plan-radio{
+        width:100% !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:flex-start !important;
+        gap:10px !important;
+    }
+
+    .merchant-create-plan-type-radio .MuiFormControlLabel-root,
+    .merchant-create-plan-radio .MuiFormControlLabel-root{
+        margin:0 !important;
+    }
+
+    .merchant-create-plan-submit{
+        width:100%;
+    }
+}

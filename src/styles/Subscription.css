@@ -1,0 +1,223 @@
+.merchant-subscription-container{
+    padding:30px;
+    background:#f8fafc;
+    min-height:100vh;
+}
+
+.merchant-subscription-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.merchant-subscription-title{
+    font-size:30px;
+    font-weight:700;
+    color:#1e293b;
+    margin-bottom:6px;
+}
+
+.merchant-subscription-subtitle{
+    color:#64748b;
+    font-size:15px;
+}
+
+.merchant-subscription-add-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:none;
+    cursor:pointer;
+    color:#fff;
+    background:#2563eb;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.merchant-subscription-add-btn:hover{
+    background:#1d4ed8;
+}
+
+.merchant-subscription-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.merchant-subscription-search{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    color:black;
+    padding:12px 18px;
+    border-radius:10px;
+    border:1px solid #e2e8f0;
+    width:340px;
+}
+
+.merchant-subscription-search input{
+    width:100%;
+    border:none;
+    outline:none;
+    font-size:20px;
+    background:transparent;
+    color:#1e293b;
+}
+.merchant-subscription-search input::placeholder{
+    color:#94a3b8;
+}
+.merchant-subscription-count{
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:12px 20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+}
+
+.merchant-subscription-count span{
+    background:#2563eb;
+    color:#fff;
+    padding:4px 12px;
+    border-radius:20px;
+}
+
+.merchant-subscription-table-wrapper{
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(15,23,42,.06);
+}
+
+.merchant-subscription-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.merchant-subscription-table thead{
+    background:#3968a9;
+    color:#fff;
+}
+
+.merchant-subscription-table th{
+    padding:18px;
+    font-size:14px;
+    text-align:center;
+}
+
+.merchant-subscription-table td{
+    padding:18px;
+    border-bottom:1px solid #edf2f7;
+    text-align:center;
+    color:black;
+} 
+
+.merchant-subscription-table tbody tr:hover{
+    background:#f8fafc;
+}
+
+.merchant-subscription-plan{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.merchant-subscription-plan svg{
+    width:42px;
+    height:42px;
+    color:#f59e0b;
+    background:#fef3c7;
+    padding:10px;
+    border-radius:50%;
+}
+
+.merchant-subscription-plan strong{
+    display:block;
+    color:#1e293b;
+    font-size:15px;
+}
+
+.merchant-subscription-plan small{
+    color:#64748b;
+}
+
+.merchant-subscription-actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+}
+
+.merchant-subscription-edit-btn,
+.merchant-subscription-delete-btn{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:.3s;
+}
+
+.merchant-subscription-edit-btn{
+    background:#dbeafe;
+    color:#2563eb;
+}
+
+.merchant-subscription-delete-btn{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.merchant-subscription-edit-btn:hover{
+    background:#2563eb;
+    color:#fff;
+}
+
+.merchant-subscription-delete-btn:hover{
+    background:#dc2626;
+    color:#fff;
+}
+
+.merchant-subscription-no-data{
+    padding:35px;
+    color:#64748b;
+    font-weight:600;
+}
+
+@media(max-width:992px){
+
+.merchant-subscription-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.merchant-subscription-toolbar{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.merchant-subscription-search{
+    width:100%;
+}
+
+.merchant-subscription-table-wrapper{
+    overflow:auto;
+}
+
+.merchant-subscription-table{
+    min-width:1200px;
+}
+
+}

@@ -1,0 +1,233 @@
+/* ==========================================
+   Percent Off Plan
+========================================== */
+
+.merchant-percent-plan-container{
+    width:100%;
+    max-width:1100px;
+    margin:35px auto;
+    padding:35px 40px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    box-sizing:border-box;
+}
+
+.merchant-percent-plan-title{
+    text-align:center;
+    font-size:35px;
+    font-weight:700;
+    /* color:#0f766e; */
+    color:red;
+    margin-bottom:8px;
+}
+
+.merchant-percent-plan-description{
+    text-align:center;
+    font-size:15px;
+    color:#64748b;
+    margin-bottom:35px;
+}
+
+.merchant-percent-plan-form{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.merchant-percent-plan-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.merchant-percent-plan-group label{
+    color:#2563eb;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* ==========================================
+   Center Applies On & Select Time
+========================================== */
+
+.merchant-percent-plan-group:has(.merchant-percent-plan-applies-radio),
+.merchant-percent-plan-group:has(.merchant-percent-plan-radio){
+    align-items:center;
+}
+
+.merchant-percent-plan-group:has(.merchant-percent-plan-applies-radio) label,
+.merchant-percent-plan-group:has(.merchant-percent-plan-radio) label{
+    text-align:center;
+}
+
+/* ==========================================
+   Two Column
+========================================== */
+
+.merchant-percent-plan-two-column{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+/* ==========================================
+   Inputs
+========================================== */
+
+.merchant-percent-plan-input{
+    width:100%;
+    height:46px;
+    padding:0 14px;
+    border:1px solid #dbe4ee;
+    border-radius:8px;
+    background:#fff;
+    color:#334155;
+    font-size:15px;
+    transition:.25s;
+    box-sizing:border-box;
+}
+
+.merchant-percent-plan-input:hover{
+    border-color:#14b8a6;
+    background:#f8fffe;
+}
+
+.merchant-percent-plan-input:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 0 4px rgba(20,184,166,.15);
+}
+
+/* ==========================================
+   Applies On Radio
+========================================== */
+
+.merchant-percent-plan-applies-radio{
+    display:flex !important;
+    justify-content:center;
+    align-items:center;
+    gap:35px;
+    margin-top:8px;
+}
+
+.merchant-percent-plan-applies-radio .MuiFormControlLabel-label{
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:.25s;
+}
+
+.merchant-percent-plan-applies-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
+    color:#0f766e;
+}
+
+.merchant-percent-plan-applies-radio .Mui-checked + .MuiFormControlLabel-label{
+    color:#0f766e;
+    font-weight:600;
+}
+
+.merchant-percent-plan-applies-radio .MuiRadio-root{
+    color:#94a3b8;
+}
+
+.merchant-percent-plan-applies-radio .MuiRadio-root.Mui-checked{
+    color:#14b8a6;
+}
+
+/* ==========================================
+   Time Radio
+========================================== */
+
+.merchant-percent-plan-radio{
+    display:flex !important;
+    justify-content:center;
+    align-items:center;
+    gap:35px;
+    margin-top:8px;
+}
+
+.merchant-percent-plan-radio .MuiFormControlLabel-label{
+    color:#475569;
+    font-size:15px;
+    font-weight:500;
+    transition:.25s;
+}
+
+.merchant-percent-plan-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
+    color:#0f766e;
+}
+
+.merchant-percent-plan-radio .Mui-checked + .MuiFormControlLabel-label{
+    color:#0f766e;
+    font-weight:600;
+}
+
+.merchant-percent-plan-radio .MuiRadio-root{
+    color:#94a3b8;
+}
+
+.merchant-percent-plan-radio .MuiRadio-root.Mui-checked{
+    color:#14b8a6;
+}
+
+/* ==========================================
+   Time Note
+========================================== */
+
+.merchant-percent-plan-time-note{
+    margin-top:6px;
+    color:#94a3b8;
+    font-size:12px;
+    font-style:italic;
+}
+
+/* ==========================================
+   Button
+========================================== */
+
+.merchant-percent-plan-button-container{
+    display:flex;
+    justify-content:center;
+}
+
+.merchant-percent-plan-submit{
+    width:180px;
+    height:44px;
+    background:#14b8a6 !important;
+    border-radius:8px !important;
+    text-transform:none !important;
+    font-size:15px !important;
+    font-weight:600 !important;
+}
+
+.merchant-percent-plan-submit:hover{
+    background:#0f766e !important;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .merchant-percent-plan-container{
+        padding:25px;
+    }
+
+    .merchant-percent-plan-two-column{
+        grid-template-columns:1fr;
+    }
+
+    .merchant-percent-plan-applies-radio,
+    .merchant-percent-plan-radio{
+        flex-direction:column !important;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .merchant-percent-plan-submit{
+        width:100%;
+    }
+}

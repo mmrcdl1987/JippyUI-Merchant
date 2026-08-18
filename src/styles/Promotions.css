@@ -1,0 +1,131 @@
+/* ================= Promotions ================= */
+
+.merchant-coupons-page {
+  padding: 24px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.merchant-coupons-heading {
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  color: black;
+}
+
+.merchant-coupons-cards-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin: 40px auto;
+}
+
+.merchant-coupons-card {
+  position: relative;
+  min-height: 180px;
+  padding: 20px;
+  border-radius: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.merchant-coupons-card::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  top: -70px;
+  right: -70px;
+}
+
+.merchant-coupons-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 18px 35px rgba(79,70,229,0.4);
+}
+
+.merchant-coupons-card-active {
+  transform: scale(1.05);
+  border: 3px solid #facc15;
+}
+
+.merchant-coupons-card-icon {
+  font-size: 52px;
+  margin-bottom: 18px;
+}
+
+.merchant-coupons-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+.merchant-coupons-content {
+  margin-top: 30px;
+  min-height: 350px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.merchant-coupons-card:nth-child(1) {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+}
+
+.merchant-coupons-card:nth-child(2) {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.merchant-coupons-card:nth-child(3) {
+  background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.merchant-coupons-card:nth-child(4) {
+  background: linear-gradient(135deg, #f97316, #fb923c);
+}
+
+.merchant-coupons-card:nth-child(5) {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+}
+
+.merchant-coupons-card:nth-child(6) {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+}
+
+@media (max-width: 1200px) {
+  .merchant-coupons-cards-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .merchant-coupons-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .merchant-coupons-cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.merchant-coming-soon{
+    background: black;
+    border-radius:12px;
+    padding:80px;
+    text-align:center;
+    font-size:20px;
+    color:red;
+    border:1px solid #e2e8f0;
+}

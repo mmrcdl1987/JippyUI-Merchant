@@ -52,9 +52,9 @@ export const menuData = [
     ],
   },
   {
-    name: "Coupons",
+    name: "Promotions",
     icon: <FaTags />,
-    path: "/coupons",
+    path: "/promotions",
   },
   {
     name: "Payments",

@@ -46,26 +46,24 @@ const Login = () => {
         return;
       }
 
-      // ✅ Allow only Merchant users
-      if (
-        userType !== "MERCHANT" ||
-        !Array.isArray(roles) ||
-        !roles.includes("ROLE_MERCHANT")
-      ) {
+      // ✅ Flexible validation for merchant access
+      const hasMerchantRole =
+        userType === "MERCHANT" ||
+        (Array.isArray(roles) &&
+          (roles.includes("ROLE_MERCHANT") || roles.includes("MERCHANT")));
+
+      if (!hasMerchantRole) {
         setError("Only Merchant users can access the Merchant Portal.");
         return;
       }
 
-     // Save login details
-localStorage.setItem("token", jwt);
-
-// Store merchantId (same as userId)
-localStorage.setItem("merchantId", String(userId));
-
-localStorage.setItem("userId", String(userId));
-localStorage.setItem("userType", userType);
-localStorage.setItem("roles", JSON.stringify(roles));
-localStorage.setItem("user", JSON.stringify(response.data));
+      // Save login details
+      localStorage.setItem("token", jwt);
+      localStorage.setItem("merchantId", String(userId));
+      localStorage.setItem("userId", String(userId));
+      localStorage.setItem("userType", userType);
+      localStorage.setItem("roles", JSON.stringify(roles));
+      localStorage.setItem("user", JSON.stringify(response.data));
 
       if (rememberMe) {
         localStorage.setItem("rememberUsername", username);
@@ -88,9 +86,9 @@ localStorage.setItem("user", JSON.stringify(response.data));
     }
   };
 
-const handleRegister = () => {
-  navigate("/register");
-};
+  const handleRegister = () => {
+    navigate("/register");
+  };
 
   return (
     <div className="login-page">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { createMerchant } from "../../services/merchantService";
 
+
 import "../../styles/Register.css";
 
 const Register = () => {
