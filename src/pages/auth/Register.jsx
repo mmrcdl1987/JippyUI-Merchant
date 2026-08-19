@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { createMerchant } from "../../services/merchantService";
 
-
 import "../../styles/Register.css";
 
 const Register = () => {
@@ -21,7 +20,7 @@ const Register = () => {
     password: "",
     outletType: "",
     pan: "",
-    adhar: "",
+    adhar: "", 
     fssai: "",
     gstNumber: "",
     accountNumber: "",
@@ -124,10 +123,9 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // Get Logged In User ID
       const currentUserId = localStorage.getItem("userId");
 
-      // Build Payload
+      // Build Payload matching backend expectations
       const payload = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -137,7 +135,7 @@ const Register = () => {
         username: formData.username,
         password: formData.password,
         outletType: formData.outletType,
-        uploadedBy: currentUserId || "MERCHANT_PORTAL",
+        uploadedBy: currentUserId || "Admin",
         pan: formData.pan,
         adhar: formData.adhar,
         fssai: formData.fssai,
@@ -158,13 +156,21 @@ const Register = () => {
       console.log("========== API SUCCESS ==========");
       console.log(response);
 
-      setSuccess("Merchant Registered Successfully.");
+      // Successfully handles response matching your backend structure
+      if (response && (response.success === true || response.message)) {
+        setSuccess(response.message || "Merchant Registered Successfully.");
+        setFormData(initialFormState);
 
-      setFormData(initialFormState);
+        if (response.data && response.data.merchantId) {
+          localStorage.setItem("merchantId", response.data.merchantId);
+        }
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setError("Registration failed unexpectedly.");
+      }
     } catch (err) {
       console.log("========== API FAILED ==========");
       console.error(err);
@@ -175,8 +181,8 @@ const Register = () => {
 
         setError(
           err.response.data?.message ||
-          JSON.stringify(err.response.data) ||
-          "Registration Failed"
+            JSON.stringify(err.response.data) ||
+            "Registration Failed"
         );
       } else if (err.request) {
         console.log("No Response Received");
@@ -293,26 +299,28 @@ const Register = () => {
               <h3>Business Information</h3>
             </div>
 
-           <div className="input-group">
-  <label>Outlet Type <span className="required">*</span></label>
+            <div className="input-group">
+              <label>
+                Outlet Type <span className="required">*</span>
+              </label>
 
-  <select
-    name="outletType"
-    value={formData.outletType}
-    onChange={handleChange}
-    className="select-field"
-  >
-    <option value="">Select Outlet Type</option>
-    <option value="Restaurant">Restaurant</option>
-    <option value="Grocery">Grocery</option>
-    <option value="Pharmacy">Pharmacy</option>
-    <option value="Bakery">Bakery</option>
-    <option value="Meat">Meat</option>
-    <option value="Vegetables">Vegetables</option>
-    <option value="Flowers">Flowers</option>
-    <option value="Electronics">Electronics</option>
-  </select>
-</div>
+              <select
+                name="outletType"
+                value={formData.outletType}
+                onChange={handleChange}
+                className="select-field"
+              >
+                <option value="">Select Outlet Type</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Meat">Meat</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Flowers">Flowers</option>
+                <option value="Electronics">Electronics</option>
+              </select>
+            </div>
 
             <div className="input-group">
               <label>PAN Number *</label>

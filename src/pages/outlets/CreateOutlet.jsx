@@ -13,6 +13,12 @@ const CreateOutlet = () => {
   const navigate = useNavigate();
 
   const [sameAsMerchant, setSameAsMerchant] = useState(false);
+  
+  /* State for UI Error Handling (supports array of errors) */
+  const [errorDetails, setErrorDetails] = useState({
+    message: "",
+    errors: [],
+  });
 
   const [merchantBank, setMerchantBank] = useState({
     accountHolderName: "",
@@ -41,8 +47,8 @@ const CreateOutlet = () => {
     outletEmail: "",
     alternateOutletPhone: "",
 
-    fssaiNumber: "",
-    gstNumber: "",
+    fssaiNumber: "", // Will enforce 14 chars limit
+    gstNumber: "",   // Will enforce 15 chars limit
 
     username: "",
     password: "",
@@ -55,6 +61,7 @@ const CreateOutlet = () => {
     buildingNumber: "",
     road: "",
     landmark: "",
+    description: "", // Example textarea field with a limit
 
     stateId: "",
     cityId: "",
@@ -95,7 +102,6 @@ const CreateOutlet = () => {
   const loadMerchantBankDetails = async () => {
     try {
       const data = await getMerchantProfile();
-
       setMerchantBank({
         accountHolderName: data.accountHolderName || "",
         accountNumber: data.accountNumber || "",
@@ -118,7 +124,6 @@ const CreateOutlet = () => {
 
   const handleStateChange = async (e) => {
     const stateId = e.target.value;
-
     const state = states.find((item) => String(item.stateId) === stateId);
 
     setFormData((prev) => ({
@@ -145,7 +150,6 @@ const CreateOutlet = () => {
 
   const handleCityChange = async (e) => {
     const cityId = e.target.value;
-
     setFormData((prev) => ({
       ...prev,
       cityId,
@@ -167,7 +171,6 @@ const CreateOutlet = () => {
 
   const handleAreaChange = (e) => {
     const areaId = e.target.value;
-
     const area = areas.find((item) => String(item.areaId) === areaId);
 
     setFormData((prev) => ({
@@ -210,7 +213,6 @@ const CreateOutlet = () => {
   const handleOperatingTimeChange = (index, field, value) => {
     const updated = [...formData.operatingDays];
     updated[index][field] = value;
-
     setFormData({
       ...formData,
       operatingDays: updated,
@@ -220,7 +222,6 @@ const CreateOutlet = () => {
   const removeOperatingTime = (index) => {
     const updated = [...formData.operatingDays];
     updated.splice(index, 1);
-
     setFormData({
       ...formData,
       operatingDays: updated,
@@ -229,17 +230,15 @@ const CreateOutlet = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorDetails({ message: "", errors: [] }); // Reset errors
 
     let payload = {
       ...formData,
-
       merchantId: Number(formData.merchantId),
       stateId: Number(formData.stateId),
       cityId: Number(formData.cityId),
       areaId: Number(formData.areaId),
-
       isActive: "Y",
-
       operatingDays: sameTimingForAll
         ? [1, 2, 3, 4, 5, 6, 7].map((day) => ({
             dayOfWeekId: day,
@@ -256,21 +255,28 @@ const CreateOutlet = () => {
           })),
     };
 
-    // Remove unwanted temporary fields
     delete payload.stateName;
     delete payload.areaName;
     delete payload.uploadedBy;
 
     try {
       console.log("Submitting Payload:", payload);
-
       await createOutlet(payload);
 
       alert("Outlet created successfully");
       navigate("/outlets");
     } catch (error) {
       console.error(error);
-      alert("Failed to create outlet");
+      
+      const responseData = error.response?.data;
+
+      // Extract main message and list of validation errors safely
+      setErrorDetails({
+        message: responseData?.message || "Validation failed",
+        errors: Array.isArray(responseData?.errors) 
+          ? responseData.errors 
+          : [responseData?.message || error.message || "Failed to create outlet."],
+      });
     }
   };
 
@@ -278,11 +284,31 @@ const CreateOutlet = () => {
     <div className="create-outlet-container">
       <div className="page-header">
         <h2>Create Outlet</h2>
-
         <button className="back-btn" onClick={() => navigate("/outlets")}>
           Back
         </button>
       </div>
+
+      {/* Enhanced Multi-Error UI Banner */}
+      {errorDetails.errors.length > 0 && (
+        <div style={{
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+          padding: "14px 18px",
+          borderRadius: "6px",
+          marginBottom: "20px",
+          border: "1px solid #f5c6cb"
+        }}>
+          <strong>{errorDetails.message}:</strong>
+          <ul style={{ margin: "8px 0 0 20px", padding: 0 }}>
+            {errorDetails.errors.map((err, index) => (
+              <li key={index} style={{ fontSize: "14px", marginBottom: "4px" }}>
+                {err}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="outlet-form">
         {/* Outlet Details */}
@@ -295,6 +321,7 @@ const CreateOutlet = () => {
               placeholder="Outlet Name"
               value={formData.outletName}
               onChange={handleChange}
+              maxLength={100}
             />
 
             <input
@@ -316,6 +343,7 @@ const CreateOutlet = () => {
               placeholder="Phone"
               value={formData.outletPhone}
               onChange={handleChange}
+              maxLength={15}
             />
 
             <input
@@ -330,20 +358,25 @@ const CreateOutlet = () => {
               placeholder="Alternate Phone"
               value={formData.alternateOutletPhone}
               onChange={handleChange}
+              maxLength={15}
             />
 
+            {/* FSSAI input with strict 14 char limit visual hint */}
             <input
               name="fssaiNumber"
-              placeholder="FSSAI Number"
+              placeholder="FSSAI Number (14 digits)"
               value={formData.fssaiNumber}
               onChange={handleChange}
+              maxLength={14}
             />
 
+            {/* GST input with strict 15 char limit visual hint */}
             <input
               name="gstNumber"
-              placeholder="GST Number"
+              placeholder="GST Number (15 chars)"
               value={formData.gstNumber}
               onChange={handleChange}
+              maxLength={15}
             />
 
             <input
@@ -363,9 +396,9 @@ const CreateOutlet = () => {
           </div>
         </div>
 
-        {/* Address */}
+        {/* Address with Textarea Example */}
         <div className="form-card">
-          <h3>Address</h3>
+          <h3>Address & Details</h3>
 
           <div className="form-grid">
             <input
@@ -389,7 +422,6 @@ const CreateOutlet = () => {
               onChange={handleChange}
             />
 
-            {/* Cascading Location Dropdowns */}
             <select value={formData.stateId} onChange={handleStateChange}>
               <option value="">Select State</option>
               {states.map((state) => (
@@ -439,6 +471,25 @@ const CreateOutlet = () => {
               onChange={handleChange}
             />
           </div>
+
+          {/* Textarea field with character limit */}
+          <div style={{ marginTop: "16px" }}>
+            <label style={{ fontSize: "12px", color: "#64748b", display: "block", marginBottom: "4px" }}>
+              Outlet Description / Notes (Max 250 characters)
+            </label>
+            <textarea
+              name="description"
+              placeholder="Provide brief details about the outlet..."
+              value={formData.description || ""}
+              onChange={handleChange}
+              maxLength={250}
+              rows={3}
+              style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
+            />
+            <div style={{ fontSize: "11px", color: "#94a3b8", textAlign: "right", marginTop: "2px" }}>
+              {(formData.description || "").length} / 250
+            </div>
+          </div>
         </div>
 
         {/* Bank Details */}
@@ -479,6 +530,7 @@ const CreateOutlet = () => {
               value={formData.ifscCode}
               onChange={handleChange}
               disabled={sameAsMerchant}
+              maxLength={11}
             />
 
             <input
@@ -521,14 +573,7 @@ const CreateOutlet = () => {
           {sameTimingForAll ? (
             <div className="form-grid">
               <div>
-                <label
-                  style={{
-                    fontSize: "12px",
-                    color: "#64748b",
-                    marginBottom: "4px",
-                    display: "block",
-                  }}
-                >
+                <label style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px", display: "block" }}>
                   Opening Time
                 </label>
                 <input
@@ -544,14 +589,7 @@ const CreateOutlet = () => {
               </div>
 
               <div>
-                <label
-                  style={{
-                    fontSize: "12px",
-                    color: "#64748b",
-                    marginBottom: "4px",
-                    display: "block",
-                  }}
-                >
+                <label style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px", display: "block" }}>
                   Closing Time
                 </label>
                 <input

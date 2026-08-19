@@ -8,6 +8,7 @@ const api = axios.create({
   },
 }); 
 
+// Request Interceptor: Automatically attach Authorization token if available
 api.interceptors.request.use((config) => {
   console.log("================================");
   console.log("REQUEST");
@@ -24,6 +25,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Response Interceptor: Log responses & handle errors centrally
 api.interceptors.response.use(
   (response) => {
     console.log("================================");

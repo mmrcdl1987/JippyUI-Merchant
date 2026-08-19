@@ -16,6 +16,7 @@ const EditOutlet = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(""); // Added state for backend errors
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [areas, setAreas] = useState([]);
@@ -93,6 +94,7 @@ const EditOutlet = () => {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
+      setErrorMessage("");
 
       // Fetch states list
       const statesRes = await getStates();
@@ -106,6 +108,8 @@ const EditOutlet = () => {
         ...prev,
         ...outlet,
         outletId: outlet.outletId || id,
+        // Ensure email doesn't contain accidental spaces from mismapping
+        outletEmail: (outlet.outletEmail || "").replace(/\s+/g, ""),
         // Pre-fill building / road mappings if backend returns buildingNumber / road
         buildingNo: outlet.buildingNumber || outlet.buildingNo || "",
         streetName: outlet.road || outlet.streetName || "",
@@ -122,6 +126,7 @@ const EditOutlet = () => {
       }
     } catch (error) {
       console.error("Error loading outlet data:", error);
+      setErrorMessage("Failed to load outlet details from server.");
     } finally {
       setLoading(false);
     }
@@ -130,9 +135,13 @@ const EditOutlet = () => {
   // General Top-Level Field Handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    // Sanitize email by removing any spaces to prevent validation errors
+    const processedValue = name === "outletEmail" ? value.replace(/\s+/g, "") : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : processedValue,
     }));
   };
 
@@ -200,128 +209,136 @@ const EditOutlet = () => {
   };
 
   // Submit Handler mapped to API requirements
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(""); // Reset previous error message
 
-  try {
-    const payload = {
-      outletId: Number(id),
+    try {
+      const payload = {
+        outletId: Number(id),
 
-      outletName: formData.outletName,
-      outletEmail: formData.outletEmail,
-      outletPhone: formData.outletPhone,
-      alternateOutletPhone: formData.alternateOutletPhone,
-      cuisineType: formData.cuisineType,
+        outletName: formData.outletName,
+        outletEmail: formData.outletEmail,
+        outletPhone: formData.outletPhone,
+        alternateOutletPhone: formData.alternateOutletPhone,
+        cuisineType: formData.cuisineType,
 
-      latitude: Number(formData.latitude),
-      longitude: Number(formData.longitude),
+        latitude: Number(formData.latitude),
+        longitude: Number(formData.longitude),
 
-      accountNumber: formData.accountNumber,
-      ifscCode: formData.ifscCode,
-      bankName: formData.bankName,
-      accountHolderName: formData.accountHolderName,
+        accountNumber: formData.accountNumber,
+        ifscCode: formData.ifscCode,
+        bankName: formData.bankName,
+        accountHolderName: formData.accountHolderName,
 
-      buildingNumber: formData.buildingNo,
-      road: formData.streetName,
-      landmark: formData.landmark,
+        buildingNumber: formData.buildingNo,
+        road: formData.streetName,
+        landmark: formData.landmark,
 
-      stateId: Number(formData.stateId),
-      stateName:
-        states.find((s) => s.stateId === Number(formData.stateId))
-          ?.stateName || "",
+        stateId: Number(formData.stateId),
+        stateName:
+          states.find((s) => s.stateId === Number(formData.stateId))
+            ?.stateName || "",
 
-      cityId: Number(formData.cityId),
-      cityName:
-        cities.find((c) => c.cityId === Number(formData.cityId))
-          ?.cityName || "",
+        cityId: Number(formData.cityId),
+        cityName:
+          cities.find((c) => c.cityId === Number(formData.cityId))
+            ?.cityName || "",
 
-      areaId: Number(formData.areaId),
-      areaName:
-        areas.find((a) => a.areaId === Number(formData.areaId))
-          ?.areaName || "",
+        areaId: Number(formData.areaId),
+        areaName:
+          areas.find((a) => a.areaId === Number(formData.areaId))
+            ?.areaName || "",
 
-      isFavourite: formData.favourite,
-      isAvailable: formData.available,
+        isFavourite: formData.favourite,
+        isAvailable: formData.available,
 
-      outletTimings: formData.timings.map((item) => ({
-        day: item.day,
-        isOpen: item.isOpen,
+        outletTimings: formData.timings.map((item) => ({
+          day: item.day,
+          isOpen: item.isOpen,
 
-        openingTime: {
-          hour: Number(item.startTime.split(":")[0]),
-          minute: Number(item.startTime.split(":")[1]),
-          second: 0,
-          nano: 0,
-        },
+          openingTime: {
+            hour: Number(item.startTime.split(":")[0]),
+            minute: Number(item.startTime.split(":")[1]),
+            second: 0,
+            nano: 0,
+          },
 
-        closingTime: {
-          hour: Number(item.endTime.split(":")[0]),
-          minute: Number(item.endTime.split(":")[1]),
-          second: 0,
-          nano: 0,
-        },
-      })),
-
-      categories: formData.categories.map((cat) => ({
-        categoryId: cat.categoryId,
-        categoryName: cat.categoryName,
-        isAvailable: cat.isCategoryAvailable,
-
-        products: cat.products.map((prod) => ({
-          productId: prod.productId,
-          productName: prod.productName,
-          description: prod.description,
-
-          merchantPrice: Number(prod.price),
-          price: Number(prod.price),
-
-          isVeg: prod.isVeg,
-          isAvailable: prod.isAvailable,
-          hasProductVariants: !!prod.variants?.length,
-          isProductFavourite: false,
-
-          variants:
-            prod.variants?.map((v) => ({
-              variantId: v.variantId,
-              variantName: v.variantName || v.name,
-              merchantPrice: Number(v.price),
-              price: Number(v.price),
-            })) || [],
-
-          productTimings:
-            prod.productTimings?.map((t) => ({
-              day: t.day,
-
-              startTime: {
-                hour: Number(t.startTime.split(":")[0]),
-                minute: Number(t.startTime.split(":")[1]),
-                second: 0,
-                nano: 0,
-              },
-
-              endTime: {
-                hour: Number(t.endTime.split(":")[0]),
-                minute: Number(t.endTime.split(":")[1]),
-                second: 0,
-                nano: 0,
-              },
-            })) || [],
+          closingTime: {
+            hour: Number(item.endTime.split(":")[0]),
+            minute: Number(item.endTime.split(":")[1]),
+            second: 0,
+            nano: 0,
+          },
         })),
-      })),
-    };
 
-    console.log("Update Payload", payload);
+        categories: formData.categories.map((cat) => ({
+          categoryId: cat.categoryId,
+          categoryName: cat.categoryName,
+          isAvailable: cat.isCategoryAvailable,
 
-    await updateOutlet(payload);
+          products: cat.products.map((prod) => ({
+            productId: prod.productId,
+            productName: prod.productName,
+            description: prod.description,
 
-    alert("Outlet Updated Successfully");
+            merchantPrice: Number(prod.price),
+            price: Number(prod.price),
 
-    navigate(`/outlets/view/${id}`);
-  } catch (error) {
-    console.error(error);
-    alert("Failed to update outlet");
-  }
-};
+            isVeg: prod.isVeg,
+            isAvailable: prod.isAvailable,
+            hasProductVariants: !!prod.variants?.length,
+            isProductFavourite: false,
+
+            variants:
+              prod.variants?.map((v) => ({
+                variantId: v.variantId,
+                variantName: v.variantName || v.name,
+                merchantPrice: Number(v.price),
+                price: Number(v.price),
+              })) || [],
+
+            productTimings:
+              prod.productTimings?.map((t) => ({
+                day: t.day,
+
+                startTime: {
+                  hour: Number(t.startTime.split(":")[0]),
+                  minute: Number(t.startTime.split(":")[1]),
+                  second: 0,
+                  nano: 0,
+                },
+
+                endTime: {
+                  hour: Number(t.endTime.split(":")[0]),
+                  minute: Number(t.endTime.split(":")[1]),
+                  second: 0,
+                  nano: 0,
+                },
+              })) || [],
+          })),
+        })),
+      };
+
+      console.log("Update Payload", payload);
+
+      await updateOutlet(payload);
+
+      alert("Outlet Updated Successfully");
+      navigate(`/outlets/view/${id}`);
+    } catch (error) {
+      console.error("API Error:", error);
+      
+      // Extract exact backend error message safely
+      const backendMsg =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to update outlet";
+
+      setErrorMessage(backendMsg);
+    }
+  };
 
   if (loading) return <div className="loading-spinner">Loading Outlet Details...</div>;
 
@@ -334,6 +351,13 @@ const handleSubmit = async (e) => {
         </button>
         <h2>Edit Outlet</h2>
       </div>
+
+      {/* Backend Error Notification Box */}
+      {errorMessage && (
+        <div className="error-banner" style={{ background: "#ffebee", color: "#c62828", padding: "12px 16px", borderRadius: "4px", margin: "16px 0", border: "1px solid #ef9a9a", fontWeight: "500" }}>
+          ⚠️ <strong>Error:</strong> {errorMessage}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         {/* --- 1. Outlet Information --- */}

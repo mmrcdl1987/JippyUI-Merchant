@@ -5,11 +5,11 @@ import api from "./api";
  */
 export const createMerchant = async (merchantData) => {
   try {
-    console.log("POST /api/fm/merchants");
+    console.log("POST /api/fm/merchants/createMerchant");
     console.log(merchantData);
 
     const response = await api.post(
-      "/api/fm/merchants",
+      "/api/fm/merchants/createMerchant",
       merchantData
     );
 
@@ -25,7 +25,6 @@ export const createMerchant = async (merchantData) => {
  */
 export const getMerchantProfile = async () => {
   try {
-    // Get merchantId from localStorage
     const merchantId = localStorage.getItem("merchantId");
 
     console.log("Merchant ID:", merchantId);
