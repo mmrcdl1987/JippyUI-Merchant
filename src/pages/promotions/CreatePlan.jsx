@@ -1,20 +1,12 @@
-import "../../styles/CreatePlan.css";
 import { useState } from "react";
-import {
-  Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-} from "@mui/material";
+import "../../styles/CreatePlan.css";
 
-const CreatePlan = () => {
+const CreatePlan = ({ outletId }) => {
 
-  const [planType, setPlanType] = useState("% Off Plan");
-
-  const [appliesOn, setAppliesOn] = useState("All Items");
+  const [planType, setPlanType] =
+    useState("% Off Plan");
 
   return (
-
     <div className="merchant-create-plan-container">
 
       <h2 className="merchant-create-plan-title">
@@ -22,149 +14,70 @@ const CreatePlan = () => {
       </h2>
 
       <p className="merchant-create-plan-description">
-        Create a custom promotional plan.
+        Choose a promotion type to create a plan for this outlet.
       </p>
 
       <div className="merchant-create-plan-form">
 
-        {/* Plan Name */}
-
         <div className="merchant-create-plan-group">
 
-          <label>Plan Name</label>
+          <label>Selected Outlet</label>
 
           <input
-            type="text"
-            placeholder="Weekend Special"
+            value={outletId}
+            readOnly
             className="merchant-create-plan-input"
           />
 
         </div>
 
-        {/* Plan Type */}
-
-       {/* Plan Type */}
-
-<div className="merchant-create-plan-group">
-
-  <label>Plan Type</label>
-
-  <RadioGroup
-    row
-    value={planType}
-    onChange={(e) => setPlanType(e.target.value)}
-    className="merchant-create-plan-type-radio"
-  >
-
-    <FormControlLabel
-      value="% Off Plan"
-      control={<Radio />}
-      label="% Off Plan"
-    />
-
-    <FormControlLabel
-      value="Flat Offer"
-      control={<Radio />}
-      label="Flat Offer"
-    />
-
-    <FormControlLabel
-      value="1+1 Offer"
-      control={<Radio />}
-      label="1+1 Offer"
-    />
-
-  </RadioGroup>
-
-</div>
-
-        {/* Discount Value */}
-
         <div className="merchant-create-plan-group">
 
-          <label>Discount Value</label>
+          <label>Plan Type</label>
 
-          <input
-            type="number"
-            placeholder="15"
-            className="merchant-create-plan-input"
-          />
+          <div className="merchant-create-plan-type-radio">
 
-        </div>
+            {[
+              "% Off Plan",
+              "Flat Offer",
+              "1+1 Offer",
+              "Slot Booking",
+              "Festival Offer",
+            ].map((type) => (
 
-        {/* Dates */}
+              <label key={type}>
 
-        <div className="merchant-create-plan-two-column">
+                <input
+                  type="radio"
+                  value={type}
+                  checked={planType === type}
+                  onChange={(e) =>
+                    setPlanType(e.target.value)
+                  }
+                />
 
-          <div className="merchant-create-plan-group">
+                {type}
 
-            <label>Start Date</label>
+              </label>
 
-            <input
-              type="date"
-              className="merchant-create-plan-input"
-            />
-
-          </div>
-
-          <div className="merchant-create-plan-group">
-
-            <label>End Date</label>
-
-            <input
-              type="date"
-              className="merchant-create-plan-input"
-            />
+            ))}
 
           </div>
 
         </div>
 
-        {/* Applies On */}
-
         <div className="merchant-create-plan-group">
 
-          <label>Applies On</label>
-
-          <RadioGroup
-            row
-            value={appliesOn}
-            onChange={(e) => setAppliesOn(e.target.value)}
-            className="merchant-create-plan-radio"
-          >
-
-            <FormControlLabel
-              value="All Items"
-              control={<Radio />}
-              label="All Items"
-            />
-
-            <FormControlLabel
-              value="Selected Categories"
-              control={<Radio />}
-              label="Selected Categories"
-            />
-
-            <FormControlLabel
-              value="Selected Items"
-              control={<Radio />}
-              label="Selected Items"
-            />
-
-          </RadioGroup>
-                    <Button
-            variant="contained"
-            className="merchant-create-plan-submit"
-          >
-            Submit Plan
-          </Button>
+          <p>
+            Select the corresponding promotion card above
+            to configure all promotion-specific fields.
+          </p>
 
         </div>
 
       </div>
 
     </div>
-
   );
 };
 

@@ -1,131 +1,768 @@
-/* ================= Promotions ================= */
+/* =========================================================
+   PROMOTIONS PAGE
+========================================================= */
 
-.merchant-coupons-page {
-  padding: 24px;
-  background: #f8f9fa;
-  min-height: 100vh;
+.merchant-promotions-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 28px;
+  box-sizing: border-box;
+  background: #f6f8fc;
 }
 
-.merchant-coupons-heading {
+.merchant-promotions-header {
+  display: flex;
+  justify-content: center;
   text-align: center;
-  font-size: 50px;
+  margin-bottom: 24px;
+}
+
+.merchant-promotions-header h1 {
+  margin: 0 0 6px;
+  font-size: 35px;
   font-weight: 700;
-  margin-bottom: 35px;
+  color: #30394a;
+}
+
+.merchant-promotions-header p {
+  margin: 0;
+  color: #718096;
+  font-size: 15px;
+}
+
+
+/* ================================
+   PROMOTION CARDS / GRIDS
+================================ */
+
+.merchant-promotion-cards {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.merchant-promotion-card {
+  height: 135px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+
+/* % OFF */
+.merchant-promotion-card:nth-child(1) {
+background: linear-gradient(135deg, #41a48b, #a8d8ff);
+  border-color: #a2dfc4;
+}
+
+/* FLAT */
+.merchant-promotion-card:nth-child(2) {
+  background: linear-gradient(135deg, #d99741, #fbd8b0);
+  border-color: #edc9a3;
+}
+
+/* BOGO */
+.merchant-promotion-card:nth-child(3) {
+  background: linear-gradient(135deg, #dc2279, #f3cce0);
+  border-color: #e7bdd3;
+}
+
+/* SLOT BOOKING */
+.merchant-promotion-card:nth-child(4) {
+  background: linear-gradient(135deg, #5632a3, #d9ccff);
+  border-color: #cbbcf1;
+}
+
+/* FESTIVAL */
+.merchant-promotion-card:nth-child(5) {
+  background: linear-gradient(135deg, #336eaa, #c8ddf8);
+  border-color: #b9d2f0;
+}
+
+/* PLANS STATUS */
+.merchant-promotion-card:nth-child(6) {
+  background: linear-gradient(135deg, #ddbf36, #f9e59b);
+  border-color: #e8d27f;
+}
+
+
+
+
+/* ICON */
+.merchant-promotion-card-icon {
+  width: 33px;
+  height: 33px;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.85);
+  /* color: #6c4cff; */
+  color: rgba(255, 0, 0, 0.766);
+
+  font-size: 16px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.merchant-promotion-card span {
+  font-size: 16px;
+  font-weight: 600;
   color: black;
 }
 
-.merchant-coupons-cards-container {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-  width: 100%;
-  margin: 40px auto;
+/* HOVER */
+.merchant-promotion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(108, 76, 255, 0.10);
 }
 
-.merchant-coupons-card {
-  position: relative;
-  min-height: 180px;
-  padding: 20px;
-  border-radius: 16px;
-  color: white;
+/* ACTIVE / SELECTED */
+.merchant-promotion-card-active {
+  transform: translateY(-1px);
+
+  border-color: #7c4dff !important;
+
+  box-shadow:
+    0 0 0 2px rgba(124, 77, 255, 0.12),
+    0 6px 16px rgba(124, 77, 255, 0.14);
+}
+
+/* Keep active card slightly stronger */
+.merchant-promotion-card-active .merchant-promotion-card-icon {
+  background: #ffffff;
+  color: #6c4cff;
+}
+
+/* ================================
+   FORM SPACE
+================================ */
+
+/* This creates clear separation between
+   the promotion cards and the form */
+
+.merchant-promotion-content {
+  margin-top: 24px;
+}
+
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.merchant-promotion-content {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.promotion-section {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e3e7ed;
+  border-radius: 14px;
+  padding: 25px;
+  box-sizing: border-box;
+  box-shadow: 0 3px 12px rgba(32, 40, 55, 0.04);
+}
+
+.promotion-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.promotion-section-header h2 {
+  margin: 0 0 5px;
+  color: #202733;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.promotion-section-header p {
+  margin: 0;
+  color: #718096;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.promotion-dashboard-empty {
+  min-height: 260px;
+  background: #ffffff;
+  border: 1px solid #e4e8ee;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.merchant-coupons-card::before {
-  content: "";
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 50%;
-  top: -70px;
-  right: -70px;
-}
-
-.merchant-coupons-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 18px 35px rgba(79,70,229,0.4);
-}
-
-.merchant-coupons-card-active {
-  transform: scale(1.05);
-  border: 3px solid #facc15;
-}
-
-.merchant-coupons-card-icon {
-  font-size: 52px;
-  margin-bottom: 18px;
-}
-
-.merchant-coupons-card-title {
-  font-size: 16px;
-  font-weight: 600;
+  justify-content: center;
   text-align: center;
 }
-.merchant-coupons-content {
-  margin-top: 30px;
-  min-height: 350px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
+
+.promotion-dashboard-empty-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: #f0ecff;
+  color: #6c4cff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+
+.promotion-dashboard-empty h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  color: #303846;
+}
+
+.promotion-dashboard-empty p {
+  margin: 0;
+  font-size: 13px;
+  color: #8a94a6;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.promotion-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.promotion-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.promotion-field-full {
+  grid-column: span 2;
+}
+
+.promotion-field label {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.promotion-field label span {
+  color: #ef4444;
+}
+
+.promotion-field input,
+.promotion-field select {
+  width: 100%;
+  height: 43px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #d9dee7;
+  border-radius: 7px;
+  outline: none;
+  background: #ffffff;
+  color: #374151;
+  font-family: inherit;
+  font-size: 13px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.promotion-field input::placeholder {
+  color: #a5adba;
+}
+
+.promotion-field input:focus,
+.promotion-field select:focus {
+  border-color: #6c4cff;
+  box-shadow: 0 0 0 3px rgba(108, 76, 255, 0.1);
+}
+
+.promotion-field small {
+  color: #8a94a6;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.promotion-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #edf0f4;
+}
+
+.promotion-primary-button {
+  min-width: 125px;
+  height: 42px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 7px;
+  background: #ff6500;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.promotion-primary-button:hover {
+  background: #e95700;
+  transform: translateY(-1px);
+}
+
+.promotion-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+.promotion-refresh-button {
+  height: 38px;
+  padding: 0 15px;
+  border: 1px solid #d9dee7;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #4b5563;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.promotion-refresh-button:hover {
+  background: #f7f8fa;
+}
+
+.promotion-refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.promotion-success {
+  padding: 11px 13px;
+  margin-bottom: 18px;
+  border: 1px solid #b9e4c1;
+  border-radius: 7px;
+  background: #edf9f0;
+  color: #207a35;
+  font-size: 12px;
+}
+
+.promotion-error {
+  padding: 11px 13px;
+  margin-bottom: 18px;
+  border: 1px solid #f0c0c0;
+  border-radius: 7px;
+  background: #fff1f1;
+  color: #c62828;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   STATUS OUTLET
+========================================================= */
+
+.promotion-status-outlet {
+  width: 320px;
+  margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   COUNTS
+========================================================= */
+
+.promotion-counts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+  margin: 20px 0 25px;
+}
+
+.promotion-count-card {
+  padding: 17px;
+  border: 1px solid #e5e8ee;
   border-radius: 10px;
-  padding: 20px;
+  background: #fafbfc;
 }
 
-.merchant-coupons-card:nth-child(1) {
-  background: linear-gradient(135deg, #2563eb, #60a5fa);
+.promotion-count-card span {
+  display: block;
+  margin-bottom: 7px;
+  color: #7b8493;
+  font-size: 11px;
+  font-weight: 500;
 }
 
-.merchant-coupons-card:nth-child(2) {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+.promotion-count-card strong {
+  color: #222b38;
+  font-size: 25px;
+  font-weight: 700;
 }
 
-.merchant-coupons-card:nth-child(3) {
-  background: linear-gradient(135deg, #10b981, #34d399);
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.promotion-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e8ee;
+  border-radius: 9px;
 }
 
-.merchant-coupons-card:nth-child(4) {
-  background: linear-gradient(135deg, #f97316, #fb923c);
+.promotion-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
 }
 
-.merchant-coupons-card:nth-child(5) {
-  background: linear-gradient(135deg, #ec4899, #f472b6);
+.promotion-table th {
+  padding: 12px;
+  background: #f7f8fa;
+  border-bottom: 1px solid #e5e8ee;
+  color: #596273;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.merchant-coupons-card:nth-child(6) {
-  background: linear-gradient(135deg, #0f766e, #14b8a6);
+.promotion-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid #edf0f3;
+  color: #4b5563;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
+.promotion-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.promotion-table tbody tr:hover {
+  background: #faf9ff;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.promotion-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 65px;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.promotion-status-active {
+  background: #eaf8ee;
+  color: #23863b;
+}
+
+.promotion-status-scheduled {
+  background: #fff5df;
+  color: #a96b00;
+}
+
+.promotion-status-ended {
+  background: #eeeeee;
+  color: #777777;
+}
+
+
+/* =========================================================
+   LOADING / EMPTY
+========================================================= */
+
+.promotion-loading {
+  padding: 35px 20px;
+  text-align: center;
+  color: #7b8493;
+  font-size: 13px;
+}
+
+.promotion-empty {
+  padding: 40px 20px;
+  border: 1px dashed #d7dce4;
+  border-radius: 9px;
+  color: #8a94a6;
+  text-align: center;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1250px) {
+  .merchant-promotion-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .merchant-promotions-page {
+    padding: 18px;
+  }
+
+  .merchant-promotion-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .promotion-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .promotion-field-full {
+    grid-column: span 1;
+  }
+
+  .promotion-counts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .promotion-section {
+    padding: 18px;
+  }
+
+  .promotion-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .promotion-status-outlet {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .merchant-promotion-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .promotion-counts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .promotion-form-actions {
+    justify-content: stretch;
+  }
+
+  .promotion-primary-button {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   PROMOTION RADIO OPTIONS
+===================================================== */
+
+.promotion-radio-group {
+  display: flex;
+  gap: 30px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.promotion-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #444;
+  cursor: pointer;
+}
+
+.promotion-radio-option input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #6c4cff;
+}
+
+
+/* =====================================================
+   FORM LABEL REQUIRED
+===================================================== */
+
+.promotion-field label span,
+.promotion-field-full > label span {
+  color: #e53935;
+}
+
+
+/* =====================================================
+   FULL WIDTH FIELD
+===================================================== */
+
+.promotion-field-full {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.promotion-field-full > label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+
+/* =====================================================
+   FULL WIDTH INPUT
+===================================================== */
+
+.promotion-field-full input,
+.promotion-field-full select {
+  width: 100%;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.promotion-field-full input:focus,
+.promotion-field-full select:focus {
+  border-color: #6c4cff;
+  box-shadow:
+    0 0 0 3px rgba(108, 76, 255, 0.1);
+}
+
+
+/* =====================================================
+   FORM HELP TEXT
+===================================================== */
+
+.promotion-field small,
+.promotion-field-full small {
+  font-size: 11px;
+  color: #888;
+}
+
+
+/* =====================================================
+   ACTION BUTTON SPACING
+===================================================== */
+
+.promotion-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+/* Responsive */
 @media (max-width: 1200px) {
-  .merchant-coupons-cards-container {
+  .merchant-promotion-cards {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .merchant-coupons-cards-container {
+  .merchant-promotion-cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
-  .merchant-coupons-cards-container {
+  .merchant-promotion-cards {
     grid-template-columns: 1fr;
   }
 }
 
-.merchant-coming-soon{
-    background: black;
-    border-radius:12px;
-    padding:80px;
-    text-align:center;
-    font-size:20px;
-    color:red;
-    border:1px solid #e2e8f0;
+
+
+
+.date-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    padding-right: 42px;
+}
+
+.calendar-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 17px;
+    cursor: pointer;
+    z-index: 2;
+    line-height: 1;
+}
+
+.calendar-icon:hover {
+    transform: translateY(-50%) scale(1.1);
 }

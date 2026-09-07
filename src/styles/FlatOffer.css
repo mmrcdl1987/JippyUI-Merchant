@@ -1,183 +1,1795 @@
-/* ==========================================
-   Flat Offer
-========================================== */
+/* =========================================================
+   FLAT OFFER - MAIN
+========================================================= */
 
-.merchant-flat-container{
-    width:100%;
-    max-width:1100px;
-    margin:35px auto;
-    padding:35px 40px;
-    background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:18px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-    box-sizing:border-box;
+.flat-offer-plan {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  
+
+  border: 1px solid #f0d8bd;
+  border-radius: 16px;
+
+  padding: 26px 28px 28px;
+
+  box-shadow:
+    0 8px 28px rgba(234, 126, 45, 0.08);
 }
 
-.merchant-flat-title{
-    font-size:35px;
-    font-weight:700;
-    /* color:#0f766e; */
-    color: red;
-    text-align:center;
-    margin-bottom:8px;
+/* =========================================================
+   HEADER
+========================================================= */
+
+/* =========================================================
+   FLAT OFFER - HEADER
+========================================================= */
+
+.flat-offer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 22px;
+  margin-bottom: 24px;
+
+  border: 1px solid #e5e1f5;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4f0ff 0%,
+      #faf7ff 45%,
+      #fff7ed 100%
+    );
+
+  box-shadow:
+    0 4px 16px rgba(104, 72, 232, 0.08);
+
+  box-sizing: border-box;
 }
 
-.merchant-flat-description{
-    text-align:center;
-    color:#64748b;
-    font-size:15px;
-    margin-bottom:35px;
+/* =========================================================
+   TITLE WRAPPER
+========================================================= */
+
+.flat-offer-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
 }
 
-.merchant-flat-form{
-    display:flex;
-    flex-direction:column;
-    gap:24px;
+/* =========================================================
+   TITLE ICON
+========================================================= */
+
+.flat-offer-title-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eee9ff,
+      #ddd3ff
+    );
+
+  border: 1px solid #d8ceff;
+
+  color: #6848e8;
+
+  font-size: 19px;
+
+  box-shadow:
+    0 4px 10px rgba(104, 72, 232, 0.12);
 }
 
-.merchant-flat-group{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+/* =========================================================
+   TITLE
+========================================================= */
+
+.flat-offer-header h2 {
+  margin: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #6848e8,
+      #8b5cf6,
+      #e87520
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  color: transparent;
+
+  font-size: 21px;
+  font-weight: 800;
+
+  line-height: 1.25;
 }
 
-.merchant-flat-group label{
-    color:#2563eb;
-    font-size:15px;
-    font-weight:600;
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.flat-offer-header p {
+  margin: 5px 0 0;
+
+  color: #777187;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  line-height: 1.4;
 }
 
-/* Center Applies On */
+/* =========================================================
+   FLAT OFFER BADGE
+========================================================= */
 
-.merchant-flat-group:has(.merchant-flat-applies-radio){
-    align-items:center;
+.flat-offer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 90px;
+  height: 35px;
+
+  padding: 0 15px;
+
+  flex-shrink: 0;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6848e8,
+      #8b5cf6,
+      #a855f7
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.2px;
+
+  box-shadow:
+    0 5px 15px rgba(104, 72, 232, 0.25);
 }
 
-.merchant-flat-group:has(.merchant-flat-applies-radio) > label{
-    width:100%;
-    text-align:center;
+/* =========================================================
+   HOVER
+========================================================= */
+
+.flat-offer-title-icon {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Two Columns */
+.flat-offer-header:hover .flat-offer-title-icon {
+  transform: translateY(-1px);
 
-.merchant-flat-two-column{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:24px;
+  box-shadow:
+    0 6px 14px rgba(104, 72, 232, 0.18);
 }
 
-/* Inputs */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-.merchant-flat-input{
-    width:100%;
-    height:46px;
-    padding:0 14px;
-    border:1px solid #dbe4ee;
-    border-radius:8px;
-    background:#fff;
-    font-size:15px;
-    color:#334155;
-    transition:.25s;
-    box-sizing:border-box;
+@media (max-width: 650px) {
+
+  .flat-offer-header {
+    padding: 17px;
+  }
+
+  .flat-offer-title-wrapper {
+    gap: 10px;
+  }
+
+  .flat-offer-title-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 17px;
+  }
+
+  .flat-offer-header h2 {
+    font-size: 18px;
+  }
+
+  .flat-offer-header p {
+    font-size: 12px;
+  }
+
+  .flat-offer-badge {
+    min-width: 75px;
+    height: 32px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
 }
 
-.merchant-flat-input:hover{
-    border-color:#14b8a6;
-    background:#f8fffe;
+@media (max-width: 450px) {
+
+  .flat-offer-header {
+    align-items: flex-start;
+  }
+
+  .flat-offer-badge {
+    display: none;
+  }
+
+  .flat-offer-header h2 {
+    font-size: 17px;
+  }
+}
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.flat-offer-section {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 24px;
+
+  padding: 20px;
+
+  background: #fffaf6;
+
+  border: 1px solid #f3e4d7;
+  border-radius: 13px;
 }
 
-.merchant-flat-input:focus{
-    outline:none;
-    border-color:#14b8a6;
-    box-shadow:0 0 0 4px rgba(20,184,166,.15);
+.flat-offer-section-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 18px;
 }
 
-/* Applies On Radio */
+.flat-offer-section-heading > span {
+  width: 4px;
+  height: 19px;
 
-.merchant-flat-applies-radio{
-    display:inline-flex !important;
-    width:auto !important;
-    margin:8px auto 0 !important;
-    flex-direction:row !important;
-    justify-content:center !important;
-    align-items:center !important;
-    gap:24px !important;
+  display: block;
+
+  border-radius: 5px;
+
+  background: linear-gradient(
+    180deg,
+    #ff9a52,
+    #ec6818
+  );
 }
 
-.merchant-flat-applies-radio .MuiFormControlLabel-root{
-    display:inline-flex !important;
-    align-items:center;
-    margin:0 !important;
+.flat-offer-section-heading h3 {
+  margin: 0;
+
+  color: #302821;
+
+  font-size: 16px;
+  font-weight: 750;
 }
 
-.merchant-flat-applies-radio .MuiFormControlLabel-label{
-    white-space:nowrap;
-    color:#475569;
-    font-size:15px;
-    font-weight:500;
-    transition:.25s;
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.flat-offer-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  column-gap: 22px;
+  row-gap: 19px;
 }
 
-.merchant-flat-applies-radio .MuiFormControlLabel-root:hover .MuiFormControlLabel-label{
-    color:#0f766e;
+/* =========================================================
+   FIELD
+========================================================= */
+
+.flat-offer-field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
 }
 
-.merchant-flat-applies-radio .Mui-checked + .MuiFormControlLabel-label{
-    color:#0f766e;
-    font-weight:600;
+.flat-offer-field label {
+  color: #40372f;
+
+  font-size: 13px;
+  font-weight: 650;
 }
 
-.merchant-flat-applies-radio .MuiRadio-root{
-    color:#94a3b8;
+.flat-offer-field label span {
+  color: #e54f35;
 }
 
-.merchant-flat-applies-radio .MuiRadio-root.Mui-checked{
-    color:#14b8a6;
+.flat-offer-field small {
+  color: #958a81;
+
+  font-size: 11px;
+  line-height: 1.4;
 }
 
-/* Submit Button */
+/* =========================================================
+   INPUTS
+========================================================= */
 
-.merchant-flat-submit{
-    width:180px;
-    height:44px;
-    margin:20px auto 0 !important;
-    background:#14b8a6 !important;
-    border-radius:8px !important;
-    text-transform:none !important;
-    font-size:15px !important;
-    font-weight:600 !important;
+.flat-offer-field input,
+.flat-offer-field select {
+  width: 100%;
+  height: 44px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ddd4cc;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #332d28;
+
+  padding: 0 13px;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-.merchant-flat-submit:hover{
-    background:#0f766e !important;
+.flat-offer-field input:hover,
+.flat-offer-field select:hover {
+  border-color: #efa46e;
 }
 
-/* Responsive */
+.flat-offer-field input:focus,
+.flat-offer-field select:focus {
+  border-color: #ee7b2c;
 
-@media (max-width:768px){
+  box-shadow:
+    0 0 0 3px rgba(238, 123, 44, 0.10);
+}
 
-    .merchant-flat-container{
-        padding:25px;
-    }
+.flat-offer-field input::placeholder {
+  color: #aaa19a;
+}
 
-    .merchant-flat-two-column{
-        grid-template-columns:1fr;
-    }
+/* =========================================================
+   INPUT WITH ICON
+========================================================= */
 
-    .merchant-flat-applies-radio{
-        width:100% !important;
-        display:flex !important;
-        flex-direction:column !important;
-        align-items:flex-start !important;
-        gap:10px !important;
-    }
+.flat-offer-input-icon {
+  position: relative;
 
-    .merchant-flat-applies-radio .MuiFormControlLabel-root{
-        margin:0 !important;
-    }
+  width: 100%;
+  height: 44px;
 
-    .merchant-flat-submit{
-        width:100%;
-    }
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.flat-offer-input-icon > svg,
+.flat-offer-rupee-icon {
+  position: absolute;
+  left: 13px;
+  z-index: 2;
+
+  color: #e87520;
+}
+
+.flat-offer-input-icon input,
+.flat-offer-input-icon select {
+  padding-left: 40px;
+}
+
+/* =========================================================
+   RUPEE
+========================================================= */
+
+.flat-offer-rupee-icon {
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   READONLY PLAN TYPE
+========================================================= */
+
+.flat-offer-readonly {
+  background: #fff1e5 !important;
+
+  border-color: #ffd4b2 !important;
+
+  color: #d86616 !important;
+
+  font-weight: 700 !important;
+}
+
+/* =========================================================
+   APPLIES ON
+========================================================= */
+
+.flat-offer-selection {
+  background: #fffaf6;
+}
+
+.flat-offer-apply-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.flat-offer-apply-card {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 11px;
+
+  min-height: 82px;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5dcd4;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.flat-offer-apply-card:hover {
+  border-color: #f0a46e;
+
+  background: #fffaf5;
+
+  transform: translateY(-1px);
+}
+
+.flat-offer-apply-card.active {
+  border-color: #ef7b2c;
+
+  background: #fff3e8;
+
+  box-shadow:
+    0 5px 15px rgba(239, 123, 44, 0.10);
+}
+
+.flat-offer-apply-card > input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.flat-offer-radio-circle {
+  flex: 0 0 auto;
+
+  width: 18px;
+  height: 18px;
+
+  margin-top: 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #cfc6be;
+  border-radius: 50%;
+
+  background: #ffffff;
+}
+
+.flat-offer-apply-card.active
+  .flat-offer-radio-circle {
+  border-color: #ed7525;
+}
+
+.flat-offer-apply-card.active
+  .flat-offer-radio-circle span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #ed7525;
+}
+
+.flat-offer-apply-card strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #3b3028;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flat-offer-apply-card small {
+  display: block;
+
+  color: #8f837a;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   DROPDOWN
+========================================================= */
+
+.flat-offer-dropdown-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  margin-top: 18px;
+}
+
+.flat-offer-dropdown-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 7px;
+}
+
+.flat-offer-dropdown-label-row label {
+  color: #40372f;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flat-offer-dropdown-label-row span {
+  color: #988b81;
+
+  font-size: 11px;
+}
+
+.flat-offer-dropdown-trigger {
+  width: 100%;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ddd4cc;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #40372f;
+
+  font-size: 13px;
+  font-weight: 550;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.flat-offer-dropdown-trigger:hover,
+.flat-offer-dropdown-trigger.open {
+  border-color: #ef7b2c;
+
+  background: #fffdfb;
+
+  box-shadow:
+    0 0 0 3px rgba(239, 123, 44, 0.08);
+}
+
+.flat-offer-chevron-open {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
+
+.flat-offer-dropdown-menu {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  top: calc(100% + 7px);
+
+  z-index: 100;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e4d9d0;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 14px 35px rgba(53, 37, 25, 0.15);
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.flat-offer-search {
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin: 10px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e2d9d2;
+  border-radius: 7px;
+
+  background: #fffaf7;
+
+  color: #e87520;
+}
+
+.flat-offer-search input {
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #3b322b;
+
+  font-size: 12px;
+}
+
+.flat-offer-search input::placeholder {
+  color: #aaa097;
+}
+
+/* =========================================================
+   DROPDOWN ACTIONS
+========================================================= */
+
+.flat-offer-dropdown-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px 9px;
+}
+
+.flat-offer-dropdown-actions button {
+  border: none;
+
+  background: transparent;
+
+  color: #e87520;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.flat-offer-dropdown-actions button:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   COUNT
+========================================================= */
+
+.flat-offer-dropdown-count {
+  padding: 0 12px 8px;
+
+  color: #9b9087;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.flat-offer-dropdown-list {
+  max-height: 220px;
+
+  overflow-y: auto;
+
+  padding: 4px 7px 8px;
+}
+
+.flat-offer-dropdown-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.flat-offer-dropdown-list::-webkit-scrollbar-thumb {
+  background: #d8b69c;
+
+  border-radius: 10px;
+}
+
+/* =========================================================
+   CHECKBOX ROW
+========================================================= */
+
+.flat-offer-checkbox-row {
+  position: relative;
+
+  width: 100%;
+  min-height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 8px 9px;
+
+  box-sizing: border-box;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  color: #443a32;
+
+  font-size: 12px;
+
+  transition:
+    background 0.15s ease;
+}
+
+.flat-offer-checkbox-row:hover {
+  background: #fff5ed;
+}
+
+.flat-offer-checkbox-row.checked {
+  background: #fff1e5;
+}
+
+.flat-offer-checkbox-row input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CUSTOM CHECKBOX
+========================================================= */
+
+.flat-offer-custom-checkbox {
+  flex: 0 0 auto;
+
+  width: 17px;
+  height: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: 1.5px solid #c9beb5;
+  border-radius: 4px;
+
+  background: #ffffff;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.flat-offer-checkbox-row.checked
+  .flat-offer-custom-checkbox {
+  border-color: #ed7525;
+
+  background: #ed7525;
+}
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.flat-offer-product-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.flat-offer-product-info span {
+  overflow: hidden;
+
+  color: #40372f;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.flat-offer-product-info small {
+  color: #a0948b;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.flat-offer-dropdown-empty {
+  padding: 22px 12px;
+
+  text-align: center;
+
+  color: #9a9088;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   SELECTED CHIPS
+========================================================= */
+
+.flat-offer-selected-chips {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: 9px;
+}
+
+.flat-offer-chip {
+  display: inline-flex;
+  align-items: center;
+
+  max-width: 220px;
+
+  padding: 6px 10px;
+
+  border: 1px solid #ffd0ad;
+  border-radius: 20px;
+
+  background: #fff0e3;
+
+  color: #d96518;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flat-offer-chip.more {
+  background: #f7eee8;
+
+  border-color: #e7d8ce;
+
+  color: #806f63;
+}
+
+/* =========================================================
+   DATE & TIME
+========================================================= */
+
+.flat-offer-date-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ddd4cc;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #e87520;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.flat-offer-date-wrapper:hover {
+  border-color: #efa46e;
+}
+
+.flat-offer-date-wrapper:focus-within {
+  border-color: #ee7b2c;
+
+  box-shadow:
+    0 0 0 3px rgba(238, 123, 44, 0.10);
+}
+
+.flat-offer-date-wrapper > svg {
+  flex: 0 0 auto;
+
+  margin-left: 13px;
+
+  color: #e87520;
+
+  pointer-events: none;
+}
+
+.flat-offer-date-wrapper input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 10px;
+
+  border: none !important;
+
+  box-shadow: none !important;
+
+  background: transparent;
+
+  color: #40372f;
+
+  cursor: pointer;
+}
+
+.flat-offer-date-wrapper input:focus {
+  outline: none;
+}
+
+/*
+ * Make the entire date/time box clickable.
+ */
+
+.flat-offer-date-wrapper input::-webkit-calendar-picker-indicator {
+  width: 24px;
+  height: 24px;
+
+  opacity: 1;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   SUCCESS / ERROR
+========================================================= */
+
+.flat-offer-success,
+.flat-offer-error {
+  margin-bottom: 18px;
+
+  padding: 12px 14px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.flat-offer-success {
+  background: #edf9f0;
+
+  border: 1px solid #c8e8d0;
+
+  color: #26753a;
+}
+
+.flat-offer-error {
+  background: #fff1f0;
+
+  border: 1px solid #efc9c6;
+
+  color: #c43c34;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.flat-offer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding-top: 19px;
+
+  border-top: 1px solid #eee3da;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+.flat-offer-reset {
+  min-width: 92px;
+  height: 41px;
+
+  padding: 0 18px;
+
+  border: 1px solid #d8cec6;
+  border-radius: 8px;
+
+  background: #dd6d6d62;
+
+  color: #c4500d;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.flat-offer-reset:hover {
+  background: #faf6f2;
+
+  border-color: #c5b7ac;
+}
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+.flat-offer-submit {
+  min-width: 145px;
+  height: 41px;
+
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: linear-gradient(
+    135deg,
+    #f58b3c,
+    #e96918
+  );
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(233, 105, 24, 0.22);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.flat-offer-submit:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 18px rgba(233, 105, 24, 0.28);
+}
+
+.flat-offer-submit:disabled,
+.flat-offer-reset:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+  .flat-offer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flat-offer-apply-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .flat-offer-plan {
+    padding: 18px;
+  }
+
+  .flat-offer-header {
+    align-items: flex-start;
+  }
+
+  .flat-offer-badge {
+    display: none;
+  }
+
+  .flat-offer-section {
+    padding: 15px;
+  }
+
+  .flat-offer-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .flat-offer-reset,
+  .flat-offer-submit {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .flat-offer-plan {
+    padding: 13px;
+  }
+
+  .flat-offer-section {
+    padding: 13px;
+  }
+
+  .flat-offer-header h2 {
+    font-size: 18px;
+  }
+
+  .flat-offer-header p {
+    font-size: 11px;
+  }
+
+}
+
+
+.percent-off-plan-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.percent-off-plan-input-wrapper input {
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 14px 0 42px;
+  border: 1px solid #d9d5e8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #29253a;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.percent-off-plan-input-wrapper input:hover {
+  border-color: #a995f5;
+}
+
+.percent-off-plan-input-wrapper input:focus {
+  border-color: #7254e8;
+  box-shadow: 0 0 0 3px rgba(114, 84, 232, 0.12);
+}
+
+.percent-off-plan-input-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6848e8;
+  font-size: 16px;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+
+/* =========================================================
+   OUTLET DROPDOWN WRAPPER
+========================================================= */
+
+.flat-offer-outlet-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+  z-index: 50;
+}
+
+
+/* =========================================================
+   DROPDOWN CONTAINER
+========================================================= */
+
+.flat-offer-outlet-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+
+/* =========================================================
+   OUTLET TRIGGER
+========================================================= */
+
+.flat-offer-outlet-trigger {
+  width: 100%;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 13px;
+
+  border: 1px solid #d9d5e8;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #34384a;
+
+  cursor: pointer;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+
+/* HOVER */
+
+.flat-offer-outlet-trigger:hover {
+  border-color: #9b82f5;
+}
+
+
+/* OPEN */
+
+.flat-offer-outlet-trigger-open {
+  border-color: #6848e8;
+
+  box-shadow:
+    0 0 0 3px rgba(104, 72, 232, 0.09);
+
+  background: #fdfcff;
+}
+
+
+/* =========================================================
+   TRIGGER LEFT SIDE
+========================================================= */
+
+.flat-offer-outlet-trigger-left {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 9px;
+}
+
+
+/* =========================================================
+   OUTLET ICON
+========================================================= */
+
+.flat-offer-outlet-trigger-icon {
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 6px;
+
+  background: #f1edff;
+
+  color: #6848e8;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+.flat-offer-outlet-placeholder {
+  color: #9b9aaa;
+}
+
+
+/* =========================================================
+   SELECTED TEXT
+========================================================= */
+
+.flat-offer-outlet-selected-text {
+  color: #34384a;
+
+  font-weight: 500;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.flat-offer-outlet-arrow {
+  flex-shrink: 0;
+
+  margin-left: 10px;
+
+  color: #777185;
+
+  font-size: 17px;
+
+  transition: transform 0.2s ease;
+}
+
+
+.flat-offer-outlet-arrow-up {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
+
+.flat-offer-outlet-menu {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #ddd8ed;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 12px 30px rgba(44, 35, 80, 0.14);
+
+  overflow: hidden;
+
+  z-index: 9999;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SEARCH WRAPPER
+========================================================= */
+
+.flat-offer-outlet-search-wrapper {
+  position: relative;
+
+  padding: 10px 10px 6px;
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   SEARCH ICON
+========================================================= */
+
+.flat-offer-outlet-search-icon {
+  position: absolute;
+
+  left: 20px;
+  top: 50%;
+
+  transform: translateY(-42%);
+
+  color: #9a94a8;
+
+  font-size: 12px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
+.flat-offer-outlet-search {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 10px 0 31px;
+
+  border: 1px solid #ddd8eb;
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #fbfaff;
+
+  color: #34384a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  box-sizing: border-box;
+}
+
+
+.flat-offer-outlet-search::placeholder {
+  color: #aaa5b4;
+}
+
+
+.flat-offer-outlet-search:focus {
+  border-color: #8b72ef;
+
+  box-shadow:
+    0 0 0 2px rgba(104, 72, 232, 0.08);
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   OUTLET COUNT
+========================================================= */
+
+.flat-offer-outlet-count {
+  padding: 7px 14px 6px;
+
+  color: #9a94a8;
+
+  font-size: 10px;
+
+  text-align: center;
+}
+
+
+.flat-offer-outlet-count span {
+  color: #ff6b1a;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SCROLLABLE LIST
+========================================================= */
+
+.flat-offer-outlet-list {
+  max-height: 250px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 3px 6px 7px;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: #c8c0e8 transparent;
+}
+
+
+/* =========================================================
+   CHROME / SAFARI SCROLLBAR
+========================================================= */
+
+.flat-offer-outlet-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.flat-offer-outlet-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.flat-offer-outlet-list::-webkit-scrollbar-thumb {
+  background: #c8c0e8;
+
+  border-radius: 10px;
+}
+
+.flat-offer-outlet-list::-webkit-scrollbar-thumb:hover {
+  background: #a99cda;
+}
+
+
+/* =========================================================
+   OUTLET OPTION
+========================================================= */
+
+.flat-offer-outlet-option {
+  position: relative;
+
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 7px 9px;
+
+  border-radius: 7px;
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  border: 1px solid transparent;
+}
+
+
+/* HOVER */
+
+.flat-offer-outlet-option:hover {
+  background: #f7f4ff;
+
+  border-color: #eee9ff;
+}
+
+
+/* SELECTED */
+
+.flat-offer-outlet-option-selected {
+  background: #fff5ef;
+
+  border-color: #ffe1d1;
+}
+
+
+/* =========================================================
+   HIDE NATIVE CHECKBOX
+========================================================= */
+
+.flat-offer-outlet-option input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   CUSTOM CHECKBOX
+========================================================= */
+
+.flat-offer-outlet-checkbox {
+  width: 15px;
+  height: 15px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #cfc9dd;
+
+  border-radius: 4px;
+
+  background: #ffffff;
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+/* SELECTED CHECKBOX */
+
+.flat-offer-outlet-option-selected
+.flat-offer-outlet-checkbox {
+  background: #ff6b1a;
+
+  border-color: #ff6b1a;
+
+  box-shadow:
+    0 2px 5px rgba(255, 107, 26, 0.18);
+}
+
+
+/* =========================================================
+   OUTLET DETAILS
+========================================================= */
+
+.flat-offer-outlet-details {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 2px;
+}
+
+
+/* =========================================================
+   OUTLET NAME
+========================================================= */
+
+.flat-offer-outlet-name {
+  color: #3c3948;
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+  line-height: 1.3;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   OUTLET ID
+========================================================= */
+
+.flat-offer-outlet-id {
+  color: #aaa4b2;
+
+  font-size: 9px;
+
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
+
+.flat-offer-outlet-no-results {
+  padding: 28px 15px;
+
+  text-align: center;
+
+  color: #9b96a5;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.flat-offer-field-help {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #9a94a8;
+
+  font-size: 10px;
+
+  text-align: center;
 }

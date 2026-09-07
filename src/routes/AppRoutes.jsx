@@ -23,7 +23,7 @@ import Orders from "../pages/orders/Orders";
 import Promotions from "../pages/promotions/Promotions";
 import Payments from "../pages/payments/Payments";
 import Subscription from "../pages/subscription/Subscription";
-import AddSubscription from "../pages/subscription/AddSubscription";
+
 
 
 const AppRoutes = () => {
@@ -75,146 +75,79 @@ const AppRoutes = () => {
         />
 
 
-        {/* =====================================================
-            PROTECTED ROUTES
-            ===================================================== */}
+       {/* =====================================================
+    PROTECTED ROUTES
+    ===================================================== */}
 
-        <Route
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
+<Route
+  element={
+    <ProtectedRoute>
+      <DashboardLayout />
+    </ProtectedRoute>
+  }
+>
 
-          {/* ===================================================
-              DASHBOARD
-              =================================================== */}
+  {/* DASHBOARD */}
+  <Route
+    path="/dashboard"
+    element={<Dashboard />}
+  />
 
-          <Route
-            path="/dashboard"
-            element={<Dashboard />}
-          />
+  {/* OUTLETS */}
+  <Route
+    path="/outlets"
+    element={<Outlets />}
+  />
 
+  {/* CREATE OUTLET */}
+  <Route
+    path="/outlets/create"
+    element={<CreateOutlet />}
+  />
 
-          {/* ===================================================
-              OUTLETS LIST
-              =================================================== */}
+  {/* EDIT OUTLET */}
+  <Route
+    path="/outlets/edit/:outletId"
+    element={<EditOutlet />}
+  />
 
-          <Route
-            path="/outlets"
-            element={<Outlets />}
-          />
+  {/* OUTLET PROFILE */}
+  <Route
+    path="/outlets/profile/:outletId"
+    element={<OutletProfileDetails />}
+  />
 
+  {/* FOODS */}
+  <Route
+    path="/foods"
+    element={<Foods />}
+  />
 
-          {/* ===================================================
-              CREATE OUTLET
-              =================================================== */}
+  {/* ORDERS */}
+  <Route
+    path="/orders"
+    element={<Orders />}
+  />
 
-          <Route
-            path="/outlets/create"
-            element={<CreateOutlet />}
-          />
+  {/* PROMOTIONS */}
+  <Route
+    path="/promotions"
+    element={<Promotions />}
+  />
 
+  {/* PAYMENTS */}
+  <Route
+    path="/payments"
+    element={<Payments />}
+  />
 
-          {/* ===================================================
-              OUTLET PROFILE DETAILS
-              
-              IMPORTANT:
-              
-              /outlets/view/187
-              
-              will render OutletProfileDetails.
-              
-              OutletProfileDetails gets:
-              
-              const { outletId } = useParams();
-              
-              and calls:
-              
-              getAdminOutletDetails(outletId)
-              
-              =================================================== */}
+  {/* SUBSCRIPTION */}
+  <Route
+    path="/subscription"
+    element={<Subscription />}
+  />
 
-          <Route
-            path="/outlets/view/:outletId"
-            element={
-              <OutletProfileDetails />
-            }
-          />
-
-
-          {/* ===================================================
-              EDIT OUTLET
-              =================================================== */}
-
-          <Route
-            path="/outlets/edit/:id"
-            element={<EditOutlet />}
-          />
-
-
-          {/* ===================================================
-              FOODS
-              =================================================== */}
-
-          <Route
-            path="/foods"
-            element={<Foods />}
-          />
-
-
-          {/* ===================================================
-              ORDERS
-              =================================================== */}
-
-          <Route
-            path="/orders"
-            element={<Orders />}
-          />
-
-
-          {/* ===================================================
-              PROMOTIONS
-              =================================================== */}
-
-          <Route
-            path="/promotions"
-            element={<Promotions />}
-          />
-
-
-          {/* ===================================================
-              PAYMENTS
-              =================================================== */}
-
-          <Route
-            path="/payments"
-            element={<Payments />}
-          />
-
-
-          {/* ===================================================
-              SUBSCRIPTION
-              =================================================== */}
-
-          <Route
-            path="/subscription"
-            element={<Subscription />}
-          />
-
-
-          {/* ===================================================
-              ADD SUBSCRIPTION
-              =================================================== */}
-
-          <Route
-            path="/add-subscription"
-            element={<AddSubscription />}
-          />
-
-        </Route>
-
+</Route>
 
         {/* =====================================================
             PAGE NOT FOUND

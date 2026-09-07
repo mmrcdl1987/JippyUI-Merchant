@@ -1,225 +1,483 @@
-import "../../styles/Subscription.css";
 import { useEffect, useState } from "react";
-import {
-  getSubscriptionPlans,
-  deleteSubscriptionPlan,
-  getSubscriptionPlanById,
-  getAreaById,
-} from "../../services/subscriptionService";
+import Select from "react-select";
 
 
-import {
-  FaSearch,
-  FaPlus,
-  FaEdit,
-  FaTrash,
-  FaCrown,
-} from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import API from "../../services/api";
+
+import "../../styles/Subscription.css";
 
 
 
-const Subscription = () => {
-  const [search, setSearch] = useState("");
+
+
+function AdvertisementOutlets() {
+  const [pricingType, setPricingType] = useState("FLAT");
+
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+const merchantId = userData.merchantId;
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [outlets, setOutlets] = useState([]);
   const [plans, setPlans] = useState([]);
+
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
+  const [selectedOutlet, setSelectedOutlet] = useState("");
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const today = new Date().toISOString().split("T")[0];
+
   useEffect(() => {
-  fetchSubscriptionPlans();
-}, []);
-
-const navigate = useNavigate();
-
-const fetchSubscriptionPlans = async () => {
-  try {
-    const response = await getSubscriptionPlans();
-
-    setPlans(response.data || []);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const handleDelete = async (id) => {
-
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this subscription plan?"
-  );
-
-  if (!confirmDelete) {
+  if (!selectedPlan || !startDate) {
+    setEndDate("");
     return;
   }
 
+  const start = new Date(startDate);
+
+  start.setDate(
+    start.getDate() + Number(selectedPlan.durationInDays) - 1
+  );
+
+  const calculatedEndDate = start.toISOString().split("T")[0];
+
+  setEndDate(calculatedEndDate);
+}, [selectedPlan, startDate]);
+
+  useEffect(() => {
+    fetchStates();
+  }, []);
+
+  const fetchStates = async () => {
+    try {
+      const response = await API.get("/api/fm/location/fetchStates");
+      setStates(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Error fetching states:", error);
+    }
+  };
+
+  const handleStateChange = async (e) => {
+    const stateId = e.target.value;
+
+    setSelectedState(stateId);
+    setSelectedCity("");
+    setSelectedArea("");
+    setSelectedOutlet("");
+    setSelectedPlan(null);
+
+    setCities([]);
+    setAreas([]);
+    setOutlets([]);
+    setPlans([]);
+
+    try {
+      const response = await API.get(
+        `/api/fm/location/fetchCityInState?stateId=${stateId}`
+      );
+      setCities(response.data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
+  const handleCityChange = async (e) => {
+    const cityId = e.target.value;
+
+    setSelectedCity(cityId);
+    setSelectedArea("");
+    setSelectedOutlet("");
+    setSelectedPlan(null);
+
+    setAreas([]);
+    setOutlets([]);
+    setPlans([]);
+
+    try {
+      const response = await API.get(
+        `/api/fm/location/fetchAreaInCity?cityId=${cityId}`
+      );
+      setAreas(response.data);
+    } catch (error) {
+      console.error("Error fetching areas:", error);
+    }
+  };
+
+  const handleAreaChange = async (e) => {
+    const areaId = e.target.value;
+
+    setSelectedArea(areaId);
+    setSelectedOutlet("");
+    setSelectedPlan(null);
+    setPlans([]);
+    setOutlets([]);
+
+    if (!areaId) return;
+
+    fetchSubscriptionPlans(areaId);
+  };
+
+const fetchOutlets = async () => {
   try {
+    const merchantId = localStorage.getItem("merchantId");
 
-    await deleteSubscriptionPlan(id);
+    console.log("Logged-in Merchant ID:", merchantId);
 
-    alert("Subscription deleted successfully");
+    if (!merchantId) {
+      console.error("Merchant ID not found in localStorage");
+      setOutlets([]);
+      return;
+    }
 
-    fetchSubscriptionPlans();
-
-  } catch (error) {
-
-    console.error(error);
-
-    alert(
-      error.response?.data?.message ||
-      "Failed to delete subscription."
+    const response = await API.get(
+      "/api/fm/outlets/getOutletsByMerchant",
+      {
+        params: {
+          merchantId: merchantId,
+        },
+      }
     );
 
-  }
+    console.log("FULL OUTLET API RESPONSE:", response);
+    console.log("OUTLET API DATA:", response.data);
 
-};
+    const outletData =
+      response.data?.data ??
+      response.data?.outlets ??
+      response.data;
 
-const handleEdit = async (id) => {
-  try {
-    const response = await getSubscriptionPlanById(id);
+    console.log("FINAL OUTLET DATA:", outletData);
 
-    console.log(response);
+    setOutlets(Array.isArray(outletData) ? outletData : []);
 
-    // Later we'll open EditSubscription page
   } catch (error) {
-    console.error(error);
+    console.error("FETCH OUTLETS ERROR:", error);
+    console.error("ERROR RESPONSE:", error.response?.data);
+    setOutlets([]);
   }
 };
+  const fetchSubscriptionPlans = async (areaId) => {
+    try {
 
-const handleArea = async (areaId) => {
-  try {
-    const response = await getAreaById(areaId);
+         console.log("AREA ID:", areaId);
 
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
-};
- 
 
-  const filteredPlans = plans.filter((plan) =>
-  plan.planName?.toLowerCase().includes(search.toLowerCase())
+   const response = await API.get(
+  `/api/fm/subscription-plans/area/${areaId}`
 );
+      console.log("SUBSCRIPTION PLANS RESPONSE:", response.data);
+
+
+      setPlans(
+        Array.isArray(response.data?.data)
+          ? response.data.data
+          : Array.isArray(response.data)
+          ? response.data
+          : []
+      );
+    } catch (error) {
+      console.error("Error fetching subscription plans:", error);
+      setPlans([]);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const payload = {
+        outletId: Number(selectedOutlet),
+        subscriptionPlanId: selectedPlan.subscriptionPlanId,
+        subscriptionFromDate: startDate,
+        subscriptionToDate: endDate,
+        bannerSlotDaysId: selectedPlan.bannerDurationInDays,
+        bannerFromDate: startDate,
+        bannerToDate: endDate,
+        mealTypeTimingsIds: [],
+        priceModelType: "FLAT",
+        offerAmount: 0,
+        userId: JSON.parse(localStorage.getItem("userData") || "{}").userId,
+      };
+
+      const response = await API.post(
+        "/api/fm/outlet-subscription-plans",
+        payload
+      );
+
+      alert(response.data.message || "Successfully saved!");
+    } catch (error) {
+      console.error(error);
+      alert(
+        error.response?.data?.message || "Unable to save subscription plan."
+      );
+    }
+  };
+
+  const outletOptions = outlets.map((outlet) => ({
+    value: outlet.outletId,
+    label: outlet.outletName,
+  }));
+
+
+  const stateOptions = states.map((state) => ({
+  value: state.stateId,
+  label: state.stateName,
+}));
+
+const cityOptions = cities.map((city) => ({
+  value: city.cityId,
+  label: city.cityName,
+}));
+
+const areaOptions = areas.map((area) => ({
+  value: area.areaId,
+  label: area.areaName,
+}));
 
   return (
-    <div className="merchant-subscription-container">
-      <div className="merchant-subscription-header">
+    <div className="advertisement-page">
+      <div className="page-header">
         <div>
-          <h2 className="merchant-subscription-title">
-            Subscription Plans
-          </h2>
-
-          <p className="merchant-subscription-subtitle">
-            Manage merchant subscription plans and pricing.
-          </p>
+          <h2>Subscription Plans</h2>
+          <p>Manage subscription plans for outlets</p>
         </div>
-
-        <button
-    className="merchant-subscription-add-btn"
-    onClick={() => navigate("/add-subscription")}
->
-    Create Plan
-</button>
       </div>
 
-      <div className="merchant-subscription-toolbar">
-        <div className="merchant-subscription-search">
-          <FaSearch />
+      <div className="advertisement-card">
+        <h3>Subscription Outlet Registration</h3>
 
-          <input
-  type="text"
-  placeholder="Search Plan..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
+        <div className="form-grid">
+          <div className="form-group">
+            <label>
+              State <span className="required-star">*</span>
+            </label>
+           <Select
+  options={stateOptions}
+  placeholder="Select State"
+  value={
+    stateOptions.find(
+      (option) => option.value === Number(selectedState)
+    ) || null
+  }
+  onChange={(option) =>
+    handleStateChange({
+      target: { value: option?.value || "" }
+    })
+  }
+  isSearchable
+  isClearable
 />
-        </div>
+          </div>
 
-        <div className="merchant-subscription-count">
-          Total Plans
-          <span>{filteredPlans.length}</span>
+          <div className="form-group">
+            <label>
+              City <span className="required-star">*</span>
+            </label>
+           <Select
+  options={cityOptions}
+  placeholder="Select City"
+  value={
+    cityOptions.find(
+      (option) => option.value === Number(selectedCity)
+    ) || null
+  }
+  onChange={(option) =>
+    handleCityChange({
+      target: { value: option?.value || "" }
+    })
+  }
+  isSearchable
+  isClearable
+/>
+          </div>
+
+          <div className="form-group">
+            <label>
+              Area <span className="required-star">*</span>
+            </label>
+            <Select
+  options={areaOptions}
+  placeholder="Select Area"
+  value={
+    areaOptions.find(
+      (option) => option.value === Number(selectedArea)
+    ) || null
+  }
+  onChange={(option) =>
+    handleAreaChange({
+      target: { value: option?.value || "" }
+    })
+  }
+  isSearchable
+  isClearable
+/>
+          </div>
+
+          <div className="form-group">
+            <label>
+              Outlet <span className="required-star">*</span>
+            </label>
+            <Select
+              options={outletOptions}
+              placeholder="Select Outlet"
+              value={
+                outletOptions.find(
+                  (option) => option.value === selectedOutlet
+                ) || null
+              }
+              onMenuOpen={fetchOutlets}
+              onChange={(selectedOption) =>
+                setSelectedOutlet(selectedOption?.value || "")
+              }
+              isSearchable
+            />
+          </div>
         </div>
       </div>
 
-      <div className="merchant-subscription-table-wrapper">
-        <table className="merchant-subscription-table">
-          <thead>
-            <tr>
-              <th>Plan</th>
-              <th>Price</th>
-              <th>Duration</th>
-              <th>Radius</th>
-              <th>Banner</th>
-              <th>Restaurant</th>
-              <th>Deals</th>
-              <th>WhatsApp</th>
-              <th>Video</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+      {selectedArea && plans.length > 0 && (
 
-          <tbody>
-            {filteredPlans.length > 0 ? (
-              filteredPlans.map((plan) => (
-                <tr key={plan.subscriptionPlanId}>
-                  <td>
-                    <div className="merchant-subscription-plan">
-                      <FaCrown />
 
-                      <div>
-                        <strong>{plan.planName}</strong>
+        <div className="advertisement-card">
+          <h3>Available Subscription Plans</h3>
 
-                        <small>
-                          {plan.bannerDurationInDays} Banner Days
-                        </small>
-                      </div>
-                    </div>
-                  </td>
+          <div className="plans-table-wrapper">
+            <table className="plans-table">
 
-                  <td>₹{plan.price}</td>
+<colgroup>
+  <col style={{ width: "60px" }} />
+  <col style={{ width: "120px" }} />
+  <col style={{ width: "80px" }} />
+  <col style={{ width: "110px" }} />
+  <col style={{ width: "90px" }} />
+  <col style={{ width: "145px" }} />
+  <col style={{ width: "100px" }} />
+  <col style={{ width: "135px" }} />
+  <col style={{ width: "90px" }} />
+  <col style={{ width: "130px" }} />
+  <col style={{ width: "110px" }} />
+</colgroup>
 
-                  <td>{plan.durationInDays} Days</td>
-
-                  <td>{plan.radiusInKms} Km</td>
-
-                  <td>{plan.bannerSlot}</td>
-
-                  <td>{plan.bestRestaurantSlot}</td>
-
-                  <td>{plan.dealsSlot}</td>
-
-                  <td>{plan.whatsappBroadcast}</td>
-
-                  <td>{plan.videoCredits}</td>
-
-                  <td>
-                    <div className="merchant-subscription-actions">
-                      <button
-    className="merchant-subscription-edit-btn"
-    onClick={() => handleEdit(plan.subscriptionPlanId)}
->
-    <FaEdit />
-</button>
-
-                     <button
-    className="merchant-subscription-delete-btn"
-    onClick={() => handleDelete(plan.subscriptionPlanId)}
->
-    <FaTrash />
-</button>
-                    </div>
-                  </td>
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Plan Name</th>
+                  <th>Price</th>
+                  <th>Duration (Days)</th>
+                  <th>Radius (KM)</th>
+                  <th>Banner Duration Days</th>
+                  <th>Banner Slots</th>
+                  <th>Best Restaurant Slot</th>
+                  <th>Deals Slot</th>
+                  <th>WhatsApp Broadcast</th>
+                  <th>Video Credits</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  className="merchant-subscription-no-data"
-                  colSpan="10"
-                >
-                  No Subscription Plans Found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {plans.map((plan) => (
+                  <tr
+                    key={plan.subscriptionPlanId}
+                    className={
+                      selectedPlan?.subscriptionPlanId === plan.subscriptionPlanId
+                        ? "selected-plan-row"
+                        : ""
+                    }
+                  >
+                    <td>
+                      <input
+                        type="radio"
+                        name="selectedPlan"
+                        checked={
+                          selectedPlan?.subscriptionPlanId ===
+                          plan.subscriptionPlanId
+                        }
+                        onChange={() => setSelectedPlan(plan)}
+                      />
+                    </td>
+                    <td>{plan.planName}</td>
+                    <td className="plan-price">{plan.price}</td>
+                    <td>{plan.durationInDays}</td>
+                    <td>{plan.radiusInKms}</td>
+                    <td>{plan.bannerDurationInDays}</td>
+                    <td>{plan.bannerSlot}</td>
+                    <td>{plan.bestRestaurantSlot}</td>
+                    <td>{plan.dealsSlot}</td>
+                    <td>{plan.whatsappBroadcast}</td>
+                    <td>{plan.videoCredits}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {selectedPlan && (
+        <>
+          <div className="advertisement-bottom-grid">
+            <div className="advertisement-card">
+              <h3>Subscription Dates</h3>
+
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>
+                    Start Date <span className="required-star">*</span>
+                  </label>
+                  <div className="date-input-wrapper">
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+  />
+  <span
+    className="calendar-icon"
+    onClick={(e) => {
+      e.currentTarget.previousElementSibling?.showPicker?.();
+    }}
+  >
+    📅
+  </span>
+</div>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    End Date <span className="required-star">*</span>
+                  </label>
+                 <div className="date-input-wrapper">
+ <input
+  type="date"
+  value={endDate}
+  readOnly
+/>
+  <span
+    className="calendar-icon"
+    onClick={(e) => {
+      e.currentTarget.previousElementSibling?.showPicker?.();
+    }}
+  >
+    📅
+  </span>
+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="advertisement-buttons">
+            <button className="cancel-btn">Cancel</button>
+            <button className="save-btn" onClick={handleSave}>
+              Save
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
-};
+}
 
-export default Subscription;
+export default AdvertisementOutlets;

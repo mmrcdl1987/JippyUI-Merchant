@@ -1,141 +1,293 @@
-import { useState } from "react";
-import "../../styles/Promotions.css";
+import React, { useEffect, useState } from "react";
 import {
   FaCalendarAlt,
   FaPercentage,
   FaGift,
   FaTags,
-  FaPlusCircle,
   FaChartLine,
 } from "react-icons/fa";
 
-import SlotBooking from "./SlotBooking";
+import api from "../../services/api";
+
 import PercentOffPlan from "./PercentOffPlan";
-import BuyOneGetOne from "./BuyOneGetOne";
 import FlatOffer from "./FlatOffer";
-import CreatePlan from "./CreatePlan";
+import BuyOneGetOne from "./BuyOneGetOne";
+import SlotBooking from "./SlotBooking";
+import FestivalOffer from "./FestivalOffer";
 import PlansStatus from "./PlansStatus";
 
+import "../../styles/Promotions.css";
+
+import { getPromotionPlanTypes } from "../../services/promotionService";
 
 
 
-const Coupons = () => {
-  const [activeCard, setActiveCard] = useState("slotBooking");
 
-  // const promotionCards = [
-  //   {
-  //     id: "slotBooking",
-  //     title: "Slot Booking",
-  //     icon: "📅",
-  //   },
-  //   {
-  //     id: "percentageOffer",
-  //     title: "% Off Plan",
-  //     icon: "🏷️",
-  //   },
-  //   {
-  //     id: "buyOneGetOne",
-  //     title: "1+1 Offer",
-  //     icon: "🎁",
-  //   },
-  //   {
-  //     id: "flatOffer",
-  //     title: "Flat Offer",
-  //     icon: "💰",
-  //   },
-  //   {
-  //     id: "createPlan",
-  //     title: "Create Plan",
-  //     icon: "➕",
-  //   },
-  //   {
-  //     id: "plansStatus",
-  //     title: "Plans Status",
-  //     icon: "📊",
-  //   },
-  // ];
+const Promotions = () => {
+  const [activeType, setActiveType] = useState(null);
+  const [promotionTypes, setPromotionTypes] = useState([]);
+const [loadingPromotionTypes, setLoadingPromotionTypes] = useState(true);
 
-  const promotionCards = [
-  {
-    id: "slotBooking",
-    title: "Slot Booking",
-    icon: <FaCalendarAlt />,
-  },
-  {
-    id: "percentageOffer",
-    title: "% Off Plan",
-    icon: <FaPercentage />,
-  },
-  {
-    id: "buyOneGetOne",
-    title: "1+1 Offer",
-    icon: <FaGift />,
-  },
-  {
-    id: "flatOffer",
-    title: "Flat Offer",
-    icon: <FaTags />,
-  },
-  {
-    id: "createPlan",
-    title: "Create Plan",
-    icon: <FaPlusCircle />,
-  },
-  {
-    id: "plansStatus",
-    title: "Plans Status",
-    icon: <FaChartLine />,
-  },
-];
-  return (
-    <div className="merchant-coupons-page">
-      <h2 className="merchant-coupons-heading">Promotions</h2>
 
-      <div className="merchant-coupons-cards-container">
-        {promotionCards.map((card) => (
-          <div
-            key={card.id}
-            className={`merchant-coupons-card ${
-              activeCard === card.id
-                ? "merchant-coupons-card-active"
-                : ""
-            }`}
-            onClick={() => setActiveCard(card.id)}
-          >
-            <div className="merchant-coupons-card-icon">{card.icon}</div>
+  const [outlets, setOutlets] = useState([]);
+  const [loadingOutlets, setLoadingOutlets] = useState(true);
+  const [outletError, setOutletError] = useState("");
 
-            <div className="merchant-coupons-card-title">
-              {card.title}
-            </div>
+  useEffect(() => {
+    fetchMerchantOutlets();
+    fetchPromotionTypes();
+  }, []);
+
+  const fetchMerchantOutlets = async () => {
+    try {
+      setLoadingOutlets(true);
+      setOutletError("");
+
+      const merchantId = localStorage.getItem("merchantId");
+
+      if (!merchantId) {
+        throw new Error("Merchant ID not found. Please login again.");
+      }
+
+      const response = await api.get(
+        "/api/fm/outlets/getOutletsByMerchant",
+        {
+          params: {
+            merchantId,
+          },
+        }
+      );
+
+      const result = response.data;
+
+      let outletList = [];
+
+      if (Array.isArray(result)) {
+        outletList = result;
+      } else if (Array.isArray(result?.data)) {
+        outletList = result.data;
+      } else if (Array.isArray(result?.data?.content)) {
+        outletList = result.data.content;
+      } else if (Array.isArray(result?.content)) {
+        outletList = result.content;
+      }
+
+      setOutlets(outletList);
+    } catch (error) {
+      console.error("Error loading merchant outlets:", error);
+      setOutletError(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to load merchant outlets."
+      );
+    } finally {
+      setLoadingOutlets(false);
+    }
+  };
+
+  const fetchPromotionTypes = async () => {
+  try {
+    setLoadingPromotionTypes(true);
+
+    const data = await getPromotionPlanTypes();
+
+    if (Array.isArray(data)) {
+      setPromotionTypes(data);
+    } else {
+      setPromotionTypes([]);
+    }
+  } catch (error) {
+    console.error("Error loading promotion plan types:", error);
+    setPromotionTypes([]);
+  } finally {
+    setLoadingPromotionTypes(false);
+  }
+};
+
+const getPromotionConfig = (id) => {
+  switch (id) {
+    case 1:
+      return {
+        key: "percentage",
+        icon: <FaPercentage />,
+      };
+
+    case 2:
+      return {
+        key: "flat",
+        icon: <FaTags />,
+      };
+
+    case 3:
+      return {
+        key: "buyOneGetOne",
+        icon: <FaGift />,
+      };
+
+    case 4:
+      return {
+        key: "slot",
+        icon: <FaCalendarAlt />,
+      };
+
+    case 15:
+      return {
+        key: "festival",
+        icon: <FaGift />,
+      };
+
+    default:
+      return {
+        key: "",
+        icon: <FaTags />,
+      };
+  }
+};
+
+  const getOutletId = (outlet) => {
+    return (
+      outlet?.outletId ??
+      outlet?.id ??
+      outlet?.outletID
+    );
+  };
+
+  const renderPromotionForm = () => {
+    if (!activeType) {
+      return (
+        <div className="promotion-dashboard-empty">
+          <div className="promotion-dashboard-empty-icon">
+            <FaChartLine />
           </div>
-        ))}
+
+          <h3>Select a Promotion</h3>
+
+          <p>
+            Choose a promotion type above to create a promotional offer.
+          </p>
+        </div>
+      );
+    }
+
+    const commonProps = {
+      promotionTypeId: activeType.id,
+      promotionTypeName: activeType.title,
+      outlets,
+      loadingOutlets,
+      outletError,
+    };
+
+    switch (activeType.key) {
+      case "percentage":
+        return <PercentOffPlan {...commonProps} />;
+
+      case "flat":
+        return <FlatOffer {...commonProps} />;
+
+      case "buyOneGetOne":
+        return <BuyOneGetOne {...commonProps} />;
+
+      case "slot":
+        return <SlotBooking {...commonProps} />;
+
+      case "festival":
+        return <FestivalOffer {...commonProps} />;
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="merchant-promotions-page">
+
+      <div className="merchant-promotions-header">
+        <div>
+          <h1>Promotions</h1>
+          <p>
+            Create and manage promotional offers for your outlets.
+          </p>
+        </div>
       </div>
 
-  <div className="merchant-coupons-content">
-{activeCard === "slotBooking" && <SlotBooking />}
+      {outletError && (
+        <div className="promotion-error">
+          {outletError}
+        </div>
+      )}
 
-  {activeCard === "percentageOffer" && (
-    <PercentOffPlan />
-  )}
+      <div className="merchant-promotion-cards">
 
-  {activeCard === "buyOneGetOne" && (
-    <BuyOneGetOne />
-  )}
+       {promotionTypes.map((type) => {
+  const config = getPromotionConfig(
+    type.promotionPlanTypesId
+  );
 
-  {activeCard === "flatOffer" && (
-    <FlatOffer />
-  )}
+  return (
+    <button
+      key={type.promotionPlanTypesId}
+      type="button"
+      className={`merchant-promotion-card ${
+        activeType?.id === type.promotionPlanTypesId
+          ? "merchant-promotion-card-active"
+          : ""
+      }`}
+      onClick={() =>
+        setActiveType({
+          id: type.promotionPlanTypesId,
+          key: config.key,
+          title: type.planName,
+        })
+      }
+      disabled={loadingOutlets || loadingPromotionTypes}
+    >
+      <div className="merchant-promotion-card-icon">
+        {config.icon}
+      </div>
 
-  {activeCard === "createPlan" && (
-    <CreatePlan />
-  )}
+      <span>{type.planName}</span>
+    </button>
+  );
+})}
 
-  {activeCard === "plansStatus" && (
-   <PlansStatus/>
-  )}
-</div>
+        <button
+          type="button"
+          className={`merchant-promotion-card merchant-promotion-status-card ${
+            activeType?.key === "status"
+              ? "merchant-promotion-card-active"
+              : ""
+          }`}
+          onClick={() =>
+            setActiveType({
+              id: "status",
+              key: "status",
+              title: "Plans Status",
+            })
+          }
+          disabled={loadingOutlets}
+        >
+          <div className="merchant-promotion-card-icon">
+            <FaChartLine />
+          </div>
+
+          <span>Plans Status</span>
+        </button>
+
+      </div>
+
+      <div className="merchant-promotion-content">
+        {activeType?.key === "status" ? (
+          <PlansStatus
+            outlets={outlets}
+            loadingOutlets={loadingOutlets}
+            outletError={outletError}
+          />
+        ) : (
+          renderPromotionForm()
+        )}
+      </div>
     </div>
   );
 };
 
-export default Coupons;
+export default Promotions;
