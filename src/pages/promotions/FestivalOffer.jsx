@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 
-import "../../styles/FlatOffer.css";
+import "../../styles/FestivalOffer.css";
 
 import {
   createPromotionPlan,
@@ -27,21 +27,10 @@ const CalendarIcon = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <rect
-      x="3"
-      y="4"
-      width="18"
-      height="17"
-      rx="2"
-    />
+    <rect x="3" y="4" width="18" height="17" rx="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
-    <line
-      x1="3"
-      y1="10"
-      x2="21"
-      y2="10"
-    />
+    <line x1="3" y1="10" x2="21" y2="10" />
   </svg>
 );
 
@@ -95,10 +84,20 @@ const StoreIcon = () => (
   </svg>
 );
 
-const RupeeIcon = () => (
-  <span className="flat-offer-rupee-icon">
-    ₹
-  </span>
+const SearchIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="11" cy="11" r="7" />
+    <line x1="16.5" y1="16.5" x2="21" y2="21" />
+  </svg>
 );
 
 const ChevronIcon = ({ open = false }) => (
@@ -113,32 +112,11 @@ const ChevronIcon = ({ open = false }) => (
     strokeLinejoin="round"
     className={
       open
-        ? "flat-offer-chevron-open"
+        ? "merchant-festival-chevron-open"
         : ""
     }
   >
     <polyline points="6 9 12 15 18 9" />
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="11" cy="11" r="7" />
-    <line
-      x1="16.5"
-      y1="16.5"
-      x2="21"
-      y2="21"
-    />
   </svg>
 );
 
@@ -175,10 +153,17 @@ const getCategoryName = (product) =>
    COMPONENT
 ========================================================= */
 
-const FlatOffer = ({
+const FestivalOffer = ({
   outlets = [],
   onCancel,
 }) => {
+
+  /* =======================================================
+     CONSTANT
+  ======================================================= */
+
+  const PROMOTION_PLAN_TYPE_ID = 15;
+
   /* =======================================================
      REFS
   ======================================================= */
@@ -186,6 +171,11 @@ const FlatOffer = ({
   const outletDropdownRef = useRef(null);
   const categoryDropdownRef = useRef(null);
   const productDropdownRef = useRef(null);
+
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const endTimeRef = useRef(null);
 
   /* =======================================================
      OUTLET DROPDOWN
@@ -271,6 +261,7 @@ const FlatOffer = ({
   ======================================================= */
 
   const outletList = useMemo(() => {
+
     if (Array.isArray(outlets)) {
       return outlets;
     }
@@ -284,6 +275,7 @@ const FlatOffer = ({
     }
 
     return [];
+
   }, [outlets]);
 
   /* =======================================================
@@ -291,59 +283,81 @@ const FlatOffer = ({
   ======================================================= */
 
   const filteredOutlets = useMemo(() => {
+
     const search =
-      outletSearch.trim().toLowerCase();
+      outletSearch
+        .trim()
+        .toLowerCase();
 
     if (!search) {
       return outletList;
     }
 
     return outletList.filter((outlet) => {
-      const outletName = String(
-        outlet?.outletName ?? ""
-      ).toLowerCase();
 
-      const outletId = String(
-        outlet?.outletId ?? ""
-      ).toLowerCase();
+      const outletName =
+        String(
+          outlet?.outletName ?? ""
+        ).toLowerCase();
+
+      const outletId =
+        String(
+          outlet?.outletId ??
+          outlet?.id ??
+          ""
+        ).toLowerCase();
 
       return (
         outletName.includes(search) ||
         outletId.includes(search)
       );
     });
+
   }, [outletList, outletSearch]);
 
   /* =======================================================
-     SELECTED OUTLET NAME
+     SELECTED OUTLET
   ======================================================= */
 
   const selectedOutlet = useMemo(() => {
+
     if (!formData.outletId) {
       return null;
     }
 
     return outletList.find(
       (outlet) =>
-        Number(outlet?.outletId) ===
+        Number(
+          outlet?.outletId ??
+          outlet?.id
+        ) ===
         Number(formData.outletId)
     );
-  }, [outletList, formData.outletId]);
+
+  }, [
+    outletList,
+    formData.outletId,
+  ]);
 
   /* =======================================================
-     LOAD PRODUCTS WHEN OUTLET CHANGES
+     LOAD PRODUCTS
   ======================================================= */
 
   useEffect(() => {
+
     const loadProducts = async () => {
+
       if (!formData.outletId) {
+
         setProducts([]);
         setSelectedCategories([]);
         setSelectedProducts([]);
+
         return;
       }
 
       try {
+
         setLoadingProducts(true);
         setError("");
 
@@ -353,7 +367,7 @@ const FlatOffer = ({
           );
 
         console.log(
-          "FLAT OFFER PRODUCTS:",
+          "Festival PRODUCTS:",
           response
         );
 
@@ -384,9 +398,11 @@ const FlatOffer = ({
 
         setSelectedCategories([]);
         setSelectedProducts([]);
+
       } catch (err) {
+
         console.error(
-          "Failed to load products:",
+          "Failed to load Festival products:",
           err
         );
 
@@ -394,24 +410,30 @@ const FlatOffer = ({
 
         setError(
           err?.response?.data?.message ||
-            "Unable to load products for this outlet."
+          "Unable to load products for this outlet."
         );
+
       } finally {
+
         setLoadingProducts(false);
+
       }
     };
 
     loadProducts();
+
   }, [formData.outletId]);
 
   /* =======================================================
-     CREATE CATEGORIES FROM PRODUCTS
+     CATEGORIES
   ======================================================= */
 
   const categories = useMemo(() => {
+
     const map = new Map();
 
     products.forEach((product) => {
+
       const categoryName =
         getCategoryName(product);
 
@@ -421,110 +443,147 @@ const FlatOffer = ({
           ? product.category
           : null;
 
-      const categoryId =
-        categoryObject?.id ??
-        categoryObject?.categoryId ??
-        categoryName;
+     const categoryId =
+  categoryObject?.id ??
+  categoryObject?.categoryId ??
+  product?.categoryId ??
+  categoryName;
+
+      if (
+        categoryId === undefined ||
+        categoryId === null
+      ) {
+        return;
+      }
 
       const normalizedId =
         String(categoryId);
 
       if (!map.has(normalizedId)) {
-        map.set(normalizedId, {
-          id: normalizedId,
-          name: categoryName,
-        });
+
+        map.set(
+          normalizedId,
+          {
+            id: normalizedId,
+            name: categoryName,
+          }
+        );
+
       }
+
     });
 
-    return Array.from(map.values());
+    return Array.from(
+      map.values()
+    );
+
   }, [products]);
+  
 
   /* =======================================================
      FILTER CATEGORIES
   ======================================================= */
 
-  const filteredCategories = useMemo(() => {
-    const search =
-      categorySearch
-        .trim()
-        .toLowerCase();
+  const filteredCategories =
+    useMemo(() => {
 
-    if (!search) {
-      return categories;
-    }
+      const search =
+        categorySearch
+          .trim()
+          .toLowerCase();
 
-    return categories.filter(
-      (category) =>
-        category.name
-          .toLowerCase()
-          .includes(search)
-    );
-  }, [categories, categorySearch]);
+      if (!search) {
+        return categories;
+      }
+
+      return categories.filter(
+        (category) =>
+          category.name
+            .toLowerCase()
+            .includes(search)
+      );
+
+    }, [
+      categories,
+      categorySearch,
+    ]);
 
   /* =======================================================
      FILTER PRODUCTS
   ======================================================= */
 
-  const filteredProducts = useMemo(() => {
-    const search =
-      productSearch
-        .trim()
-        .toLowerCase();
+  const filteredProducts =
+    useMemo(() => {
 
-    if (!search) {
-      return products;
-    }
-
-    return products.filter((product) => {
-      const productName =
-        getName(product)
+      const search =
+        productSearch
+          .trim()
           .toLowerCase();
 
-      const categoryName =
-        getCategoryName(product)
-          .toLowerCase();
+      if (!search) {
+        return products;
+      }
 
-      return (
-        productName.includes(search) ||
-        categoryName.includes(search)
+      return products.filter(
+        (product) => {
+
+          const productName =
+            getName(product)
+              .toLowerCase();
+
+          const categoryName =
+            getCategoryName(product)
+              .toLowerCase();
+
+          return (
+            productName.includes(search) ||
+            categoryName.includes(search)
+          );
+        }
       );
-    });
-  }, [products, productSearch]);
+
+    }, [
+      products,
+      productSearch,
+    ]);
 
   /* =======================================================
      OUTSIDE CLICK
   ======================================================= */
 
   useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (
-        outletDropdownRef.current &&
-        !outletDropdownRef.current.contains(
-          event.target
-        )
-      ) {
-        setOutletDropdownOpen(false);
-      }
 
-      if (
-        categoryDropdownRef.current &&
-        !categoryDropdownRef.current.contains(
-          event.target
-        )
-      ) {
-        setCategoryDropdownOpen(false);
-      }
+    const handleOutsideClick =
+      (event) => {
 
-      if (
-        productDropdownRef.current &&
-        !productDropdownRef.current.contains(
-          event.target
-        )
-      ) {
-        setProductDropdownOpen(false);
-      }
-    };
+        if (
+          outletDropdownRef.current &&
+          !outletDropdownRef.current.contains(
+            event.target
+          )
+        ) {
+          setOutletDropdownOpen(false);
+        }
+
+        if (
+          categoryDropdownRef.current &&
+          !categoryDropdownRef.current.contains(
+            event.target
+          )
+        ) {
+          setCategoryDropdownOpen(false);
+        }
+
+        if (
+          productDropdownRef.current &&
+          !productDropdownRef.current.contains(
+            event.target
+          )
+        ) {
+          setProductDropdownOpen(false);
+        }
+
+      };
 
     document.addEventListener(
       "mousedown",
@@ -532,24 +591,29 @@ const FlatOffer = ({
     );
 
     return () => {
+
       document.removeEventListener(
         "mousedown",
         handleOutsideClick
       );
+
     };
+
   }, []);
 
   /* =======================================================
-     HANDLE FORM CHANGE
+     FORM CHANGE
   ======================================================= */
 
   const handleChange = (event) => {
+
     const {
       name,
       value,
     } = event.target;
 
     if (name === "offerType") {
+
       setFormData((previous) => ({
         ...previous,
         offerType: value,
@@ -563,105 +627,119 @@ const FlatOffer = ({
       ...previous,
       [name]: value,
     }));
+
   };
 
   /* =======================================================
-     HANDLE OUTLET
+     OUTLET SELECT
   ======================================================= */
 
-  const handleOutletSelect = (
-    outletId
-  ) => {
-    setFormData((previous) => ({
-      ...previous,
-      outletId: String(outletId),
-    }));
+  const handleOutletSelect =
+    (outletId) => {
 
-    setOutletDropdownOpen(false);
-    setOutletSearch("");
+      setFormData((previous) => ({
+        ...previous,
+        outletId: String(outletId),
+      }));
 
-    setSelectedCategories([]);
-    setSelectedProducts([]);
+      setOutletDropdownOpen(false);
+      setOutletSearch("");
 
-    setCategoryDropdownOpen(false);
-    setProductDropdownOpen(false);
-  };
+      setSelectedCategories([]);
+      setSelectedProducts([]);
+
+      setCategoryDropdownOpen(false);
+      setProductDropdownOpen(false);
+    };
 
   /* =======================================================
      CATEGORY CHECKBOX
   ======================================================= */
 
-  const handleCategoryChange = (
-    categoryId
-  ) => {
-    const id = String(categoryId);
+  const handleCategoryChange =
+    (categoryId) => {
 
-    setSelectedCategories(
-      (previous) => {
-        const exists =
-          previous.some(
-            (item) =>
-              String(item) === id
-          );
+      const id =
+        String(categoryId);
 
-        if (exists) {
-          return previous.filter(
-            (item) =>
-              String(item) !== id
-          );
+      setSelectedCategories(
+        (previous) => {
+
+          const exists =
+            previous.some(
+              (item) =>
+                String(item) === id
+            );
+
+          if (exists) {
+
+            return previous.filter(
+              (item) =>
+                String(item) !== id
+            );
+
+          }
+
+          return [
+            ...previous,
+            id,
+          ];
         }
+      );
 
-        return [
-          ...previous,
-          id,
-        ];
-      }
-    );
-  };
+    };
 
   /* =======================================================
      PRODUCT CHECKBOX
   ======================================================= */
 
-  const handleProductChange = (
-    productId
-  ) => {
-    const id = String(productId);
+  const handleProductChange =
+    (productId) => {
 
-    setSelectedProducts(
-      (previous) => {
-        const exists =
-          previous.some(
-            (item) =>
-              String(item) === id
-          );
+      const id =
+        String(productId);
 
-        if (exists) {
-          return previous.filter(
-            (item) =>
-              String(item) !== id
-          );
+      setSelectedProducts(
+        (previous) => {
+
+          const exists =
+            previous.some(
+              (item) =>
+                String(item) === id
+            );
+
+          if (exists) {
+
+            return previous.filter(
+              (item) =>
+                String(item) !== id
+            );
+
+          }
+
+          return [
+            ...previous,
+            id,
+          ];
         }
+      );
 
-        return [
-          ...previous,
-          id,
-        ];
-      }
-    );
-  };
+    };
 
   /* =======================================================
-     SELECT / CLEAR CATEGORIES
+     SELECT ALL CATEGORIES
   ======================================================= */
 
   const selectAllCategories = () => {
+
     setSelectedCategories(
-      filteredCategories.map(
-        (category) =>
-          String(category.id)
-      )
+      filteredCategories
+        .map(
+          (category) =>
+            String(category.id)
+        )
     );
+
   };
 
   const clearCategories = () => {
@@ -669,10 +747,11 @@ const FlatOffer = ({
   };
 
   /* =======================================================
-     SELECT / CLEAR PRODUCTS
+     SELECT ALL PRODUCTS
   ======================================================= */
 
   const selectAllProducts = () => {
+
     setSelectedProducts(
       filteredProducts
         .map((product) =>
@@ -687,6 +766,7 @@ const FlatOffer = ({
           String(id)
         )
     );
+
   };
 
   const clearProducts = () => {
@@ -694,14 +774,14 @@ const FlatOffer = ({
   };
 
   /* =======================================================
-     CATEGORY LABEL
+     DROPDOWN LABELS
   ======================================================= */
 
   const categoryDropdownLabel =
     useMemo(() => {
+
       if (
-        selectedCategories.length ===
-        0
+        selectedCategories.length === 0
       ) {
         return "Select categories";
       }
@@ -711,17 +791,14 @@ const FlatOffer = ({
           ? "y"
           : "ies"
       } selected`;
-    }, [selectedCategories]);
 
-  /* =======================================================
-     PRODUCT LABEL
-  ======================================================= */
+    }, [selectedCategories]);
 
   const productDropdownLabel =
     useMemo(() => {
+
       if (
-        selectedProducts.length ===
-        0
+        selectedProducts.length === 0
       ) {
         return "Select products";
       }
@@ -731,13 +808,51 @@ const FlatOffer = ({
           ? ""
           : "s"
       } selected`;
+
     }, [selectedProducts]);
+
+  /* =======================================================
+     DATE / TIME PICKERS
+  ======================================================= */
+
+  const openDatePicker = (ref) => {
+
+    if (!ref.current) {
+      return;
+    }
+
+    if (
+      typeof ref.current.showPicker ===
+      "function"
+    ) {
+      ref.current.showPicker();
+    } else {
+      ref.current.focus();
+    }
+  };
+
+  const openTimePicker = (ref) => {
+
+    if (!ref.current) {
+      return;
+    }
+
+    if (
+      typeof ref.current.showPicker ===
+      "function"
+    ) {
+      ref.current.showPicker();
+    } else {
+      ref.current.focus();
+    }
+  };
 
   /* =======================================================
      VALIDATION
   ======================================================= */
 
   const validateForm = () => {
+
     if (!formData.outletId) {
       return "Please select an outlet.";
     }
@@ -752,20 +867,19 @@ const FlatOffer = ({
       return "Please enter offer amount.";
     }
 
-    if (
-      Number(formData.offerAmount) <=
-      0
-    ) {
+    const offerAmount =
+      Number(formData.offerAmount);
+
+    if (offerAmount <= 0) {
       return "Offer amount must be greater than 0.";
     }
 
     if (
       formData.offerType ===
         "PERCENTAGE" &&
-      Number(formData.offerAmount) >
-        100
+      offerAmount > 100
     ) {
-      return "Percentage offer cannot be greater than 100.";
+      return "Percentage offer must be between 1 and 100.";
     }
 
     if (
@@ -811,7 +925,7 @@ const FlatOffer = ({
       formData.endTime <=
         formData.startTime
     ) {
-      return "End time must be after start time when both dates are the same.";
+      return "End time must be after start time.";
     }
 
     if (
@@ -835,196 +949,176 @@ const FlatOffer = ({
      SUBMIT
   ======================================================= */
 
-  const handleSubmit = async (
-    event
-  ) => {
-    event.preventDefault();
+  const handleSubmit =
+    async (event) => {
 
-    setError("");
-    setSuccess("");
+      event.preventDefault();
 
-    const validationError =
-      validateForm();
+      setError("");
+      setSuccess("");
 
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+      const validationError =
+        validateForm();
 
-    try {
-      setSubmitting(true);
+      if (validationError) {
 
-      /*
-       * Backend DTO:
-       *
-       * LocalDate  -> YYYY-MM-DD
-       * LocalTime  -> object with hour/minute/second/nano
-       */
+        setError(
+          validationError
+        );
 
-      const startTimeParts =
-        formData.startTime.split(":");
-
-      const endTimeParts =
-        formData.endTime.split(":");
-
-      const payload = {
-        outletId: Number(
-          formData.outletId
-        ),
-
-        // Flat Offer = ID 2
-        promotionPlanTypeId: 2,
-
-        planStartDate:
-          formData.startDate,
-
-        planEndDate:
-          formData.endDate,
-
-        planStartTime: {
-          hour: Number(
-            startTimeParts[0]
-          ),
-          minute: Number(
-            startTimeParts[1]
-          ),
-          second: 0,
-          nano: 0,
-        },
-
-        planEndTime: {
-          hour: Number(
-            endTimeParts[0]
-          ),
-          minute: Number(
-            endTimeParts[1]
-          ),
-          second: 0,
-          nano: 0,
-        },
-
-        offerName:
-          formData.offerName.trim(),
-
-        minimumOrderValue:
-          Number(
-            formData.minimumOrderValue
-          ),
-
-        offerAmount:
-          Number(
-            formData.offerAmount
-          ),
-
-        /*
-         * Backend offer type.
-         *
-         * FLAT_AMOUNT -> FLAT
-         * PERCENTAGE   -> % OFF
-         */
-        offerType:
-          formData.offerType ===
-          "FLAT_AMOUNT"
-            ? "FLAT"
-            : "% OFF",
-
-        /*
-         * ALL
-         *      -> []
-         *
-         * CATEGORY
-         *      -> selected category IDs
-         *
-         * PRODUCT
-         *      -> selected product IDs
-         */
-
-        productIds:
-          applyTo === "PRODUCT"
-            ? selectedProducts.map(
-                Number
-              )
-            : [],
-
-        outletCategoryIds:
-          applyTo === "CATEGORY"
-            ? selectedCategories.map(
-                Number
-              )
-            : [],
-
-        maxSelection:
-          formData.maximumSelection ===
-          "" ||
-          formData.maximumSelection ===
-          null
-            ? -1
-            : Number(
-                formData.maximumSelection
-              ),
-      };
-
-      console.log(
-        "================================"
-      );
-
-      console.log(
-        "CREATE FLAT OFFER PAYLOAD:"
-      );
-
-      console.log(payload);
-
-      console.log(
-        JSON.stringify(
-          payload,
-          null,
-          2
-        )
-      );
-
-      console.log(
-        "================================"
-      );
-
-      await createPromotionPlan(
-        payload
-      );
-
-      setSuccess(
-        "Flat Offer created successfully."
-      );
-
-      if (onCancel) {
-        setTimeout(() => {
-          onCancel();
-        }, 800);
+        return;
       }
-    } catch (err) {
-      console.error(
-        "Create Flat Offer failed:",
-        err
-      );
 
-      console.error(
-        "Backend response:",
-        err?.response?.data
-      );
+      try {
 
-      setError(
-        err?.response?.data?.message ||
+        setSubmitting(true);
+
+        /*
+         * Backend DTO expects LocalTime.
+         * Send HH:mm:ss.
+         */
+
+        const payload = {
+
+          outletId:
+            Number(
+              formData.outletId
+            ),
+
+          promotionPlanTypeId:
+            PROMOTION_PLAN_TYPE_ID,
+
+          planStartDate:
+            formData.startDate,
+
+          planEndDate:
+            formData.endDate,
+
+          planStartTime:
+            `${formData.startTime}:00`,
+
+          planEndTime:
+            `${formData.endTime}:00`,
+
+          offerName:
+            formData.offerName.trim(),
+
+          minimumOrderValue:
+            Number(
+              formData.minimumOrderValue
+            ),
+
+          offerAmount:
+            Number(
+              formData.offerAmount
+            ),
+
+          offerType:
+            formData.offerType ===
+            "FLAT_AMOUNT"
+              ? "FLAT"
+              : "% OFF",
+
+          productIds:
+            applyTo === "PRODUCT"
+              ? selectedProducts
+                  .map(Number)
+                  .filter(
+                    (id) =>
+                      Number.isInteger(id)
+                  )
+              : [],
+
+          outletCategoryIds:
+            applyTo === "CATEGORY"
+              ? selectedCategories
+                  .map(Number)
+                  .filter(
+                    (id) =>
+                      Number.isInteger(id)
+                  )
+              : [],
+
+          maxSelection:
+            formData.maximumSelection ===
+              "" ||
+            formData.maximumSelection ===
+              null
+              ? -1
+              : Number(
+                  formData.maximumSelection
+                ),
+        };
+
+        console.log(
+          "================================"
+        );
+
+        console.log(
+          "CREATE FESTIVAL PAYLOAD:"
+        );
+
+        console.log(payload);
+
+        console.log(
+          JSON.stringify(
+            payload,
+            null,
+            2
+          )
+        );
+
+        console.log(
+          "================================"
+        );
+
+        await createPromotionPlan(
+          payload
+        );
+
+        setSuccess(
+          "Festival Offer created successfully."
+        );
+
+        if (onCancel) {
+
+          setTimeout(() => {
+            onCancel();
+          }, 800);
+
+        }
+
+      } catch (err) {
+
+        console.error(
+          "Create Festival Offer failed:",
+          err
+        );
+
+        console.error(
+          "Backend response:",
+          err?.response?.data
+        );
+
+        setError(
+          err?.response?.data?.message ||
           err?.response?.data?.error ||
-          "Failed to create Flat Offer."
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
+          "Failed to create Festival Offer."
+        );
+
+      } finally {
+
+        setSubmitting(false);
+
+      }
+    };
 
   /* =======================================================
      RESET
   ======================================================= */
 
   const handleReset = () => {
+
     setFormData({
       outletId: "",
       offerName: "",
@@ -1046,7 +1140,6 @@ const FlatOffer = ({
     setProducts([]);
 
     setOutletSearch("");
-
     setCategorySearch("");
     setProductSearch("");
 
@@ -1059,66 +1152,64 @@ const FlatOffer = ({
   };
 
   /* =======================================================
-     RENDER
+     JSX
   ======================================================= */
 
   return (
-    <div className="flat-offer-plan">
+    <div className="merchant-festival-plan">
 
       {/* =================================================
           HEADER
       ================================================= */}
 
-      <div className="flat-offer-header">
+      <div className="merchant-festival-header">
 
-        <div className="flat-offer-title-wrapper">
+        <div className="merchant-festival-title-wrapper">
 
-          <div className="flat-offer-title-icon">
+          <div className="merchant-festival-title-icon">
             <TagIcon />
           </div>
 
           <div>
+
             <h2>
-              Flat Offer
+              Festival Offer
             </h2>
 
             <p>
-              Create a fixed amount
-              promotional offer for
-              your outlet
+              Create attractive Festival
+              Offer promotional offers
+              for your outlet
             </p>
+
           </div>
 
         </div>
 
-        <div className="flat-offer-badge">
-          ₹ FLAT
+        <div className="merchant-festival-badge">
+          FESTIVAL OFFER
         </div>
 
       </div>
 
       {/* =================================================
-          SUCCESS
+          MESSAGES
       ================================================= */}
 
       {success && (
-        <div className="flat-offer-success">
+        <div className="merchant-festival-success">
           ✓ {success}
         </div>
       )}
 
-      {/* =================================================
-          ERROR
-      ================================================= */}
-
       {error && (
-        <div className="flat-offer-error">
+        <div className="merchant-festival-error">
           ⚠ {error}
         </div>
       )}
 
       <form
-        className="flat-offer-form"
+        className="merchant-festival-form"
         onSubmit={handleSubmit}
       >
 
@@ -1126,22 +1217,22 @@ const FlatOffer = ({
             PLAN DETAILS
         ================================================= */}
 
-        <div className="flat-offer-section">
+        <div className="merchant-festival-section">
 
-          <div className="flat-offer-section-heading">
+          <div className="merchant-festival-section-heading">
             <span />
             <h3>
               Plan Details
             </h3>
           </div>
 
-          <div className="flat-offer-grid">
+          <div className="merchant-festival-grid">
 
             {/* =================================================
                 OUTLET
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 Outlet{" "}
@@ -1149,18 +1240,19 @@ const FlatOffer = ({
               </label>
 
               <div
-                className="flat-offer-outlet-dropdown"
+                className="merchant-festival-outlet-dropdown"
                 ref={outletDropdownRef}
               >
 
                 <button
                   type="button"
-                  className={`flat-offer-outlet-trigger ${
+                  className={`merchant-festival-outlet-trigger ${
                     outletDropdownOpen
-                      ? "flat-offer-outlet-trigger-open"
+                      ? "merchant-festival-outlet-trigger-open"
                       : ""
                   }`}
                   onClick={() => {
+
                     setOutletDropdownOpen(
                       (previous) =>
                         !previous
@@ -1173,25 +1265,27 @@ const FlatOffer = ({
                     setProductDropdownOpen(
                       false
                     );
+
                   }}
                 >
 
-                  <span className="flat-offer-outlet-trigger-left">
+                  <span className="merchant-festival-outlet-trigger-left">
 
-                    <span className="flat-offer-outlet-trigger-icon">
-                      <StoreIcon />
-                    </span>
+                    <StoreIcon />
 
-                    <span
-                      className={
-                        selectedOutlet
-                          ? "flat-offer-outlet-selected-text"
-                          : "flat-offer-outlet-placeholder"
-                      }
-                    >
+                    <span>
+
                       {selectedOutlet
-                        ? `${selectedOutlet.outletName} (ID: ${selectedOutlet.outletId})`
+                        ? (
+                          selectedOutlet.outletName ||
+                          selectedOutlet.name ||
+                          `Outlet ${
+                            selectedOutlet.outletId ||
+                            selectedOutlet.id
+                          }`
+                        )
                         : "Select outlet"}
+
                     </span>
 
                   </span>
@@ -1204,81 +1298,57 @@ const FlatOffer = ({
 
                 </button>
 
-                {/* =================================================
-                    OUTLET MENU
-                ================================================= */}
-
                 {outletDropdownOpen && (
-                  <div className="flat-offer-outlet-menu">
 
-                    {/* SEARCH */}
+                  <div className="merchant-festival-outlet-menu">
 
-                    <div className="flat-offer-outlet-search-wrapper">
+                    <div className="merchant-festival-search">
 
                       <SearchIcon />
 
                       <input
                         type="text"
-                        value={
-                          outletSearch
-                        }
-                        onChange={(
-                          event
-                        ) =>
+                        value={outletSearch}
+                        onChange={(e) =>
                           setOutletSearch(
-                            event.target
-                              .value
+                            e.target.value
                           )
                         }
-                        placeholder="Search outlet by name or ID..."
-                        className="flat-offer-outlet-search"
-                        onClick={(event) =>
-                          event.stopPropagation()
-                        }
+                        placeholder="Search outlet..."
                         autoFocus
                       />
 
                     </div>
 
-                    {/* COUNT */}
-
-                    <div className="flat-offer-outlet-count">
-                      <strong>
-                        {
-                          filteredOutlets.length
-                        }
-                      </strong>{" "}
-                      outlets
-                    </div>
-
-                    {/* SCROLL LIST */}
-
-                    <div className="flat-offer-outlet-list">
+                    <div className="merchant-festival-outlet-list">
 
                       {filteredOutlets.length >
                       0 ? (
+
                         filteredOutlets.map(
                           (outlet) => {
 
                             const outletId =
-                              Number(
-                                outlet?.outletId
-                              );
+                              outlet?.outletId ??
+                              outlet?.id;
 
                             const isSelected =
-                              Number(
+                              String(
                                 formData.outletId
                               ) ===
-                              outletId;
+                              String(
+                                outletId
+                              );
 
                             return (
+
                               <label
                                 key={
                                   outletId
                                 }
-                                className={`flat-offer-outlet-option ${
+                                className={`merchant-festival-outlet-row ${
                                   isSelected
-                                    ? "flat-offer-outlet-option-selected"
+                                    ? "checked"
                                     : ""
                                 }`}
                               >
@@ -1295,25 +1365,29 @@ const FlatOffer = ({
                                   }
                                 />
 
-                                <span className="flat-offer-outlet-checkbox">
+                                <span className="merchant-festival-custom-checkbox">
                                   {isSelected
                                     ? "✓"
                                     : ""}
                                 </span>
 
-                                <span className="flat-offer-outlet-details">
+                                <span className="merchant-festival-outlet-details">
 
-                                  <span className="flat-offer-outlet-name">
-                                    {
-                                      outlet?.outletName
-                                    }
+                                  <span className="merchant-festival-outlet-name">
+
+                                    {outlet?.outletName ||
+                                      outlet?.name ||
+                                      `Outlet ${
+                                        outletId
+                                      }`}
+
                                   </span>
 
-                                  <span className="flat-offer-outlet-id">
+                                  <span className="merchant-festival-outlet-id">
+
                                     Outlet ID:{" "}
-                                    {
-                                      outletId
-                                    }
+                                    {outletId}
+
                                   </span>
 
                                 </span>
@@ -1322,15 +1396,19 @@ const FlatOffer = ({
                             );
                           }
                         )
+
                       ) : (
-                        <div className="flat-offer-outlet-no-results">
+
+                        <div className="merchant-festival-dropdown-empty">
                           No outlets found
                         </div>
+
                       )}
 
                     </div>
 
                   </div>
+
                 )}
 
               </div>
@@ -1347,7 +1425,7 @@ const FlatOffer = ({
                 PLAN TYPE
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 Plan Type
@@ -1355,13 +1433,13 @@ const FlatOffer = ({
 
               <input
                 type="text"
-                value="Flat Offer"
+                value="Festival Offer"
                 readOnly
-                className="flat-offer-readonly"
+                className="merchant-festival-readonly"
               />
 
               <small>
-                Promotion Plan Type ID: 2
+                Promotion Plan Type ID: 15
               </small>
 
             </div>
@@ -1370,7 +1448,7 @@ const FlatOffer = ({
                 OFFER NAME
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 Offer Name{" "}
@@ -1394,15 +1472,17 @@ const FlatOffer = ({
                 OFFER TYPE
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
-              <label htmlFor="offerType">
+              <label
+                htmlFor="merchant-festival-offer-type"
+              >
                 Offer Type{" "}
                 <span>*</span>
               </label>
 
               <select
-                id="offerType"
+                id="merchant-festival-offer-type"
                 name="offerType"
                 value={
                   formData.offerType
@@ -1431,9 +1511,11 @@ const FlatOffer = ({
                 OFFER AMOUNT
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
-              <label htmlFor="offerAmount">
+              <label
+                htmlFor="merchant-festival-offer-amount"
+              >
 
                 {formData.offerType ===
                 "PERCENTAGE"
@@ -1441,23 +1523,24 @@ const FlatOffer = ({
                   : "Offer Amount (₹)"}
 
                 <span>
-                  {" "}
-                  *
+                  {" "}*
                 </span>
 
               </label>
 
-              <div className="flat-offer-input-icon">
+              <div className="merchant-festival-input-icon">
 
-                <span className="flat-offer-currency">
+                <span className="merchant-festival-currency">
+
                   {formData.offerType ===
                   "PERCENTAGE"
                     ? "%"
                     : "₹"}
+
                 </span>
 
                 <input
-                  id="offerAmount"
+                  id="merchant-festival-offer-amount"
                   type="number"
                   name="offerAmount"
                   value={
@@ -1486,20 +1569,21 @@ const FlatOffer = ({
             </div>
 
             {/* =================================================
-                MINIMUM ORDER VALUE
+                MINIMUM ORDER
             ================================================= */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
-                Minimum Order Value
-                (₹){" "}
+                Minimum Order Value (₹){" "}
                 <span>*</span>
               </label>
 
-              <div className="flat-offer-input-icon">
+              <div className="merchant-festival-input-icon">
 
-                <RupeeIcon />
+                <span className="merchant-festival-currency">
+                  ₹
+                </span>
 
                 <input
                   type="number"
@@ -1518,6 +1602,33 @@ const FlatOffer = ({
 
             </div>
 
+            {/* =================================================
+                MAXIMUM SELECTION
+            ================================================= */}
+
+            <div className="merchant-festival-field">
+
+              <label>
+                Maximum Selection
+              </label>
+
+              <input
+                type="number"
+                name="maximumSelection"
+                value={
+                  formData.maximumSelection
+                }
+                onChange={handleChange}
+                min="-1"
+                placeholder="-1 for unlimited"
+              />
+
+              <small>
+                Use -1 for unlimited selection.
+              </small>
+
+            </div>
+
           </div>
 
         </div>
@@ -1526,21 +1637,21 @@ const FlatOffer = ({
             APPLIES ON
         ================================================= */}
 
-        <div className="flat-offer-section flat-offer-selection">
+        <div className="merchant-festival-section">
 
-          <div className="flat-offer-section-heading">
+          <div className="merchant-festival-section-heading">
             <span />
             <h3>
               Applies On
             </h3>
           </div>
 
-          <div className="flat-offer-apply-grid">
+          <div className="merchant-festival-apply-grid">
 
             {/* ALL */}
 
             <label
-              className={`flat-offer-apply-card ${
+              className={`merchant-festival-apply-card ${
                 applyTo === "ALL"
                   ? "active"
                   : ""
@@ -1549,37 +1660,33 @@ const FlatOffer = ({
 
               <input
                 type="radio"
-                name="applyTo"
+                name="bogoApplyTo"
                 value="ALL"
                 checked={
                   applyTo === "ALL"
                 }
-                onChange={() => {
-                  setApplyTo("ALL");
-                  setSelectedCategories(
-                    []
-                  );
-                  setSelectedProducts(
-                    []
-                  );
-                }}
+                onChange={() =>
+                  setApplyTo("ALL")
+                }
               />
 
-              <div className="flat-offer-radio-circle">
-                <span />
-              </div>
+              <span className="merchant-festival-radio-circle">
+                {applyTo === "ALL" && (
+                  <span />
+                )}
+              </span>
 
               <div>
+
                 <strong>
                   All Categories
                 </strong>
 
                 <small>
-                  Applies to all
-                  categories and all
-                  products in this
-                  outlet
+                  Applies to all products
+                  in this outlet.
                 </small>
+
               </div>
 
             </label>
@@ -1587,9 +1694,8 @@ const FlatOffer = ({
             {/* CATEGORY */}
 
             <label
-              className={`flat-offer-apply-card ${
-                applyTo ===
-                "CATEGORY"
+              className={`merchant-festival-apply-card ${
+                applyTo === "CATEGORY"
                   ? "active"
                   : ""
               }`}
@@ -1597,37 +1703,33 @@ const FlatOffer = ({
 
               <input
                 type="radio"
-                name="applyTo"
+                name="bogoApplyTo"
                 value="CATEGORY"
                 checked={
-                  applyTo ===
-                  "CATEGORY"
+                  applyTo === "CATEGORY"
                 }
-                onChange={() => {
-                  setApplyTo(
-                    "CATEGORY"
-                  );
-                  setSelectedProducts(
-                    []
-                  );
-                }}
+                onChange={() =>
+                  setApplyTo("CATEGORY")
+                }
               />
 
-              <div className="flat-offer-radio-circle">
-                <span />
-              </div>
+              <span className="merchant-festival-radio-circle">
+                {applyTo === "CATEGORY" && (
+                  <span />
+                )}
+              </span>
 
               <div>
+
                 <strong>
-                  Selected
-                  Categories
+                  Selected Categories
                 </strong>
 
                 <small>
-                  Select one or
-                  more categories
-                  below
+                  Apply the offer to
+                  selected categories.
                 </small>
+
               </div>
 
             </label>
@@ -1635,9 +1737,8 @@ const FlatOffer = ({
             {/* PRODUCT */}
 
             <label
-              className={`flat-offer-apply-card ${
-                applyTo ===
-                "PRODUCT"
+              className={`merchant-festival-apply-card ${
+                applyTo === "PRODUCT"
                   ? "active"
                   : ""
               }`}
@@ -1645,36 +1746,33 @@ const FlatOffer = ({
 
               <input
                 type="radio"
-                name="applyTo"
+                name="bogoApplyTo"
                 value="PRODUCT"
                 checked={
-                  applyTo ===
-                  "PRODUCT"
+                  applyTo === "PRODUCT"
                 }
-                onChange={() => {
-                  setApplyTo(
-                    "PRODUCT"
-                  );
-                  setSelectedCategories(
-                    []
-                  );
-                }}
+                onChange={() =>
+                  setApplyTo("PRODUCT")
+                }
               />
 
-              <div className="flat-offer-radio-circle">
-                <span />
-              </div>
+              <span className="merchant-festival-radio-circle">
+                {applyTo === "PRODUCT" && (
+                  <span />
+                )}
+              </span>
 
               <div>
+
                 <strong>
                   Selected Products
                 </strong>
 
                 <small>
-                  Select specific
-                  products from
-                  the list
+                  Apply the offer to
+                  selected products.
                 </small>
+
               </div>
 
             </label>
@@ -1685,49 +1783,52 @@ const FlatOffer = ({
               CATEGORY DROPDOWN
           ================================================= */}
 
-          {applyTo ===
-            "CATEGORY" && (
+          {applyTo === "CATEGORY" && (
+
             <div
-              className="flat-offer-dropdown-wrapper"
-              ref={
-                categoryDropdownRef
-              }
+              className="merchant-festival-dropdown-wrapper"
+              ref={categoryDropdownRef}
             >
 
-              <div className="flat-offer-dropdown-label-row">
+              <div className="merchant-festival-dropdown-label-row">
 
                 <label>
                   Categories
                 </label>
 
                 <span>
-                  {
-                    categories.length
-                  }{" "}
-                  available
+                  {selectedCategories.length} selected
                 </span>
 
               </div>
 
               <button
                 type="button"
-                className={`flat-offer-dropdown-trigger ${
+                className={`merchant-festival-dropdown-trigger ${
                   categoryDropdownOpen
                     ? "open"
                     : ""
                 }`}
-                onClick={() =>
+                onClick={() => {
+
                   setCategoryDropdownOpen(
                     (previous) =>
                       !previous
-                  )
-                }
+                  );
+
+                  setProductDropdownOpen(
+                    false
+                  );
+
+                  setOutletDropdownOpen(
+                    false
+                  );
+
+                }}
               >
 
                 <span>
-                  {
-                    categoryDropdownLabel
-                  }
+                  {categoryDropdownLabel}
                 </span>
 
                 <ChevronIcon
@@ -1739,9 +1840,10 @@ const FlatOffer = ({
               </button>
 
               {categoryDropdownOpen && (
-                <div className="flat-offer-dropdown-menu">
 
-                  <div className="flat-offer-search">
+                <div className="merchant-festival-dropdown-menu">
+
+                  <div className="merchant-festival-search">
 
                     <SearchIcon />
 
@@ -1750,20 +1852,18 @@ const FlatOffer = ({
                       value={
                         categorySearch
                       }
-                      onChange={(
-                        event
-                      ) =>
+                      onChange={(e) =>
                         setCategorySearch(
-                          event.target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder="Search categories..."
+                      autoFocus
                     />
 
                   </div>
 
-                  <div className="flat-offer-dropdown-actions">
+                  <div className="merchant-festival-dropdown-actions">
 
                     <button
                       type="button"
@@ -1785,43 +1885,36 @@ const FlatOffer = ({
 
                   </div>
 
-                  <div className="flat-offer-dropdown-list">
+                  <div className="merchant-festival-dropdown-count">
+                    {filteredCategories.length} categories
+                  </div>
 
-                    {loadingProducts ? (
-                      <div className="flat-offer-dropdown-empty">
-                        Loading
-                        categories...
-                      </div>
-                    ) : filteredCategories.length ===
-                      0 ? (
-                      <div className="flat-offer-dropdown-empty">
-                        No categories
-                        found.
-                      </div>
-                    ) : (
+                  <div className="merchant-festival-dropdown-list">
+
+                    {filteredCategories.length >
+                    0 ? (
+
                       filteredCategories.map(
                         (category) => {
 
-                          const categoryId =
+                          const id =
                             String(
                               category.id
                             );
 
                           const checked =
                             selectedCategories.some(
-                              (id) =>
+                              (item) =>
                                 String(
-                                  id
-                                ) ===
-                                categoryId
+                                  item
+                                ) === id
                             );
 
                           return (
+
                             <label
-                              key={
-                                categoryId
-                              }
-                              className={`flat-offer-checkbox-row ${
+                              key={id}
+                              className={`merchant-festival-checkbox-row ${
                                 checked
                                   ? "checked"
                                   : ""
@@ -1830,45 +1923,57 @@ const FlatOffer = ({
 
                               <input
                                 type="checkbox"
-                                checked={
-                                  checked
-                                }
+                                checked={checked}
                                 onChange={() =>
                                   handleCategoryChange(
-                                    categoryId
+                                    id
                                   )
                                 }
                               />
 
-                              <span className="flat-offer-custom-checkbox">
+                              <span className="merchant-festival-custom-checkbox">
                                 {checked
                                   ? "✓"
                                   : ""}
                               </span>
 
-                              <span>
-                                {
-                                  category.name
-                                }
+                              <span className="merchant-festival-product-info">
+
+                                <span>
+                                  {category.name}
+                                </span>
+
                               </span>
 
                             </label>
+
                           );
+
                         }
                       )
+
+                    ) : (
+
+                      <div className="merchant-festival-dropdown-empty">
+                        No categories found
+                      </div>
+
                     )}
 
                   </div>
 
                 </div>
+
               )}
 
               {selectedCategories.length >
                 0 && (
-                <div className="flat-offer-selected-chips">
 
-                  {selectedCategories.map(
-                    (categoryId) => {
+                <div className="merchant-festival-selected-chips">
+
+                  {selectedCategories
+                    .slice(0, 3)
+                    .map((id) => {
 
                       const category =
                         categories.find(
@@ -1876,79 +1981,91 @@ const FlatOffer = ({
                             String(
                               item.id
                             ) ===
-                            String(
-                              categoryId
-                            )
+                            String(id)
                         );
 
                       return (
                         <span
-                          key={
-                            categoryId
-                          }
-                          className="flat-offer-chip"
+                          key={id}
+                          className="merchant-festival-chip"
                         >
-                          {
-                            category?.name
-                          }
+                          {category?.name ||
+                            `Category ${id}`}
                         </span>
                       );
-                    }
+
+                    })}
+
+                  {selectedCategories.length >
+                    3 && (
+
+                    <span className="merchant-festival-chip more">
+                      +
+                      {selectedCategories.length -
+                        3}
+                      more
+                    </span>
+
                   )}
 
                 </div>
+
               )}
 
             </div>
+
           )}
 
           {/* =================================================
               PRODUCT DROPDOWN
           ================================================= */}
 
-          {applyTo ===
-            "PRODUCT" && (
+          {applyTo === "PRODUCT" && (
+
             <div
-              className="flat-offer-dropdown-wrapper"
-              ref={
-                productDropdownRef
-              }
+              className="merchant-festival-dropdown-wrapper"
+              ref={productDropdownRef}
             >
 
-              <div className="flat-offer-dropdown-label-row">
+              <div className="merchant-festival-dropdown-label-row">
 
                 <label>
                   Products
                 </label>
 
                 <span>
-                  {
-                    products.length
-                  }{" "}
-                  available
+                  {selectedProducts.length} selected
                 </span>
 
               </div>
 
               <button
                 type="button"
-                className={`flat-offer-dropdown-trigger ${
+                className={`merchant-festival-dropdown-trigger ${
                   productDropdownOpen
                     ? "open"
                     : ""
                 }`}
-                onClick={() =>
+                onClick={() => {
+
                   setProductDropdownOpen(
                     (previous) =>
                       !previous
-                  )
-                }
+                  );
+
+                  setCategoryDropdownOpen(
+                    false
+                  );
+
+                  setOutletDropdownOpen(
+                    false
+                  );
+
+                }}
               >
 
                 <span>
-                  {
-                    productDropdownLabel
-                  }
+                  {productDropdownLabel}
                 </span>
 
                 <ChevronIcon
@@ -1960,9 +2077,10 @@ const FlatOffer = ({
               </button>
 
               {productDropdownOpen && (
-                <div className="flat-offer-dropdown-menu">
 
-                  <div className="flat-offer-search">
+                <div className="merchant-festival-dropdown-menu">
+
+                  <div className="merchant-festival-search">
 
                     <SearchIcon />
 
@@ -1971,20 +2089,18 @@ const FlatOffer = ({
                       value={
                         productSearch
                       }
-                      onChange={(
-                        event
-                      ) =>
+                      onChange={(e) =>
                         setProductSearch(
-                          event.target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder="Search products..."
+                      autoFocus
                     />
 
                   </div>
 
-                  <div className="flat-offer-dropdown-actions">
+                  <div className="merchant-festival-dropdown-actions">
 
                     <button
                       type="button"
@@ -2006,60 +2122,44 @@ const FlatOffer = ({
 
                   </div>
 
-                  <div className="flat-offer-dropdown-count">
-
-                    Showing{" "}
-                    {
-                      filteredProducts.length
-                    }{" "}
-                    of{" "}
-                    {
-                      products.length
-                    }{" "}
-                    products
-
+                  <div className="merchant-festival-dropdown-count">
+                    {filteredProducts.length} products
                   </div>
 
-                  <div className="flat-offer-dropdown-list">
+                  <div className="merchant-festival-dropdown-list">
 
-                    {loadingProducts ? (
-                      <div className="flat-offer-dropdown-empty">
-                        Loading
-                        products...
-                      </div>
-                    ) : filteredProducts.length ===
-                      0 ? (
-                      <div className="flat-offer-dropdown-empty">
-                        No products
-                        found for
-                        this outlet.
-                      </div>
-                    ) : (
+                    {filteredProducts.length >
+                    0 ? (
+
                       filteredProducts.map(
                         (product) => {
 
-                          const productId =
-                            String(
-                              getId(
-                                product
-                              )
-                            );
+                          const id =
+                            getId(product);
+
+                          if (
+                            id === undefined ||
+                            id === null
+                          ) {
+                            return null;
+                          }
 
                           const checked =
                             selectedProducts.some(
-                              (id) =>
+                              (item) =>
                                 String(
-                                  id
+                                  item
                                 ) ===
-                                productId
+                                String(id)
                             );
 
                           return (
+
                             <label
                               key={
-                                productId
+                                String(id)
                               }
-                              className={`flat-offer-checkbox-row ${
+                              className={`merchant-festival-checkbox-row ${
                                 checked
                                   ? "checked"
                                   : ""
@@ -2068,30 +2168,26 @@ const FlatOffer = ({
 
                               <input
                                 type="checkbox"
-                                checked={
-                                  checked
-                                }
+                                checked={checked}
                                 onChange={() =>
                                   handleProductChange(
-                                    productId
+                                    id
                                   )
                                 }
                               />
 
-                              <span className="flat-offer-custom-checkbox">
+                              <span className="merchant-festival-custom-checkbox">
                                 {checked
                                   ? "✓"
                                   : ""}
                               </span>
 
-                              <div className="flat-offer-product-info">
+                              <span className="merchant-festival-product-info">
 
                                 <span>
-                                  {
-                                    getName(
-                                      product
-                                    )
-                                  }
+                                  {getName(
+                                    product
+                                  )}
                                 </span>
 
                                 <small>
@@ -2102,107 +2198,125 @@ const FlatOffer = ({
                                   }
                                 </small>
 
-                              </div>
+                              </span>
 
                             </label>
+
                           );
+
                         }
                       )
+
+                    ) : (
+
+                      <div className="merchant-festival-dropdown-empty">
+
+                        {loadingProducts
+                          ? "Loading products..."
+                          : "No products found"}
+
+                      </div>
+
                     )}
 
                   </div>
 
                 </div>
+
               )}
 
               {selectedProducts.length >
                 0 && (
-                <div className="flat-offer-selected-chips">
+
+                <div className="merchant-festival-selected-chips">
 
                   {selectedProducts
-                    .slice(0, 8)
-                    .map(
-                      (productId) => {
+                    .slice(0, 3)
+                    .map((id) => {
 
-                        const product =
-                          products.find(
-                            (item) =>
-                              String(
-                                getId(
-                                  item
-                                )
-                              ) ===
-                              String(
-                                productId
-                              )
-                          );
-
-                        return (
-                          <span
-                            key={
-                              productId
-                            }
-                            className="flat-offer-chip"
-                          >
-                            {
-                              getName(
-                                product
-                              )
-                            }
-                          </span>
+                      const product =
+                        products.find(
+                          (item) =>
+                            String(
+                              getId(item)
+                            ) ===
+                            String(id)
                         );
-                      }
-                    )}
+
+                      return (
+                        <span
+                          key={id}
+                          className="merchant-festival-chip"
+                        >
+                          {getName(
+                            product
+                          )}
+                        </span>
+                      );
+
+                    })}
 
                   {selectedProducts.length >
-                    8 && (
-                    <span className="flat-offer-chip more">
+                    3 && (
+
+                    <span className="merchant-festival-chip more">
+
                       +
-                      {
-                        selectedProducts.length -
-                          8
-                      }{" "}
+                      {selectedProducts.length -
+                        3}
                       more
+
                     </span>
+
                   )}
 
                 </div>
+
               )}
 
             </div>
+
           )}
 
         </div>
 
         {/* =================================================
-            PLAN SCHEDULE
+            DATE & TIME
         ================================================= */}
 
-        <div className="flat-offer-section">
+        <div className="merchant-festival-section">
 
-          <div className="flat-offer-section-heading">
+          <div className="merchant-festival-section-heading">
             <span />
             <h3>
-              Plan Schedule
+              Promotion Schedule
             </h3>
           </div>
 
-          <div className="flat-offer-grid">
+          <div className="merchant-festival-grid">
 
             {/* START DATE */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 Start Date{" "}
                 <span>*</span>
               </label>
 
-              <div className="flat-offer-date-wrapper">
+              <div
+                className="merchant-festival-date-wrapper"
+                onClick={() =>
+                  openDatePicker(
+                    startDateRef
+                  )
+                }
+              >
 
                 <CalendarIcon />
 
                 <input
+                  ref={startDateRef}
                   type="date"
                   name="startDate"
                   value={
@@ -2220,26 +2334,30 @@ const FlatOffer = ({
 
             {/* END DATE */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 End Date{" "}
                 <span>*</span>
               </label>
 
-              <div className="flat-offer-date-wrapper">
+              <div
+                className="merchant-festival-date-wrapper"
+                onClick={() =>
+                  openDatePicker(
+                    endDateRef
+                  )
+                }
+              >
 
                 <CalendarIcon />
 
                 <input
+                  ref={endDateRef}
                   type="date"
                   name="endDate"
                   value={
                     formData.endDate
-                  }
-                  min={
-                    formData.startDate ||
-                    undefined
                   }
                   onChange={
                     handleChange
@@ -2253,18 +2371,26 @@ const FlatOffer = ({
 
             {/* START TIME */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 Start Time{" "}
                 <span>*</span>
               </label>
 
-              <div className="flat-offer-date-wrapper">
+              <div
+                className="merchant-festival-date-wrapper"
+                onClick={() =>
+                  openTimePicker(
+                    startTimeRef
+                  )
+                }
+              >
 
                 <ClockIcon />
 
                 <input
+                  ref={startTimeRef}
                   type="time"
                   name="startTime"
                   value={
@@ -2282,18 +2408,26 @@ const FlatOffer = ({
 
             {/* END TIME */}
 
-            <div className="flat-offer-field">
+            <div className="merchant-festival-field">
 
               <label>
                 End Time{" "}
                 <span>*</span>
               </label>
 
-              <div className="flat-offer-date-wrapper">
+              <div
+                className="merchant-festival-date-wrapper"
+                onClick={() =>
+                  openTimePicker(
+                    endTimeRef
+                  )
+                }
+              >
 
                 <ClockIcon />
 
                 <input
+                  ref={endTimeRef}
                   type="time"
                   name="endTime"
                   value={
@@ -2309,34 +2443,6 @@ const FlatOffer = ({
 
             </div>
 
-            {/* MAXIMUM SELECTION */}
-
-            <div className="flat-offer-field">
-
-              <label>
-                Maximum Selection
-              </label>
-
-              <input
-                type="number"
-                name="maximumSelection"
-                value={
-                  formData.maximumSelection
-                }
-                onChange={
-                  handleChange
-                }
-                min="-1"
-                placeholder="-1"
-              />
-
-              <small>
-                Enter -1 for
-                unlimited selection
-              </small>
-
-            </div>
-
           </div>
 
         </div>
@@ -2345,39 +2451,35 @@ const FlatOffer = ({
             ACTIONS
         ================================================= */}
 
-        <div className="flat-offer-actions">
+        <div className="merchant-festival-actions">
 
           <button
             type="button"
-            className="flat-offer-reset"
-            onClick={
-              handleReset
-            }
-            disabled={
-              submitting
-            }
+            className="merchant-festival-reset"
+            onClick={handleReset}
+            disabled={submitting}
           >
             Reset
           </button>
 
           <button
             type="submit"
-            className="flat-offer-submit"
-            disabled={
-              submitting
-            }
+            className="merchant-festival-submit"
+            disabled={submitting}
           >
+
             {submitting
               ? "Creating..."
-              : "Create Flat Offer"}
+              : "Create Festival Offer"}
+
           </button>
 
         </div>
 
-      </form> 
+      </form>
 
     </div>
   );
 };
 
-export default FlatOffer;
+export default FestivalOffer;

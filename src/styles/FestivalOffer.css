@@ -2,7 +2,7 @@
    BOGO MAIN
 ========================================================= */
 
-.bogo-plan {
+.merchant-festival-plan {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -15,14 +15,14 @@
   padding: 26px 28px 28px;
 
   box-shadow:
-    0 8px 28px rgba(20, 184, 166, 0.08);
+    0 8px 28px rgba(184, 20, 124, 0.08);
 }
 
 /* =========================================================
    HEADER
 ========================================================= */
 
-.bogo-header {
+.merchant-festival-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,17 +37,17 @@
     linear-gradient(
       135deg,
       #ecfdf8 0%,
-      #f5fffd 45%,
+      #faf7ff 45%,
       #f0f9ff 100%
     );
 
   box-shadow:
-    0 4px 16px rgba(20, 184, 166, 0.08);
+    0 4px 16px rgba(184, 20, 151, 0.08);
 
   box-sizing: border-box;
 }
 
-.bogo-title-wrapper {
+.merchant-festival-title-wrapper {
   display: flex;
   align-items: center;
 
@@ -56,7 +56,7 @@
   min-width: 0;
 }
 
-.bogo-title-icon {
+.merchant-festival-title-icon {
   width: 44px;
   height: 44px;
 
@@ -77,20 +77,20 @@
 
   border: 1px solid #99e8db;
 
-  color: #0f766e;
+  color: #7c3aed;
 
   box-shadow:
     0 4px 10px rgba(20, 184, 166, 0.12);
 }
 
-.bogo-header h2 {
+.merchant-festival-header h2 {
   margin: 0;
 
   background:
     linear-gradient(
       90deg,
-      #0f766e,
-      #14b8a6,
+      #7c3aed,
+      #8b5cf6,
       #2563eb
     );
 
@@ -106,7 +106,7 @@
   line-height: 1.25;
 }
 
-.bogo-header p {
+.merchant-festival-header p {
   margin: 5px 0 0;
 
   color: #6b7c79;
@@ -117,7 +117,7 @@
   line-height: 1.4;
 }
 
-.bogo-badge {
+.merchant-festival-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,8 +134,8 @@
   background:
     linear-gradient(
       135deg,
-      #0f766e,
-      #14b8a6,
+      #7c3aed,
+      #8b5cf6,
       #0891b2
     );
 
@@ -154,14 +154,14 @@
     rgba(20, 184, 166, 0.25);
 }
 
-.bogo-title-icon {
+.merchant-festival-title-icon {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
-.bogo-header:hover
-  .bogo-title-icon {
+.merchant-festival-header:hover
+  .merchant-festival-title-icon {
   transform: translateY(-1px);
 
   box-shadow:
@@ -173,7 +173,7 @@
    FORM
 ========================================================= */
 
-.bogo-form {
+.merchant-festival-form {
   width: 100%;
 }
 
@@ -181,7 +181,7 @@
    SECTIONS
 ========================================================= */
 
-.bogo-section {
+.merchant-festival-section {
   width: 100%;
   box-sizing: border-box;
 
@@ -195,7 +195,7 @@
   border-radius: 13px;
 }
 
-.bogo-section-heading {
+.merchant-festival-section-heading {
   display: flex;
   align-items: center;
 
@@ -204,7 +204,7 @@
   margin-bottom: 18px;
 }
 
-.bogo-section-heading > span {
+.merchant-festival-section-heading > span {
   width: 4px;
   height: 19px;
 
@@ -215,12 +215,12 @@
   background:
     linear-gradient(
       180deg,
-      #14b8a6,
-      #0f766e
+      #8b5cf6,
+      #7c3aed
     );
 }
 
-.bogo-section-heading h3 {
+.merchant-festival-section-heading h3 {
   margin: 0;
 
   color: #253a37;
@@ -233,7 +233,7 @@
    GRID
 ========================================================= */
 
-.bogo-grid {
+.merchant-festival-grid {
   display: grid;
 
   grid-template-columns:
@@ -250,7 +250,7 @@
    FIELD
 ========================================================= */
 
-.bogo-field {
+.merchant-festival-field {
   min-width: 0;
 
   display: flex;
@@ -259,19 +259,19 @@
   gap: 7px;
 }
 
-.bogo-field label {
-  color: #344b47;
+.merchant-festival-field label {
+  color: #40365a;
 
   font-size: 13px;
   font-weight: 650;
 }
 
-.bogo-field label span {
+.merchant-festival-field label span {
   color: #e54f35;
 }
 
-.bogo-field small {
-  color: #81918d;
+.merchant-festival-field small {
+  color: #8b819d;
 
   font-size: 11px;
   line-height: 1.4;
@@ -281,14 +281,14 @@
    INPUTS
 ========================================================= */
 
-.bogo-field input,
-.bogo-field select {
+.merchant-festival-field input,
+.merchant-festival-field select {
   width: 100%;
   height: 44px;
 
   box-sizing: border-box;
 
-  border: 1px solid #cfe1dd;
+  border: 1px solid #ddd6fe;
   border-radius: 8px;
 
   background: #ffffff;
@@ -307,13 +307,13 @@
     background 0.2s ease;
 }
 
-.bogo-field input:hover,
-.bogo-field select:hover {
+.merchant-festival-field input:hover,
+.merchant-festival-field select:hover {
   border-color: #69cfc0;
 }
 
-.bogo-field input:focus,
-.bogo-field select:focus {
+.merchant-festival-field input:focus,
+.merchant-festival-field select:focus {
   border-color: #14a895;
 
   box-shadow:
@@ -321,7 +321,7 @@
     rgba(20, 168, 149, 0.12);
 }
 
-.bogo-field input::placeholder {
+.merchant-festival-field input::placeholder {
   color: #9aa9a5;
 }
 
@@ -329,7 +329,7 @@
    INPUT ICON
 ========================================================= */
 
-.bogo-input-icon {
+.merchant-festival-input-icon {
   position: relative;
 
   width: 100%;
@@ -341,11 +341,11 @@
   box-sizing: border-box;
 }
 
-.bogo-input-icon input {
+.merchant-festival-input-icon input {
   padding-left: 40px;
 }
 
-.bogo-currency {
+.merchant-festival-currency {
   position: absolute;
 
   left: 13px;
@@ -371,12 +371,12 @@
    READONLY PLAN
 ========================================================= */
 
-.bogo-readonly {
+.merchant-festival-readonly {
   background: #e9fffa !important;
 
   border-color: #b7e8df !important;
 
-  color: #0f766e !important;
+  color: #7c3aed !important;
 
   font-weight: 700 !important;
 }
@@ -385,13 +385,13 @@
    OUTLET DROPDOWN
 ========================================================= */
 
-.bogo-outlet-dropdown {
+.merchant-festival-outlet-dropdown {
   position: relative;
 
   width: 100%;
 }
 
-.bogo-outlet-trigger {
+.merchant-festival-outlet-trigger {
   width: 100%;
   min-height: 44px;
 
@@ -403,12 +403,12 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #cfe1dd;
+  border: 1px solid #ddd6fe;
   border-radius: 8px;
 
   background: #ffffff;
 
-  color: #344b47;
+  color: #40365a;
 
   font-size: 13px;
   font-weight: 550;
@@ -423,18 +423,18 @@
     background 0.2s ease;
 }
 
-.bogo-outlet-trigger:hover,
-.bogo-outlet-trigger-open {
+.merchant-festival-outlet-trigger:hover,
+.merchant-festival-outlet-trigger-open {
   border-color: #14a895;
 
-  background: #fbfffe;
+  background: #fcfaff;
 
   box-shadow:
     0 0 0 3px
     rgba(20, 168, 149, 0.08);
 }
 
-.bogo-outlet-trigger-left {
+.merchant-festival-outlet-trigger-left {
   min-width: 0;
 
   display: flex;
@@ -443,13 +443,13 @@
   gap: 9px;
 }
 
-.bogo-outlet-trigger-left svg {
+.merchant-festival-outlet-trigger-left svg {
   flex-shrink: 0;
 
   color: #0f9f8e;
 }
 
-.bogo-outlet-trigger-left > span {
+.merchant-festival-outlet-trigger-left > span {
   overflow: hidden;
 
   white-space: nowrap;
@@ -457,7 +457,7 @@
   text-overflow: ellipsis;
 }
 
-.bogo-chevron-open {
+.merchant-festival-chevron-open {
   transform: rotate(180deg);
 }
 
@@ -465,7 +465,7 @@
    OUTLET MENU
 ========================================================= */
 
-.bogo-outlet-menu {
+.merchant-festival-outlet-menu {
   position: absolute;
 
   top: calc(100% + 7px);
@@ -485,14 +485,14 @@
 
   box-shadow:
     0 14px 35px
-    rgba(20, 70, 63, 0.16);
+    rgba(76, 29, 149, 0.14);
 }
 
 /* =========================================================
    SEARCH
 ========================================================= */
 
-.bogo-search {
+.merchant-festival-search {
   height: 43px;
 
   display: flex;
@@ -509,12 +509,12 @@
   border: 1px solid #d6e7e3;
   border-radius: 7px;
 
-  background: #f5fffd;
+  background: #faf7ff;
 
   color: #0f9f8e;
 }
 
-.bogo-search input {
+.merchant-festival-search input {
   width: 100%;
   height: 100%;
 
@@ -530,7 +530,7 @@
   font-size: 12px;
 }
 
-.bogo-search input::placeholder {
+.merchant-festival-search input::placeholder {
   color: #9aa9a5;
 }
 
@@ -538,7 +538,7 @@
    OUTLET LIST
 ========================================================= */
 
-.bogo-outlet-list {
+.merchant-festival-outlet-list {
   max-height: 230px;
 
   overflow-y: auto;
@@ -549,13 +549,13 @@
   box-sizing: border-box;
 }
 
-.bogo-outlet-list::-webkit-scrollbar,
-.bogo-dropdown-list::-webkit-scrollbar {
+.merchant-festival-outlet-list::-webkit-scrollbar,
+.merchant-festival-dropdown-list::-webkit-scrollbar {
   width: 5px;
 }
 
-.bogo-outlet-list::-webkit-scrollbar-thumb,
-.bogo-dropdown-list::-webkit-scrollbar-thumb {
+.merchant-festival-outlet-list::-webkit-scrollbar-thumb,
+.merchant-festival-dropdown-list::-webkit-scrollbar-thumb {
   background: #9dd8ce;
 
   border-radius: 10px;
@@ -565,7 +565,7 @@
    OUTLET ROW
 ========================================================= */
 
-.bogo-outlet-row {
+.merchant-festival-outlet-row {
   width: 100%;
   min-height: 48px;
 
@@ -586,15 +586,15 @@
     background 0.15s ease;
 }
 
-.bogo-outlet-row:hover {
-  background: #effcf9;
+.merchant-festival-outlet-row:hover {
+  background: #f7f3ff;
 }
 
-.bogo-outlet-row.checked {
+.merchant-festival-outlet-row.checked {
   background: #e9faf6;
 }
 
-.bogo-outlet-row input {
+.merchant-festival-outlet-row input {
   position: absolute;
 
   opacity: 0;
@@ -606,7 +606,7 @@
    CHECKBOX
 ========================================================= */
 
-.bogo-custom-checkbox {
+.merchant-festival-custom-checkbox {
   flex: 0 0 auto;
 
   width: 17px;
@@ -618,7 +618,7 @@
 
   box-sizing: border-box;
 
-  border: 1.5px solid #aebfbb;
+  border: 1.5px solid #c4b5fd;
   border-radius: 4px;
 
   background: #ffffff;
@@ -629,20 +629,20 @@
   font-weight: 800;
 }
 
-.bogo-outlet-row.checked
-  .bogo-custom-checkbox,
-.bogo-checkbox-row.checked
-  .bogo-custom-checkbox {
-  border-color: #0fa18e;
+.merchant-festival-outlet-row.checked
+  .merchant-festival-custom-checkbox,
+.merchant-festival-checkbox-row.checked
+  .merchant-festival-custom-checkbox {
+  border-color: #7c3aed;
 
-  background: #0fa18e;
+  background: #7c3aed;
 }
 
 /* =========================================================
    OUTLET DETAILS
 ========================================================= */
 
-.bogo-outlet-details {
+.merchant-festival-outlet-details {
   min-width: 0;
 
   display: flex;
@@ -651,10 +651,10 @@
   gap: 2px;
 }
 
-.bogo-outlet-name {
+.merchant-festival-outlet-name {
   overflow: hidden;
 
-  color: #344b47;
+  color: #40365a;
 
   font-size: 12px;
   font-weight: 650;
@@ -663,7 +663,7 @@
   text-overflow: ellipsis;
 }
 
-.bogo-outlet-id {
+.merchant-festival-outlet-id {
   color: #91a19d;
 
   font-size: 10px;
@@ -673,7 +673,7 @@
    APPLY ON
 ========================================================= */
 
-.bogo-apply-grid {
+.merchant-festival-apply-grid {
   display: grid;
 
   grid-template-columns:
@@ -685,7 +685,7 @@
   gap: 12px;
 }
 
-.bogo-apply-card {
+.merchant-festival-apply-card {
   position: relative;
 
   display: flex;
@@ -713,25 +713,25 @@
     transform 0.2s ease;
 }
 
-.bogo-apply-card:hover {
+.merchant-festival-apply-card:hover {
   border-color: #76cfc3;
 
-  background: #f5fffd;
+  background: #faf7ff;
 
   transform: translateY(-1px);
 }
 
-.bogo-apply-card.active {
-  border-color: #13a892;
+.merchant-festival-apply-card.active {
+  border-color: #8b5cf6;
 
-  background: #eafff9;
+  background: #f5f0ff;
 
   box-shadow:
     0 5px 15px
-    rgba(19, 168, 146, 0.1);
+    rgba(139, 92, 246, 0.10);
 }
 
-.bogo-apply-card > input {
+.merchant-festival-apply-card > input {
   position: absolute;
 
   opacity: 0;
@@ -739,7 +739,7 @@
   pointer-events: none;
 }
 
-.bogo-radio-circle {
+.merchant-festival-radio-circle {
   flex: 0 0 auto;
 
   width: 18px;
@@ -751,42 +751,42 @@
   align-items: center;
   justify-content: center;
 
-  border: 2px solid #b8c8c4;
+  border: 2px solid #c4b5fd;
   border-radius: 50%;
 
   background: #ffffff;
 }
 
-.bogo-apply-card.active
-  .bogo-radio-circle {
-  border-color: #0fa18e;
+.merchant-festival-apply-card.active
+  .merchant-festival-radio-circle {
+  border-color: #7c3aed;
 }
 
-.bogo-apply-card.active
-  .bogo-radio-circle span {
+.merchant-festival-apply-card.active
+  .merchant-festival-radio-circle span {
   width: 8px;
   height: 8px;
 
   border-radius: 50%;
 
-  background: #0fa18e;
+  background: #7c3aed;
 }
 
-.bogo-apply-card strong {
+.merchant-festival-apply-card strong {
   display: block;
 
   margin-bottom: 4px;
 
-  color: #344b47;
+  color: #40365a;
 
   font-size: 13px;
   font-weight: 700;
 }
 
-.bogo-apply-card small {
+.merchant-festival-apply-card small {
   display: block;
 
-  color: #81918d;
+  color: #8b819d;
 
   font-size: 11px;
 
@@ -797,7 +797,7 @@
    SELECTION DROPDOWN
 ========================================================= */
 
-.bogo-dropdown-wrapper {
+.merchant-festival-dropdown-wrapper {
   position: relative;
 
   width: 100%;
@@ -807,13 +807,13 @@
   z-index: 20;
 }
 
-.bogo-dropdown-wrapper:has(
-  .bogo-dropdown-menu
+.merchant-festival-dropdown-wrapper:has(
+  .merchant-festival-dropdown-menu
 ) {
   z-index: 200;
 }
 
-.bogo-dropdown-label-row {
+.merchant-festival-dropdown-label-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -821,15 +821,15 @@
   margin-bottom: 7px;
 }
 
-.bogo-dropdown-label-row label {
-  color: #344b47;
+.merchant-festival-dropdown-label-row label {
+  color: #40365a;
 
   font-size: 13px;
   font-weight: 700;
 }
 
-.bogo-dropdown-label-row span {
-  color: #82938f;
+.merchant-festival-dropdown-label-row span {
+  color: #8b819d;
 
   font-size: 11px;
 }
@@ -838,7 +838,7 @@
    DROPDOWN TRIGGER
 ========================================================= */
 
-.bogo-dropdown-trigger {
+.merchant-festival-dropdown-trigger {
   width: 100%;
   min-height: 44px;
 
@@ -850,12 +850,12 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #cfe1dd;
+  border: 1px solid #ddd6fe;
   border-radius: 8px;
 
   background: #ffffff;
 
-  color: #344b47;
+  color: #40365a;
 
   font-size: 13px;
   font-weight: 550;
@@ -870,22 +870,22 @@
     background 0.2s ease;
 }
 
-.bogo-dropdown-trigger:hover,
-.bogo-dropdown-trigger.open {
-  border-color: #13a892;
+.merchant-festival-dropdown-trigger:hover,
+.merchant-festival-dropdown-trigger.open {
+  border-color: #8b5cf6;
 
-  background: #fbfffe;
+  background: #fcfaff;
 
   box-shadow:
     0 0 0 3px
-    rgba(19, 168, 146, 0.08);
+    rgba(139, 92, 246, 0.08);
 }
 
 /* =========================================================
    DROPDOWN MENU
 ========================================================= */
 
-.bogo-dropdown-menu {
+.merchant-festival-dropdown-menu {
   position: absolute;
 
   top: calc(100% + 5px);
@@ -901,13 +901,13 @@
 
   background: #ffffff;
 
-  border: 1px solid #cfe1dd;
+  border: 1px solid #ddd6fe;
 
   border-radius: 10px;
 
   box-shadow:
     0 15px 35px
-    rgba(20, 70, 63, 0.16);
+    rgba(76, 29, 149, 0.14);
 
   z-index: 300;
 }
@@ -916,7 +916,7 @@
    DROPDOWN ACTIONS
 ========================================================= */
 
-.bogo-dropdown-actions {
+.merchant-festival-dropdown-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -924,12 +924,12 @@
   padding: 0 10px 9px;
 }
 
-.bogo-dropdown-actions button {
+.merchant-festival-dropdown-actions button {
   border: none;
 
   background: transparent;
 
-  color: #0f9382;
+  color: #7c3aed;
 
   font-size: 11px;
   font-weight: 700;
@@ -937,7 +937,7 @@
   cursor: pointer;
 }
 
-.bogo-dropdown-actions button:hover {
+.merchant-festival-dropdown-actions button:hover {
   text-decoration: underline;
 }
 
@@ -945,10 +945,10 @@
    COUNT
 ========================================================= */
 
-.bogo-dropdown-count {
+.merchant-festival-dropdown-count {
   padding: 0 12px 8px;
 
-  color: #8c9b98;
+  color: #9489a6;
 
   font-size: 10px;
 }
@@ -957,7 +957,7 @@
    LIST
 ========================================================= */
 
-.bogo-dropdown-list {
+.merchant-festival-dropdown-list {
   max-height: 235px;
 
   overflow-y: auto;
@@ -972,7 +972,7 @@
    CHECK ROW
 ========================================================= */
 
-.bogo-checkbox-row {
+.merchant-festival-checkbox-row {
   width: 100%;
 
   min-height: 43px;
@@ -994,15 +994,15 @@
     background 0.15s ease;
 }
 
-.bogo-checkbox-row:hover {
-  background: #effcf9;
+.merchant-festival-checkbox-row:hover {
+  background: #f7f3ff;
 }
 
-.bogo-checkbox-row.checked {
+.merchant-festival-checkbox-row.checked {
   background: #e8faf6;
 }
 
-.bogo-checkbox-row input[type="checkbox"] {
+.merchant-festival-checkbox-row input[type="checkbox"] {
   position: absolute;
 
   opacity: 0;
@@ -1014,7 +1014,7 @@
    PRODUCT INFO
 ========================================================= */
 
-.bogo-product-info {
+.merchant-festival-product-info {
   min-width: 0;
 
   display: flex;
@@ -1023,20 +1023,20 @@
   gap: 2px;
 }
 
-.bogo-product-info span {
+.merchant-festival-product-info span {
   overflow: hidden;
 
   text-overflow: ellipsis;
 
   white-space: nowrap;
 
-  color: #344b47;
+  color: #40365a;
 
   font-size: 12px;
   font-weight: 600;
 }
 
-.bogo-product-info small {
+.merchant-festival-product-info small {
   color: #91a19d;
 
   font-size: 10px;
@@ -1046,12 +1046,12 @@
    EMPTY
 ========================================================= */
 
-.bogo-dropdown-empty {
+.merchant-festival-dropdown-empty {
   padding: 22px 12px;
 
   text-align: center;
 
-  color: #8c9b98;
+  color: #9489a6;
 
   font-size: 12px;
 }
@@ -1060,7 +1060,7 @@
    SELECTED CHIPS
 ========================================================= */
 
-.bogo-selected-chips {
+.merchant-festival-selected-chips {
   display: flex;
 
   flex-wrap: wrap;
@@ -1070,7 +1070,7 @@
   margin-top: 9px;
 }
 
-.bogo-chip {
+.merchant-festival-chip {
   display: inline-flex;
   align-items: center;
 
@@ -1095,7 +1095,7 @@
   text-overflow: ellipsis;
 }
 
-.bogo-chip.more {
+.merchant-festival-chip.more {
   background: #eef5f3;
 
   border-color: #d6e3df;
@@ -1107,7 +1107,7 @@
    DATE & TIME
 ========================================================= */
 
-.bogo-date-wrapper {
+.merchant-festival-date-wrapper {
   position: relative;
 
   width: 100%;
@@ -1118,7 +1118,7 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #cfe1dd;
+  border: 1px solid #ddd6fe;
   border-radius: 8px;
 
   background: #ffffff;
@@ -1132,19 +1132,19 @@
     box-shadow 0.2s ease;
 }
 
-.bogo-date-wrapper:hover {
+.merchant-festival-date-wrapper:hover {
   border-color: #69cfc0;
 }
 
-.bogo-date-wrapper:focus-within {
-  border-color: #13a892;
+.merchant-festival-date-wrapper:focus-within {
+  border-color: #8b5cf6;
 
   box-shadow:
     0 0 0 3px
-    rgba(19, 168, 146, 0.1);
+    rgba(139, 92, 246, 0.10);
 }
 
-.bogo-date-wrapper > svg {
+.merchant-festival-date-wrapper > svg {
   flex: 0 0 auto;
 
   margin-left: 13px;
@@ -1154,7 +1154,7 @@
   pointer-events: none;
 }
 
-.bogo-date-wrapper input {
+.merchant-festival-date-wrapper input {
   width: 100%;
   height: 100%;
 
@@ -1166,16 +1166,16 @@
 
   background: transparent;
 
-  color: #344b47;
+  color: #40365a;
 
   cursor: pointer;
 }
 
-.bogo-date-wrapper input:focus {
+.merchant-festival-date-wrapper input:focus {
   outline: none;
 }
 
-.bogo-date-wrapper
+.merchant-festival-date-wrapper
   input::-webkit-calendar-picker-indicator {
   width: 24px;
   height: 24px;
@@ -1189,8 +1189,8 @@
    SUCCESS / ERROR
 ========================================================= */
 
-.bogo-success,
-.bogo-error {
+.merchant-festival-success,
+.merchant-festival-error {
   margin-bottom: 18px;
 
   padding: 12px 14px;
@@ -1201,7 +1201,7 @@
   font-weight: 650;
 }
 
-.bogo-success {
+.merchant-festival-success {
   background: #eafaf1;
 
   border: 1px solid #c5ead3;
@@ -1209,7 +1209,7 @@
   color: #247b43;
 }
 
-.bogo-error {
+.merchant-festival-error {
   background: #fff1f0;
 
   border: 1px solid #efc9c6;
@@ -1221,7 +1221,7 @@
    ACTIONS
 ========================================================= */
 
-.bogo-actions {
+.merchant-festival-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -1233,7 +1233,7 @@
   border-top: 1px solid #dcebe7;
 }
 
-.bogo-reset {
+.merchant-festival-reset {
   min-width: 92px;
   height: 41px;
 
@@ -1242,7 +1242,7 @@
   border: 1px solid #c8d8d4;
   border-radius: 8px;
 
- background: #dd6d6d62;
+background: #dd6d6d62;
 
   color: #c4500d;
 
@@ -1252,13 +1252,13 @@
   cursor: pointer;
 }
 
-.bogo-reset:hover {
-  background: #f5fbf9;
+.merchant-festival-reset:hover {
+  background: #faf7ff;
 
-  border-color: #aebfbb;
+  border-color: #c4b5fd;
 }
 
-.bogo-submit {
+.merchant-festival-submit {
   min-width: 155px;
   height: 41px;
 
@@ -1270,8 +1270,8 @@
   background:
     linear-gradient(
       135deg,
-      #14b8a6,
-      #0f766e
+      #8b5cf6,
+      #7c3aed
     );
 
   color: #ffffff;
@@ -1283,7 +1283,7 @@
 
   box-shadow:
     0 5px 14px
-    rgba(15, 118, 110, 0.22);
+    rgba(124, 58, 237, 0.22);
 
   transition:
     transform 0.2s ease,
@@ -1291,16 +1291,16 @@
     opacity 0.2s ease;
 }
 
-.bogo-submit:hover {
+.merchant-festival-submit:hover {
   transform: translateY(-1px);
 
   box-shadow:
     0 7px 18px
-    rgba(15, 118, 110, 0.28);
+    rgba(124, 58, 237, 0.28);
 }
 
-.bogo-submit:disabled,
-.bogo-reset:disabled {
+.merchant-festival-submit:disabled,
+.merchant-festival-reset:disabled {
   opacity: 0.55;
 
   cursor: not-allowed;
@@ -1312,11 +1312,11 @@
 
 @media (max-width: 950px) {
 
-  .bogo-grid {
+  .merchant-festival-grid {
     grid-template-columns: 1fr;
   }
 
-  .bogo-apply-grid {
+  .merchant-festival-apply-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1324,34 +1324,34 @@
 
 @media (max-width: 650px) {
 
-  .bogo-plan {
+  .merchant-festival-plan {
     padding: 18px;
   }
 
-  .bogo-header {
+  .merchant-festival-header {
     align-items: flex-start;
 
     padding: 17px;
   }
 
-  .bogo-title-wrapper {
+  .merchant-festival-title-wrapper {
     gap: 10px;
   }
 
-  .bogo-title-icon {
+  .merchant-festival-title-icon {
     width: 40px;
     height: 40px;
   }
 
-  .bogo-header h2 {
+  .merchant-festival-header h2 {
     font-size: 18px;
   }
 
-  .bogo-header p {
+  .merchant-festival-header p {
     font-size: 12px;
   }
 
-  .bogo-badge {
+  .merchant-festival-badge {
     min-width: 75px;
 
     height: 32px;
@@ -1361,18 +1361,18 @@
     font-size: 11px;
   }
 
-  .bogo-section {
+  .merchant-festival-section {
     padding: 15px;
   }
 
-  .bogo-actions {
+  .merchant-festival-actions {
     flex-direction: column-reverse;
 
     align-items: stretch;
   }
 
-  .bogo-reset,
-  .bogo-submit {
+  .merchant-festival-reset,
+  .merchant-festival-submit {
     width: 100%;
   }
 
@@ -1380,15 +1380,15 @@
 
 @media (max-width: 450px) {
 
-  .bogo-header {
+  .merchant-festival-header {
     align-items: flex-start;
   }
 
-  .bogo-badge {
+  .merchant-festival-badge {
     display: none;
   }
 
-  .bogo-header h2 {
+  .merchant-festival-header h2 {
     font-size: 17px;
   }
 

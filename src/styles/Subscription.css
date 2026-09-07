@@ -1,223 +1,395 @@
-.merchant-subscription-container{
-    padding:30px;
-    background:#f8fafc;
+.advertisement-page{
+    padding:24px;
+    background:#f5f7fb;
     min-height:100vh;
 }
 
-.merchant-subscription-header{
+.page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+    margin-bottom:24px;
 }
 
-.merchant-subscription-title{
+.page-header h2{
+    margin:0;
     font-size:30px;
     font-weight:700;
-    color:#1e293b;
-    margin-bottom:6px;
+    color:#222;
 }
 
-.merchant-subscription-subtitle{
-    color:#64748b;
-    font-size:15px;
-}
-
-.merchant-subscription-add-btn{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    border:none;
-    cursor:pointer;
-    color:#fff;
-    background:#2563eb;
-    padding:12px 22px;
-    border-radius:10px;
-    font-size:15px;
-    font-weight:600;
-    transition:.3s;
-}
-
-.merchant-subscription-add-btn:hover{
-    background:#1d4ed8;
-}
-
-.merchant-subscription-toolbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.merchant-subscription-search{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:#fff;
-    color:black;
-    padding:12px 18px;
-    border-radius:10px;
-    border:1px solid #e2e8f0;
-    width:340px;
-}
-
-.merchant-subscription-search input{
-    width:100%;
-    border:none;
-    outline:none;
-    font-size:20px;
-    background:transparent;
-    color:#1e293b;
-}
-.merchant-subscription-search input::placeholder{
-    color:#94a3b8;
-}
-.merchant-subscription-count{
-    background:#fff;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:12px 20px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:600;
-}
-
-.merchant-subscription-count span{
-    background:#2563eb;
-    color:#fff;
-    padding:4px 12px;
-    border-radius:20px;
-}
-
-.merchant-subscription-table-wrapper{
-    background:#fff;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 8px 24px rgba(15,23,42,.06);
-}
-
-.merchant-subscription-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-.merchant-subscription-table thead{
-    background:#3968a9;
-    color:#fff;
-}
-
-.merchant-subscription-table th{
-    padding:18px;
+.page-header p{
+    margin-top:6px;
+    color:#777;
     font-size:14px;
-    text-align:center;
 }
 
-.merchant-subscription-table td{
-    padding:18px;
-    border-bottom:1px solid #edf2f7;
-    text-align:center;
-    color:black;
-} 
-
-.merchant-subscription-table tbody tr:hover{
-    background:#f8fafc;
+.advertisement-card{
+    background:#fff;
+    border-radius:12px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:0 2px 12px rgba(0,0,0,.07);
+    transition:all .3s ease;
 }
 
-.merchant-subscription-plan{
-    display:flex;
-    align-items:center;
-    gap:14px;
+.advertisement-card:hover{
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
 }
 
-.merchant-subscription-plan svg{
-    width:42px;
-    height:42px;
-    color:#f59e0b;
-    background:#fef3c7;
-    padding:10px;
-    border-radius:50%;
-}
-
-.merchant-subscription-plan strong{
-    display:block;
-    color:#1e293b;
-    font-size:15px;
-}
-
-.merchant-subscription-plan small{
-    color:#64748b;
-}
-
-.merchant-subscription-actions{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-}
-
-.merchant-subscription-edit-btn,
-.merchant-subscription-delete-btn{
-    width:38px;
-    height:38px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    transition:.3s;
-}
-
-.merchant-subscription-edit-btn{
-    background:#dbeafe;
-    color:#2563eb;
-}
-
-.merchant-subscription-delete-btn{
-    background:#fee2e2;
-    color:#dc2626;
-}
-
-.merchant-subscription-edit-btn:hover{
-    background:#2563eb;
-    color:#fff;
-}
-
-.merchant-subscription-delete-btn:hover{
-    background:#dc2626;
-    color:#fff;
-}
-
-.merchant-subscription-no-data{
-    padding:35px;
-    color:#64748b;
+.advertisement-card h3{
+    margin:0 0 22px;
+    font-size:22px;
     font-weight:600;
+    color:#333;
+    padding-bottom:12px;
+    border-bottom:1px solid #ececec;
 }
 
-@media(max-width:992px){
+.required-star{
+    color:#d32f2f;
+    margin-left:3px;
+}
 
-.merchant-subscription-header{
+/* ================= FORM ================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(280px,1fr));
+    gap:22px;
+}
+
+.form-group{
+    display:flex;
     flex-direction:column;
-    align-items:flex-start;
-    gap:15px;
 }
 
-.merchant-subscription-toolbar{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:15px;
+.form-group label{
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:#444;
 }
 
-.merchant-subscription-search{
+.form-group select,
+.form-group input{
     width:100%;
+    height:46px;
+    padding:0 14px;
+    border:1px solid #d8d8d8;
+    border-radius:8px;
+    background:#fff;
+    font-size:14px;
+    outline:none;
+    transition:.25s;
+    box-sizing:border-box;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 
-.merchant-subscription-table-wrapper{
-    overflow:auto;
+
+.form-group select{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
 }
 
-.merchant-subscription-table{
-    min-width:1200px;
+.form-group select:hover,
+.form-group input:hover{
+    border-color:#bdbdbd;
 }
 
+.form-group select:focus,
+.form-group input:focus{
+    border-color:#8b3a3a;
+    box-shadow:0 0 0 3px rgba(139,58,58,.12);
+}
+
+.form-group input[type="date"]{
+    cursor:pointer;
+}
+
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button{
+    margin:0;
+}
+
+/* ================= TABLE ================= */
+
+.plans-table-wrapper{
+    width:100%;
+    overflow-x:auto;
+    border:1px solid #ececec;
+    border-radius:10px;
+}
+
+.plans-table{
+    width:100%;
+    min-width:0;
+    border-collapse:collapse;
+    border-spacing:0;
+    table-layout:fixed;
+}
+
+.plans-table thead{
+    background:#8b3a3a;
+}
+
+.plans-table th,
+.plans-table td {
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: center;
+}
+
+.plans-table th {
+    padding: 12px 6px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 17px;
+    white-space: normal;
+}
+
+.plans-table td {
+    padding: 12px 6px;
+    font-size: 14px;
+    color: #222;
+    font-weight: 500;
+    border-bottom: 1px solid #efefef;
+    white-space: nowrap;
+}
+
+.plans-table tbody tr{
+    transition:.25s;
+}
+
+.plans-table tbody tr:hover td{
+    background:#fff8f4;
+}
+
+.selected-plan-row td{
+    background:#fff3ec;
+}
+
+.selected-plan-row td:first-child{
+    border-left:4px solid #8b3a3a;
+}
+
+.plan-price{
+    color:#1565c0;
+    font-weight:700;
+}
+
+.plans-table input[type="radio"]{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+}
+
+/* ================= DATES CARD ================= */
+
+.advertisement-bottom-grid{
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+}
+
+.advertisement-bottom-grid .advertisement-card{
+    width:100%;
+    max-width:700px;
+}
+
+.advertisement-bottom-grid .form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+/* ================= BUTTONS ================= */
+
+.advertisement-buttons{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    width:100%;
+    margin:45px 0 0;
+    padding-bottom:50px;
+}
+
+.save-btn,
+.cancel-btn{
+    width:190px;
+    height:48px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.cancel-btn{
+    background:#fff;
+    border:1px solid #d5d5d5;
+    color:#555;
+}
+
+.save-btn{
+    background:#8b3a3a;
+    color:#fff;
+    border:none;
+}
+
+/* Cancel */
+
+.cancel-btn{
+    background:#ffffff;
+    color:#555;
+    border:1px solid #d6d6d6;
+}
+
+.cancel-btn:hover{
+    background:#f4f4f4;
+    border-color:#bcbcbc;
+}
+
+/* Save */
+
+.save-btn{
+    background:#8b3a3a;
+    color:#fff;
+}
+
+.save-btn:hover{
+    background:#742d2d;
+}
+
+@media (max-width:768px){
+
+    .button-group{
+        flex-direction:column;
+        gap:14px;
+        margin-bottom:40px;
+    }
+
+    .save-btn,
+    .cancel-btn{
+        width:100%;
+        max-width:300px;
+    }
+
+}
+
+.advertisement-page{
+    padding:24px 24px 100px;
+    background:#f5f7fb;
+    min-height:100vh;
+    box-sizing:border-box;
+}
+/* ================= SCROLLBAR ================= */
+
+.plans-table-wrapper::-webkit-scrollbar{
+    height:8px;
+}
+
+.plans-table-wrapper::-webkit-scrollbar-track{
+    background:#f1f1f1;
+    border-radius:10px;
+}
+
+.plans-table-wrapper::-webkit-scrollbar-thumb{
+    background:#b8b8b8;
+    border-radius:10px;
+}
+
+.plans-table-wrapper::-webkit-scrollbar-thumb:hover{
+    background:#8b3a3a;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width:1200px){
+
+    .advertisement-bottom-grid{
+        display:block;
+    }
+
+    .advertisement-bottom-grid .advertisement-card{
+        max-width:100%;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .advertisement-page{
+        padding:15px;
+    }
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .page-header h2{
+        font-size:24px;
+    }
+
+    .advertisement-card{
+        padding:18px;
+    }
+
+    .advertisement-card h3{
+        font-size:20px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+        gap:18px;
+    }
+
+    .advertisement-bottom-grid .form-grid{
+        grid-template-columns:1fr;
+    }
+
+  
+
+    .button-group{
+        flex-direction:column;
+        gap:14px;
+        margin-bottom:25px;
+    }
+
+    .save-btn,
+    .cancel-btn{
+        width:100%;
+        max-width:320px;
+    }
+
+}
+
+
+
+.form-group option{
+    white-space: normal;
+    word-break: break-word;
+}
+
+
+.plans-table thead th {
+    font-size: 13px !important;
+    color: orangered !important;
+    font-weight: 900 !important;
+
+}
+
+
+.plans-table tbody td {
+    font-size: 13px !important;
+    color: black !important;
+    font-weight: 900 !important;
 }
