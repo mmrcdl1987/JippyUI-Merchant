@@ -7,8 +7,10 @@ import {
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import ViewOutlet from "../pages/outlets/ViewOutlet";
+import ForgotPassword from "../pages/ForgotPassword";
+
 import EditOutlet from "../pages/outlets/EditOutlet";
+import OutletProfileDetails from "../pages/outlets/OutletProfileDetails";
 
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -27,15 +29,56 @@ import AddSubscription from "../pages/subscription/AddSubscription";
 const AppRoutes = () => {
   return (
     <BrowserRouter>
+
       <Routes>
-        {/* Redirect Root */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* =====================================================
+            ROOT
+            ===================================================== */}
 
-        {/* Protected Routes */}
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
+        />
+
+
+        {/* =====================================================
+            PUBLIC ROUTES
+            ===================================================== */}
+
+        {/* LOGIN */}
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+
+        {/* REGISTER */}
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+
+        {/* FORGOT PASSWORD */}
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+
+        {/* =====================================================
+            PROTECTED ROUTES
+            ===================================================== */}
+
         <Route
           element={
             <ProtectedRoute>
@@ -43,31 +86,155 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* Outlets */}
-          <Route path="/outlets" element={<Outlets />} />
-          <Route path="/outlets/create" element={<CreateOutlet />} />
-          <Route path="/outlets/view/:id" element={<ViewOutlet />} />
-          <Route path="/outlets/edit/:id" element={<EditOutlet />} />
+          {/* ===================================================
+              DASHBOARD
+              =================================================== */}
 
-          {/* Other Modules */}
-          <Route path="/foods" element={<Foods />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/promotions" element={<Promotions />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/subscription" element={<Subscription />} />
           <Route
-  path="/add-subscription"
-  element={<AddSubscription />}
-/>
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+
+
+          {/* ===================================================
+              OUTLETS LIST
+              =================================================== */}
+
+          <Route
+            path="/outlets"
+            element={<Outlets />}
+          />
+
+
+          {/* ===================================================
+              CREATE OUTLET
+              =================================================== */}
+
+          <Route
+            path="/outlets/create"
+            element={<CreateOutlet />}
+          />
+
+
+          {/* ===================================================
+              OUTLET PROFILE DETAILS
+              
+              IMPORTANT:
+              
+              /outlets/view/187
+              
+              will render OutletProfileDetails.
+              
+              OutletProfileDetails gets:
+              
+              const { outletId } = useParams();
+              
+              and calls:
+              
+              getAdminOutletDetails(outletId)
+              
+              =================================================== */}
+
+          <Route
+            path="/outlets/view/:outletId"
+            element={
+              <OutletProfileDetails />
+            }
+          />
+
+
+          {/* ===================================================
+              EDIT OUTLET
+              =================================================== */}
+
+          <Route
+            path="/outlets/edit/:id"
+            element={<EditOutlet />}
+          />
+
+
+          {/* ===================================================
+              FOODS
+              =================================================== */}
+
+          <Route
+            path="/foods"
+            element={<Foods />}
+          />
+
+
+          {/* ===================================================
+              ORDERS
+              =================================================== */}
+
+          <Route
+            path="/orders"
+            element={<Orders />}
+          />
+
+
+          {/* ===================================================
+              PROMOTIONS
+              =================================================== */}
+
+          <Route
+            path="/promotions"
+            element={<Promotions />}
+          />
+
+
+          {/* ===================================================
+              PAYMENTS
+              =================================================== */}
+
+          <Route
+            path="/payments"
+            element={<Payments />}
+          />
+
+
+          {/* ===================================================
+              SUBSCRIPTION
+              =================================================== */}
+
+          <Route
+            path="/subscription"
+            element={<Subscription />}
+          />
+
+
+          {/* ===================================================
+              ADD SUBSCRIPTION
+              =================================================== */}
+
+          <Route
+            path="/add-subscription"
+            element={<AddSubscription />}
+          />
+
         </Route>
 
-        {/* Page Not Found */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+
+        {/* =====================================================
+            PAGE NOT FOUND
+            ===================================================== */}
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 };
+
 
 export default AppRoutes;

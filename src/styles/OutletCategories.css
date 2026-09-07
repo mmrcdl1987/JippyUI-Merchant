@@ -1,0 +1,746 @@
+/* ============================================================
+   OUTLET CATEGORY SCREEN
+============================================================ */
+
+.jippy-category-screen {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.jippy-category-screen *,
+.jippy-category-screen *::before,
+.jippy-category-screen *::after {
+  box-sizing: border-box;
+}
+
+
+.jippy-categories-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+/* Expand button */
+.jippy-categories-table th:nth-child(1),
+.jippy-categories-table td:nth-child(1) {
+  width: 45px;
+}
+
+/* Category ID */
+.jippy-categories-table th:nth-child(2),
+.jippy-categories-table td:nth-child(2) {
+  width: 180px;
+}
+
+/* Category Name */
+.jippy-categories-table th:nth-child(3),
+.jippy-categories-table td:nth-child(3) {
+  width: 38%;
+}
+
+/* Availability */
+.jippy-categories-table th:nth-child(4),
+.jippy-categories-table td:nth-child(4) {
+  width: 160px;
+}
+
+/* Toggle */
+.jippy-categories-table th:nth-child(5),
+.jippy-categories-table td:nth-child(5) {
+  width: 100px;
+}
+/* ============================================================
+   TABLE CONTAINER
+============================================================ */
+
+.jippy-category-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.jippy-category-data-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+/* ============================================================
+   TABLE HEADER
+============================================================ */
+
+.jippy-category-data-table thead {
+  background: #ff6b00 !important;
+}
+
+.jippy-category-data-table th {
+  height: 28px;
+  padding: 7px 10px;
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: none;
+  border-bottom: 1px solid #ff6b00;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   COLUMN WIDTHS
+============================================================ */
+
+.jippy-category-expand-column {
+  width: 42px;
+}
+
+.jippy-category-id-column {
+  width: 18%;
+}
+
+.jippy-category-name-column {
+  width: 42%;
+}
+
+.jippy-category-available-column {
+  width: 20%;
+}
+
+.jippy-category-toggle-column {
+  width: 15%;
+}
+
+/* ============================================================
+   TABLE CELLS
+============================================================ */
+
+.jippy-category-data-table td {
+  height: 34px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #eeeeee;
+  color: #333333;
+  vertical-align: middle;
+  font-size: 18px;
+}
+
+.jippy-category-data-table tbody tr:last-child
+  td {
+  border-bottom: none;
+}
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.jippy-category-data-table
+  tbody
+  tr:not(.jippy-category-details-row):hover {
+  background: #fffaf6;
+}
+
+/* ============================================================
+   EXPAND CELL
+============================================================ */
+
+.jippy-category-expand-cell {
+  width: 42px;
+  padding-left: 10px !important;
+  padding-right: 5px !important;
+}
+
+/* ============================================================
+   EXPAND BUTTON
+============================================================ */
+
+.jippy-category-expand-button {
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ff6b00;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #ff6b00;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jippy-category-expand-button:hover {
+  background: #fff2e8;
+}
+
+/* ============================================================
+   CATEGORY ID
+============================================================ */
+
+.jippy-category-id-cell {
+  font-size: 18px;
+  color: #444444;
+}
+
+/* ============================================================
+   CATEGORY NAME
+============================================================ */
+
+.jippy-category-name-cell {
+  font-weight: 600;
+  color: #222222;
+}
+
+/* ============================================================
+   AVAILABLE BADGE
+============================================================ */
+
+.jippy-category-available-badge,
+.jippy-category-unavailable-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.jippy-category-available-badge {
+  color: #16803a;
+  background: #eaf8ef;
+  border: 1px solid #bde8cb;
+}
+
+.jippy-category-unavailable-badge {
+  color: #c2410c;
+  background: #fff1e8;
+  border: 1px solid #ffc9a8;
+}
+
+/* ============================================================
+   TOGGLE CELL
+============================================================ */
+
+.jippy-category-toggle-cell {
+  text-align: left;
+}
+
+/* ============================================================
+   TOGGLE SWITCH
+============================================================ */
+
+.jippy-category-switch {
+  position: relative;
+  width: 35px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  vertical-align: middle;
+}
+
+.jippy-category-switch span {
+  position: absolute;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: left 0.2s ease,
+    right 0.2s ease;
+  box-shadow: 0 1px 2px
+    rgba(0, 0, 0, 0.15);
+}
+
+/* ON */
+
+.jippy-category-switch-on {
+  background: #16a34a;
+}
+
+.jippy-category-switch-on span {
+  right: 2px;
+}
+
+/* OFF */
+
+.jippy-category-switch-off {
+  background: #d5d9df;
+}
+
+.jippy-category-switch-off span {
+  left: 2px;
+}
+
+/* ============================================================
+   UNAVAILABLE ROW
+============================================================ */
+
+.jippy-category-unavailable-row {
+  background: #fffaf7;
+}
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.jippy-category-empty-cell {
+  height: 100px !important;
+  text-align: center;
+  color: #888888 !important;
+}
+
+/* ============================================================
+   EXPANDED DETAILS ROW
+============================================================ */
+
+.jippy-category-details-row {
+  background: #fffaf7 !important;
+}
+
+.jippy-category-details-row > td {
+  padding: 0 !important;
+  border-bottom: 1px solid #eeeeee !important;
+}
+
+/* ============================================================
+   UNAVAILABILITY PANEL
+============================================================ */
+
+.jippy-category-unavailability-panel {
+  width: 100%;
+  padding: 13px 15px;
+  border-top: 1px solid #ffcfad;
+  background: #fffaf7;
+}
+
+/* ============================================================
+   DETAILS HEADER
+============================================================ */
+
+.jippy-category-unavailability-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.jippy-category-unavailability-header strong {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.jippy-category-unavailability-header span {
+  color: #777777;
+  font-size: 14px;
+}
+
+/* ============================================================
+   EDIT BUTTON
+============================================================ */
+
+.jippy-category-edit-button {
+  padding: 5px 10px;
+  border: 1px solid #ff6b00;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #ff6b00;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.jippy-category-edit-button:hover {
+  background: #fff2e8;
+}
+
+/* ============================================================
+   UNAVAILABILITY GRID
+============================================================ */
+
+.jippy-category-unavailability-grid {
+  display: grid;
+  grid-template-columns:
+    1fr
+    1fr
+    1.3fr
+    1fr;
+  gap: 20px;
+}
+
+.jippy-category-unavailability-grid > div {
+  min-width: 0;
+}
+
+.jippy-category-unavailability-grid label {
+  display: block;
+  margin-bottom: 4px;
+  color: #ff3b30;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.jippy-category-unavailability-grid strong {
+  display: block;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* ============================================================
+   MODAL OVERLAY
+============================================================ */
+
+.jippy-category-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* ============================================================
+   CREATE / EDIT MODAL
+============================================================ */
+
+.jippy-category-unavailability-modal {
+  width: 100%;
+  max-width: 680px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 15px 45px
+    rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* ============================================================
+   RESTORE MODAL
+============================================================ */
+
+.jippy-category-restore-modal {
+  width: 100%;
+  max-width: 430px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 15px 45px
+    rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* ============================================================
+   MODAL HEADER
+============================================================ */
+
+.jippy-category-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 18px 20px 10px;
+}
+
+.jippy-category-modal-header h2 {
+  margin: 0;
+  color: #222222;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.jippy-category-modal-header p {
+  margin: 4px 0 0;
+  color: #777777;
+  font-size: 19px;
+}
+
+/* ============================================================
+   CLOSE
+============================================================ */
+
+.jippy-category-modal-close {
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #333333;
+  font-size: 21px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   INFO MESSAGE
+============================================================ */
+
+.jippy-category-modal-info {
+  margin: 10px 20px 18px;
+  padding: 12px 14px;
+  border: 1px solid #ffd88a;
+  border-radius: 6px;
+  background: #fff9e8;
+  color: #555555;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   FORM ROW
+============================================================ */
+
+.jippy-category-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
+
+.jippy-category-form-group {
+  margin-bottom: 14px;
+}
+
+.jippy-category-form-row
+  .jippy-category-form-group {
+  margin-bottom: 0;
+}
+
+.jippy-category-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ff6b00;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.jippy-category-form-group input,
+.jippy-category-form-group textarea {
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  outline: none;
+  background: #ffffff;
+  color: #333333;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.jippy-category-form-group input {
+  height: 48px;
+  padding: 0 10px;
+}
+.jippy-category-form-group textarea {
+  min-height: 110px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.jippy-category-form-group input:focus,
+.jippy-category-form-group textarea:focus {
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 2px
+    rgba(255, 107, 0, 0.08);
+}
+
+/* ============================================================
+   MODAL ACTIONS
+============================================================ */
+
+.jippy-category-modal-actions,
+.jippy-category-restore-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 20px 18px;
+}
+
+/* ============================================================
+   CANCEL BUTTON
+============================================================ */
+
+.jippy-category-cancel-button {
+  min-width: 85px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #333333;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jippy-category-cancel-button:hover {
+  background: #f7f7f7;
+}
+
+/* ============================================================
+   CONFIRM BUTTON
+============================================================ */
+
+.jippy-category-confirm-button {
+  min-width: 150px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ff6b00;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jippy-category-confirm-button:hover {
+  background: #e85f00;
+}
+
+.jippy-category-confirm-button:disabled,
+.jippy-category-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   RESTORE ACTIONS
+============================================================ */
+
+.jippy-category-restore-actions {
+  padding-top: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 800px) {
+  .jippy-category-data-table {
+    min-width: 650px;
+  }
+
+  .jippy-category-unavailability-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .jippy-category-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-category-unavailability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-category-modal-header {
+    padding: 15px;
+  }
+
+  .jippy-category-modal-info {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .jippy-category-form-row {
+    padding: 0 15px;
+  }
+
+  .jippy-category-form-group {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .jippy-category-modal-actions,
+  .jippy-category-restore-actions {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+
+/* ================================
+   REASON
+================================ */
+
+.jippy-category-modal .jippy-reason-group {
+  width: 100%;
+  margin: 12 0 18px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.jippy-category-modal .jippy-reason-group label {
+  display: block;
+  width: 100%;
+  margin: 0 0 7px 0;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.jippy-category-modal .jippy-reason-textarea {
+  display: block;
+  width: 100%;
+  height: 95px;
+  min-height: 95px;
+  margin: 0;
+  padding: 12px;
+  box-sizing: border-box;
+
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: #fff;
+
+  resize: vertical;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+
+  text-align: left;
+  vertical-align: top;
+}
+
+.jippy-category-modal .jippy-reason-textarea::placeholder {
+  color: #999;
+  text-align: left;
+}
+
+.jippy-category-modal .jippy-reason-textarea:focus {
+  outline: none;
+  border-color: #ff6b00;
+}

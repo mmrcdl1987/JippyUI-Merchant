@@ -1,0 +1,1273 @@
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+.jippy-outlet-profile-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 22px 20px 40px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #202124;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.jippy-outlet-profile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 20px;
+}
+
+.jippy-outlet-profile-header-left {
+  min-width: 0;
+}
+
+.jippy-outlet-profile-title-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.jippy-outlet-profile-title-row svg {
+  width: 21px;
+  height: 21px;
+  color: #202124;
+  flex-shrink: 0;
+}
+
+.jippy-outlet-profile-title-row h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: #202124;
+}
+
+.jippy-outlet-profile-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+  margin-left: 32px;
+  font-size: 15px;
+  color: #999;
+}
+
+.jippy-outlet-profile-breadcrumb span:first-child {
+  color: #f47b20;
+}
+
+.jippy-outlet-profile-breadcrumb strong {
+  color: #777;
+  font-weight: 400;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.jippy-outlet-profile-wallet-btn,
+.jippy-outlet-profile-orange-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 17px;
+  min-height: 38px;
+  background: #ff6840;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.jippy-outlet-profile-wallet-btn:hover,
+.jippy-outlet-profile-orange-btn:hover {
+  background: #f25730;
+  transform: translateY(-1px);
+}
+
+.jippy-outlet-profile-wallet-btn svg,
+.jippy-outlet-profile-orange-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+.jippy-outlet-profile-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.jippy-outlet-profile-tabs::-webkit-scrollbar {
+  height: 0;
+}
+
+.jippy-outlet-profile-tab {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 12px 9px 13px;
+  margin-right: 20px;
+  border-radius: 0;
+  color: #222;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.jippy-outlet-profile-tab:hover {
+  background: transparent;
+  color: #f47b20;
+}
+
+.jippy-outlet-profile-tab-active {
+  background: transparent;
+  color: #f47b20;
+  font-weight: 500;
+}
+
+.jippy-outlet-profile-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #ff6840;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ============================================================
+   SUMMARY CARDS
+   ============================================================ */
+
+.jippy-outlet-profile-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 18px;
+}
+
+.jippy-outlet-profile-summary-card {
+  position: relative;
+  min-height: 72px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 9px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.jippy-summary-blue {
+  background: #e1f1ff;
+}
+
+.jippy-summary-green {
+  background: #def5ed;
+}
+
+.jippy-summary-pink {
+  background: #fff0f2;
+}
+
+.jippy-summary-yellow {
+  background: #fff5eb;
+}
+
+.jippy-summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jippy-outlet-profile-summary-card strong {
+  font-size: 20px;
+  line-height: 1.2;
+  color: #202124;
+  font-weight: 600;
+}
+
+.jippy-outlet-profile-summary-card span {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.jippy-summary-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.65;
+}
+
+.jippy-summary-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.jippy-status-success {
+  color: #22a447 !important;
+}
+
+.jippy-status-danger {
+  color: #e53935 !important;
+}
+
+.jippy-status-neutral {
+  color: #555 !important;
+}
+
+/* ============================================================
+   MAIN CARDS
+   ============================================================ */
+
+.jippy-outlet-profile-main-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 13px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.jippy-outlet-profile-card-heading {
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 13px 16px;
+  border-bottom: 1px solid #e9e9e9;
+  font-size: 18px;
+  font-weight: 600;
+  color: #202124;
+  
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.jippy-outlet-profile-card-heading svg {
+  width: 16px;
+  height: 16px;
+  color: #333;
+}
+
+.jippy-outlet-profile-card-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   DETAILS GRID
+   ============================================================ */
+
+.jippy-outlet-profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.jippy-outlet-profile-details-grid > div {
+  padding: 14px 16px;
+  min-width: 0;
+  min-height: 61px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.jippy-outlet-profile-details-grid > div:nth-last-child(-n + 4) {
+  border-bottom: none;
+}
+
+.jippy-outlet-profile-details-grid span,
+.jippy-subscription-summary span,
+.jippy-subscription-banner-list span {
+  display: block;
+  font-size: 18px;
+  color: #888;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.jippy-outlet-profile-details-grid strong,
+.jippy-subscription-summary strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #262626;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.jippy-outlet-profile-address-full {
+  grid-column: span 4;
+}
+
+.jippy-outlet-profile-address-full strong {
+  font-weight: 400;
+  color: #555;
+}
+
+/* ============================================================
+   LOCATION TWO COLUMN AREA
+   ============================================================ */
+
+.jippy-outlet-profile-location-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 22px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+
+.jippy-location-details-card {
+  margin-bottom: 0;
+}
+
+.jippy-outlet-profile-map-card {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.jippy-outlet-profile-map-header {
+  min-height: 44px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #e9e9e9;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.jippy-outlet-profile-map-header a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #1683e6;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.jippy-outlet-profile-map-header a:hover {
+  text-decoration: underline;
+}
+
+.jippy-outlet-profile-map-header a svg {
+  width: 12px;
+  height: 12px;
+}
+
+.jippy-outlet-profile-map {
+  height: 100%;
+  min-height: 270px;
+  background: #eef5f1;
+}
+
+.jippy-outlet-profile-map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 270px;
+  border: 0;
+}
+
+.jippy-outlet-profile-map-empty {
+  width: 100%;
+  height: 100%;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #999;
+  font-size: 15px;
+}
+
+.jippy-outlet-profile-map-empty svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* ============================================================
+   WORKING HOURS
+   ============================================================ */
+
+.jippy-outlet-profile-hours-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.jippy-outlet-profile-hours-grid > div {
+  padding: 14px 16px;
+  min-height: 61px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.jippy-outlet-profile-hours-grid strong {
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+}
+
+.jippy-outlet-profile-hours-grid span {
+  font-size: 15px;
+  color: #777;
+}
+
+/* ============================================================
+   SUBSCRIPTION HISTORY
+   ============================================================ */
+
+.jippy-outlet-subscription-wrapper {
+  width: 100%;
+}
+
+.jippy-outlet-subscription-loading,
+.jippy-outlet-subscription-empty {
+  padding: 45px 20px;
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+}
+
+.jippy-subscription-history-item {
+  border-bottom: 1px solid #eee;
+}
+
+.jippy-subscription-history-item:last-child {
+  border-bottom: none;
+}
+
+.jippy-subscription-history-title {
+  padding: 13px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ============================================================
+   SUBSCRIPTION SUMMARY
+   ============================================================ */
+
+.jippy-subscription-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.jippy-subscription-summary > div {
+  padding: 14px 16px;
+  min-width: 0;
+  min-height: 60px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #eee;
+}
+
+/* ============================================================
+   SUBSCRIPTION SECTION TITLE
+   ============================================================ */
+
+.jippy-subscription-section-title {
+  padding: 13px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ============================================================
+   SUBSCRIPTION TABLE
+   ============================================================ */
+
+.jippy-subscription-table-wrapper {
+  overflow-x: auto;
+}
+
+.jippy-subscription-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.jippy-subscription-table th {
+  padding: 12px 16px;
+  text-align: left;
+  background: #f8f8f8;
+  font-size: 11px;
+  color: #444;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.jippy-subscription-table td {
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #555;
+}
+
+.jippy-subscription-no-data {
+  text-align: center;
+  padding: 28px !important;
+}
+
+/* ============================================================
+   BANNER URLS
+   ============================================================ */
+
+.jippy-subscription-banner-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.jippy-subscription-banner-list > div {
+  padding: 13px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.jippy-subscription-banner-list > div:last-child {
+  border-bottom: none;
+}
+
+.jippy-subscription-banner-list a {
+  color: #2878d7;
+  font-size: 12px;
+  word-break: break-all;
+  text-decoration: none;
+}
+
+.jippy-subscription-banner-list a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   OTHER EMPTY TABS
+   ============================================================ */
+
+.jippy-outlet-profile-empty-tab {
+  min-height: 300px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+}
+
+.jippy-outlet-profile-empty-tab svg {
+  width: 35px;
+  height: 35px;
+  margin-bottom: 10px;
+  color: #aaa;
+}
+
+.jippy-outlet-profile-empty-tab h3 {
+  color: #333;
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.jippy-outlet-profile-empty-tab p {
+  margin: 5px 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ============================================================
+   BACK BUTTON
+   ============================================================ */
+
+.jippy-outlet-profile-bottom-actions {
+  margin-top: 22px;
+}
+
+.jippy-outlet-profile-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #444;
+  padding: 9px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.jippy-outlet-profile-back-btn:hover {
+  background: #f7f7f7;
+  border-color: #ccc;
+}
+
+.jippy-outlet-profile-back-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.jippy-outlet-profile-loading {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #777;
+}
+
+.jippy-outlet-profile-loading p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.jippy-outlet-profile-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #eee;
+  border-top-color: #ff6840;
+  border-radius: 50%;
+  animation: jippyOutletSpin 0.8s linear infinite;
+}
+
+@keyframes jippyOutletSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+  .jippy-outlet-profile-summary-grid {
+    gap: 14px;
+  }
+
+  .jippy-outlet-profile-location-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-profile-map-card {
+    min-height: 300px;
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  .jippy-outlet-profile-summary-grid,
+  .jippy-outlet-profile-details-grid,
+  .jippy-subscription-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .jippy-outlet-profile-hours-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .jippy-outlet-profile-address-full {
+    grid-column: span 2;
+  }
+
+  .jippy-outlet-profile-summary-card {
+    min-height: 70px;
+  }
+
+}
+
+@media (max-width: 700px) {
+
+  .jippy-outlet-profile-page {
+    padding: 15px 12px 30px;
+  }
+
+  .jippy-outlet-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .jippy-outlet-profile-wallet-btn {
+    align-self: flex-start;
+  }
+
+  .jippy-outlet-profile-breadcrumb {
+    margin-left: 0;
+  }
+
+  .jippy-outlet-profile-tabs {
+    width: 100%;
+  }
+
+  .jippy-outlet-profile-tab {
+    margin-right: 12px;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .jippy-outlet-profile-summary-grid,
+  .jippy-outlet-profile-details-grid,
+  .jippy-subscription-summary,
+  .jippy-outlet-profile-hours-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-profile-address-full {
+    grid-column: span 1;
+  }
+
+  .jippy-outlet-profile-location-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-profile-map {
+    min-height: 240px;
+  }
+
+  .jippy-outlet-profile-map iframe {
+    min-height: 240px;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .jippy-outlet-profile-title-row h1 {
+    font-size: 17px;
+  }
+
+  .jippy-outlet-profile-summary-card strong {
+    font-size: 17px;
+  }
+
+  .jippy-outlet-profile-card-heading {
+    font-size: 13px;
+  }
+
+}
+
+/* ============================================================
+   SUBSCRIPTION HISTORY - IMPROVED UI
+   ============================================================ */
+
+.jippy-outlet-subscription-wrapper {
+  width: 100%;
+}
+
+
+/* ============================================================
+   SUBSCRIPTION HEADER
+   ============================================================ */
+
+.jippy-subscription-history-title {
+  min-height: 54px;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #fff7f1;
+
+  border-bottom: 1px solid #eeeeee;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #222;
+}
+
+
+/* ============================================================
+   STATUS BADGE
+   ============================================================ */
+
+.jippy-subscription-status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 14px;
+
+  border-radius: 20px;
+
+  background: #e8f7ed;
+
+  color: #1b8a43;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   SECTION TITLES
+   ============================================================ */
+
+.jippy-subscription-section-title {
+  padding: 15px 20px;
+
+  background: #f8f9fb;
+
+  border-bottom: 1px solid #e2e5e9;
+
+  color: #222;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   SUBSCRIPTION SUMMARY GRID
+   ============================================================ */
+
+.jippy-subscription-summary {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  background: #ffffff;
+}
+
+
+/* ============================================================
+   SUMMARY ITEM
+   ============================================================ */
+
+.jippy-subscription-summary > div {
+  min-height: 78px;
+
+  padding: 17px 20px;
+
+  box-sizing: border-box;
+
+  border-right: 1px solid #eeeeee;
+
+  border-bottom: 1px solid #eeeeee;
+
+  min-width: 0;
+}
+
+
+/* ============================================================
+   FIELD LABEL
+   ============================================================ */
+
+.jippy-subscription-summary span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   FIELD VALUE
+   ============================================================ */
+
+.jippy-subscription-summary strong {
+  display: block;
+
+  color: #202124;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  line-height: 1.4;
+
+  word-break: break-word;
+}
+
+
+/* ============================================================
+   TABLE WRAPPER
+   ============================================================ */
+
+.jippy-subscription-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  background: #fff;
+}
+
+
+/* ============================================================
+   SUBSCRIPTION TABLE
+   ============================================================ */
+
+.jippy-subscription-table {
+  width: 100%;
+
+  min-width: 650px;
+
+  border-collapse: collapse;
+
+  background: #ffffff;
+}
+
+
+/* ============================================================
+   TABLE HEADER
+   ============================================================ */
+
+.jippy-subscription-table thead {
+  background: #fff0e6;
+}
+
+
+.jippy-subscription-table th {
+  padding: 15px 18px;
+
+  text-align: left;
+
+  border-bottom: 2px solid #f47b20;
+
+  color: #8a3f0c;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   TABLE BODY
+   ============================================================ */
+
+.jippy-subscription-table td {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  color: #333;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  vertical-align: middle;
+}
+
+
+/* ============================================================
+   TABLE ROW
+   ============================================================ */
+
+.jippy-subscription-table tbody tr:hover {
+  background: #fffaf6;
+}
+
+
+/* ============================================================
+   TABLE STRONG TEXT
+   ============================================================ */
+
+.jippy-subscription-table td strong {
+  color: #222;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   NO DATA
+   ============================================================ */
+
+.jippy-subscription-no-data {
+  padding: 30px !important;
+
+  text-align: center !important;
+
+  color: #777 !important;
+
+  font-size: 14px !important;
+}
+
+
+/* ============================================================
+   BANNER URL SECTION
+   ============================================================ */
+
+.jippy-subscription-banner-list {
+  display: flex;
+
+  flex-direction: column;
+
+  background: #fff;
+}
+
+
+.jippy-subscription-banner-list > div {
+  padding: 17px 20px;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+
+.jippy-subscription-banner-list span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+.jippy-subscription-banner-list strong {
+  color: #333;
+
+  font-size: 14px;
+}
+
+
+.jippy-subscription-banner-list a {
+  display: block;
+
+  color: #2878d7;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  word-break: break-all;
+
+  text-decoration: none;
+}
+
+
+.jippy-subscription-banner-list a:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.jippy-outlet-subscription-loading {
+  min-height: 220px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #666;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+
+.jippy-subscription-loading-spinner {
+  width: 30px;
+
+  height: 30px;
+
+  border: 3px solid #eeeeee;
+
+  border-top: 3px solid #f47b20;
+
+  border-radius: 50%;
+
+  animation: jippySubscriptionSpin 0.8s linear infinite;
+}
+
+
+@keyframes jippySubscriptionSpin {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.jippy-outlet-subscription-empty {
+  min-height: 250px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 30px;
+
+  color: #777;
+
+  text-align: center;
+}
+
+
+.jippy-outlet-subscription-empty svg {
+  font-size: 38px;
+
+  margin-bottom: 10px;
+
+  color: #aaa;
+}
+
+
+.jippy-outlet-subscription-empty h3 {
+  margin: 5px 0;
+
+  color: #333;
+
+  font-size: 18px;
+}
+
+
+.jippy-outlet-subscription-empty p {
+  margin: 5px 0;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1000px) {
+
+  .jippy-subscription-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .jippy-subscription-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-subscription-history-title {
+    padding: 12px 15px;
+
+    font-size: 15px;
+  }
+
+  .jippy-subscription-summary > div {
+    padding: 15px;
+  }
+
+}
+
+
+
+.jippy-outlet-profile-map-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+}
+
+.jippy-outlet-profile-map-location svg {
+  width: 15px;
+  height: 15px;
+}
+
+
+
+
+

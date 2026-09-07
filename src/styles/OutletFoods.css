@@ -1,0 +1,1719 @@
+/* ============================================================
+   OUTLET FOODS PAGE
+   ============================================================ */
+
+.jippy-outlet-foods-page {
+  width: 100%;
+  box-sizing: border-box;
+
+  background: #f7f8fa;
+  color: #202124;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+.jippy-outlet-foods-page-header {
+  min-height: 70px;
+
+  padding: 18px 20px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e7eb;
+  border-radius: 10px;
+
+  margin-bottom: 16px;
+}
+
+.jippy-outlet-foods-page-header h2 {
+  margin: 0;
+
+  color: #202124;
+
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.jippy-outlet-foods-page-header p {
+  margin: 6px 0 0;
+
+  color: #737b87;
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   FOOD COUNT
+   ============================================================ */
+
+.jippy-outlet-foods-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 90px;
+
+  padding: 9px 16px;
+
+  box-sizing: border-box;
+
+  background: #fff1e8;
+
+  border: 1px solid #ffd6bd;
+  border-radius: 20px;
+
+  color: #e96810;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   TABLE CARD
+   ============================================================ */
+
+.jippy-outlet-foods-card {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e5e9;
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+.jippy-outlet-foods-controls {
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 14px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* ============================================================
+   ENTRIES
+   ============================================================ */
+
+.jippy-outlet-foods-entries {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding-left: 2px;
+
+  color: #4b5563;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.jippy-outlet-foods-entries select {
+  width: 70px;
+  height: 36px;
+
+  padding: 5px 8px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cfd4da;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #222;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.jippy-outlet-foods-entries select:focus {
+  border-color: #f47b20;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(244, 123, 32, 0.12);
+}
+
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
+.jippy-outlet-foods-search {
+  display: flex;
+  align-items: center;
+
+  padding-right: 0;
+}
+
+.jippy-outlet-foods-search-box {
+  width: 280px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cfd4da;
+  border-radius: 7px;
+
+  background: #ffffff;
+}
+
+.jippy-outlet-foods-search-box:focus-within {
+  border-color: #f47b20;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(244, 123, 32, 0.12);
+}
+
+.jippy-outlet-foods-search-box input {
+  flex: 1;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0 11px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #333;
+
+  font-size: 14px;
+}
+
+.jippy-outlet-foods-search-box input::placeholder {
+  color: #9ca3af;
+}
+
+.jippy-outlet-foods-search-box svg {
+  flex-shrink: 0;
+
+  margin-right: 11px;
+
+  color: #7b8490;
+
+  font-size: 18px;
+}
+
+
+/* ============================================================
+   TABLE WRAPPER
+   ============================================================ */
+
+.jippy-outlet-foods-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  border-top: 1px solid #e5e7eb;
+
+  scrollbar-width: thin;
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+.jippy-outlet-foods-table {
+  width: 100%;
+
+  /*
+    Keep the table wide enough so all 10 columns
+    remain readable.
+  */
+  min-width: 1450px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: auto;
+
+  background: #ffffff;
+}
+
+
+/* ============================================================
+   TABLE HEADER
+   ============================================================ */
+
+.jippy-outlet-foods-table thead th {
+  padding: 15px 14px;
+
+  text-align: left;
+  vertical-align: middle;
+
+  /*
+    Strong visible header colour
+  */
+  background: #fff3eb;
+
+  border-bottom: 2px solid #f47b20;
+
+  color: #2f343b;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.jippy-outlet-foods-table thead th:first-child {
+  padding-left: 18px;
+}
+
+.jippy-outlet-foods-table thead th:last-child {
+  padding-right: 18px;
+}
+
+
+/* ============================================================
+   DESCRIPTION HEADER
+   ============================================================ */
+
+.jippy-outlet-foods-description-column {
+  min-width: 300px;
+}
+
+
+/* ============================================================
+   TABLE BODY
+   ============================================================ */
+
+.jippy-outlet-foods-table tbody td {
+  padding: 15px 14px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  color: #4b5563;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+
+  vertical-align: top;
+
+  background: #ffffff;
+}
+
+.jippy-outlet-foods-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.jippy-outlet-foods-table tbody tr:hover td {
+  background: #fffaf6;
+}
+
+.jippy-outlet-foods-table tbody td strong {
+  color: #202124;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   PRODUCT ID
+   ============================================================ */
+
+.jippy-food-product-id {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  background: #f3f4f6;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   FOOD NAME
+   ============================================================ */
+
+.jippy-food-name {
+  display: block;
+
+  min-width: 180px;
+
+  color: #222222 !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   CATEGORY
+   ============================================================ */
+
+.jippy-food-category {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #eef4ff;
+
+  color: #285ea8;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   DESCRIPTION
+   ============================================================ */
+
+.jippy-outlet-foods-description {
+  min-width: 300px;
+  max-width: 360px;
+
+  color: #555f6d !important;
+
+  font-size: 14px !important;
+
+  line-height: 1.55 !important;
+
+  word-break: normal;
+}
+
+
+/* ============================================================
+   PRICE
+   ============================================================ */
+
+.jippy-food-price {
+  display: inline-flex;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #edf8f1;
+
+  color: #16753b;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.jippy-food-online-price {
+  display: inline-flex;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #f3f4f6;
+
+  color: #4b5563;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   VEG / NON-VEG
+   ============================================================ */
+
+.jippy-food-veg,
+.jippy-food-nonveg {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 62px;
+
+  padding: 6px 10px;
+
+  box-sizing: border-box;
+
+  border-radius: 15px;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.jippy-food-veg {
+  background: #e8f7ee;
+
+  border: 1px solid #b8e5c7;
+
+  color: #16803c;
+}
+
+.jippy-food-nonveg {
+  background: #fdeceb;
+
+  border: 1px solid #f4c3bf;
+
+  color: #c0392b;
+}
+
+
+/* ============================================================
+   VARIANTS
+   ============================================================ */
+
+.jippy-food-variant,
+.jippy-food-no-variant {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 10px;
+
+  border-radius: 14px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.jippy-food-variant {
+  background: #f2ecff;
+
+  border: 1px solid #d9c9ff;
+
+  color: #6b35c5;
+}
+
+.jippy-food-no-variant {
+  background: #f3f4f6;
+
+  border: 1px solid #e0e2e5;
+
+  color: #68707a;
+}
+
+
+/* ============================================================
+   AVAILABLE BADGES
+   ============================================================ */
+
+.jippy-food-available,
+.jippy-food-unavailable {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 92px;
+
+  padding: 6px 11px;
+
+  box-sizing: border-box;
+
+  border-radius: 15px;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.jippy-food-available {
+  background: #e8f7ee;
+
+  border: 1px solid #b8e5c7;
+
+  color: #16803c;
+}
+
+.jippy-food-unavailable {
+  background: #fdeceb;
+
+  border: 1px solid #f4c3bf;
+
+  color: #c0392b;
+}
+
+
+/* ============================================================
+   PRODUCT TIMINGS
+   ============================================================ */
+
+.jippy-outlet-foods-timings {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  min-width: 145px;
+}
+
+.jippy-outlet-foods-timing-row {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  padding-bottom: 5px;
+
+  border-bottom: 1px dashed #dfe3e8;
+}
+
+.jippy-outlet-foods-timing-row:last-child {
+  padding-bottom: 0;
+
+  border-bottom: none;
+}
+
+.jippy-outlet-foods-timing-row strong {
+  color: #333333 !important;
+
+  font-size: 13px !important;
+
+  font-weight: 700 !important;
+}
+
+.jippy-outlet-foods-timing-row span {
+  color: #69727e;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+.jippy-outlet-foods-no-timing {
+  color: #9ca3af;
+
+  font-size: 13px;
+
+  font-style: italic;
+}
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.jippy-outlet-foods-empty {
+  height: 220px;
+
+  text-align: center !important;
+  vertical-align: middle !important;
+
+  color: #8a929c !important;
+
+  font-size: 15px !important;
+}
+
+.jippy-outlet-foods-empty svg {
+  display: block;
+
+  margin: 0 auto 10px;
+
+  font-size: 32px;
+
+  color: #b2b8c0;
+}
+
+.jippy-outlet-foods-empty div {
+  margin-bottom: 5px;
+
+  color: #4b5563;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+.jippy-outlet-foods-empty small {
+  color: #9ca3af;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+
+.jippy-outlet-foods-pagination {
+  min-height: 65px;
+
+  padding: 12px 16px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  border-top: 1px solid #e2e5e9;
+
+  background: #ffffff;
+}
+
+.jippy-outlet-foods-showing {
+  color: #6b7280;
+
+  font-size: 13px;
+
+  font-weight: 500;
+}
+
+.jippy-outlet-foods-pagination-controls {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.jippy-outlet-foods-pagination-controls span {
+  min-width: 105px;
+
+  text-align: center;
+
+  color: #4b5563;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.jippy-outlet-foods-pagination-controls button {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #d5d9de;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #4b5563;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.jippy-outlet-foods-pagination-controls button:hover:not(
+    :disabled
+  ) {
+  background: #fff3eb;
+
+  border-color: #f47b20;
+
+  color: #e96810;
+}
+
+.jippy-outlet-foods-pagination-controls button:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   BOTTOM BACK BUTTON
+   ============================================================ */
+
+.jippy-outlet-foods-bottom {
+  margin-top: 18px;
+}
+
+.jippy-outlet-foods-back-btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 10px 15px;
+
+  border: 1px solid #d5d9de;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #444;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.jippy-outlet-foods-back-btn:hover {
+  background: #f7f8fa;
+
+  border-color: #c5cbd2;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.jippy-outlet-foods-loading {
+  min-height: 350px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #777;
+}
+
+.jippy-outlet-foods-loading p {
+  margin-top: 14px;
+
+  color: #666;
+
+  font-size: 14px;
+}
+
+.jippy-outlet-foods-loader {
+  width: 34px;
+  height: 34px;
+
+  box-sizing: border-box;
+
+  border: 4px solid #e8e8e8;
+
+  border-top-color: #f47b20;
+
+  border-radius: 50%;
+
+  animation:
+    jippyOutletFoodsSpin
+    0.8s
+    linear
+    infinite;
+}
+
+@keyframes jippyOutletFoodsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.jippy-outlet-foods-error {
+  min-height: 350px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e4e8;
+
+  border-radius: 10px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+.jippy-outlet-foods-error h3 {
+  margin: 0 0 8px;
+
+  color: #333;
+
+  font-size: 18px;
+}
+
+.jippy-outlet-foods-error p {
+  margin: 0 0 20px;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .jippy-outlet-foods-page-header {
+    align-items: center;
+  }
+
+  .jippy-outlet-foods-table {
+    min-width: 1450px;
+  }
+}
+
+@media (max-width: 650px) {
+  .jippy-outlet-foods-page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .jippy-outlet-foods-controls {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+  }
+
+  .jippy-outlet-foods-search {
+    width: 100%;
+  }
+
+  .jippy-outlet-foods-search-box {
+    width: 100%;
+  }
+
+  .jippy-outlet-foods-pagination {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+}
+
+/* FOOD AVAILABILITY TOGGLE */
+
+.jippy-food-availability-toggle {
+  width: 42px;
+  height: 22px;
+  border: none;
+  border-radius: 20px;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.jippy-food-toggle-on {
+  background: #16a34a;
+  justify-content: flex-end;
+}
+
+.jippy-food-toggle-off {
+  background: #d1d5db;
+  justify-content: flex-start;
+}
+
+.jippy-food-toggle-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+
+/* MODAL */
+
+.jippy-food-unavailability-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.jippy-food-unavailability-modal {
+  width: 560px;
+  max-width: calc(100vw - 30px);
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.jippy-food-unavailability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.jippy-food-unavailability-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.jippy-food-unavailability-header p {
+  margin: 5px 0 0;
+  color: #777;
+}
+
+.jippy-food-unavailability-close {
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.jippy-food-unavailability-info {
+  margin: 20px 0;
+  padding: 12px;
+  border: 1px solid #f5d98b;
+  background: #fff9e8;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.jippy-food-unavailability-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.jippy-food-unavailability-grid label,
+.jippy-food-unavailability-field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.jippy-food-unavailability-grid input,
+.jippy-food-unavailability-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 11px;
+  font-size: 13px;
+}
+
+.jippy-food-unavailability-field {
+  margin-top: 18px;
+}
+
+.jippy-food-unavailability-field textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.jippy-food-unavailability-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.jippy-food-unavailability-cancel,
+.jippy-food-unavailability-confirm {
+  padding: 10px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.jippy-food-unavailability-cancel {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.jippy-food-unavailability-confirm {
+  background: #ff6b00;
+  color: #fff;
+  border: 1px solid #ff6b00;
+}
+
+
+/* =========================================================
+   FOOD EXPAND BUTTON
+   ========================================================= */
+
+.food-expand-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #f07822;
+  background: #fff;
+  color: #f07822;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food-expand-btn:hover {
+  background: #fff5ee;
+}
+
+
+/* =========================================================
+   EXPANDED FOOD ROW
+   ========================================================= */
+
+.food-expanded-row {
+  background: #fff;
+}
+
+.food-expanded-row > td {
+  padding: 0 !important;
+}
+
+
+/* =========================================================
+   EXPANDED FOOD DETAILS
+   ========================================================= */
+
+.food-expanded-details {
+  margin: 0 12px 12px;
+  padding: 18px 20px;
+  border: 1px solid #f0d9ce;
+  border-radius: 10px;
+  background: #fffaf7;
+}
+
+
+/* =========================================================
+   UNAVAILABILITY HEADER
+   ========================================================= */
+
+.food-unavailability-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.food-unavailable-status {
+  font-weight: 500;
+  color: #444;
+}
+
+.edit-food-unavailability-btn {
+  margin-left: auto;
+  padding: 8px 14px;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  background: #fff;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-food-unavailability-btn:hover {
+  background: #fff1f1;
+}
+
+
+/* =========================================================
+   HORIZONTAL FOOD UNAVAILABILITY DETAILS
+   ========================================================= */
+
+.jippy-food-unavailability-content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+.jippy-unavailability-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.jippy-unavailability-info span {
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.jippy-unavailability-info strong {
+  color: #222;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   NO UNAVAILABILITY
+   ========================================================= */
+
+.food-no-unavailability {
+  color: #777;
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .jippy-food-unavailability-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .jippy-food-unavailability-content {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-food-unavailability-heading {
+    flex-wrap: wrap;
+  }
+
+  .jippy-edit-unavailability-btn {
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   JIPPY FOOD UNAVAILABILITY EXPANDED CARD
+   ========================================================= */
+
+.jippy-food-expanded-cell {
+  padding: 0 !important;
+  background: #fffaf7 !important;
+}
+
+.jippy-food-unavailability-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 20px;
+  background: #fffaf7;
+  border-top: 1px solid #f0d9ce;
+}
+
+.jippy-food-unavailability-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.jippy-food-unavailability-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.jippy-food-unavailability-heading strong {
+  color: #222;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.jippy-food-unavailability-heading span {
+  color: #555;
+  font-size: 13px;
+}
+
+.jippy-edit-unavailability-btn {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  background: #fff;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.jippy-edit-unavailability-btn:hover {
+  background: #fff1f1;
+}
+
+
+.jippy-food-restore-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.jippy-food-restore-modal {
+  width: 500px;
+  max-width: calc(100vw - 40px);
+
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.jippy-food-restore-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.jippy-food-restore-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.jippy-food-restore-header p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.jippy-food-restore-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.jippy-food-restore-info {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #fff7e6;
+  border: 1px solid #ffd98a;
+  font-size: 14px;
+}
+
+.jippy-food-restore-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.jippy-food-restore-cancel,
+.jippy-food-restore-confirm {
+  padding: 9px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.jippy-food-restore-cancel {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.jippy-food-restore-confirm {
+  background: #ff6b00;
+  color: #fff;
+  border: none;
+}
+
+.jippy-food-restore-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   FOOD UNAVAILABILITY MODAL - ACTION BUTTONS
+   ========================================================= */
+
+.jippy-food-unavailability-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Cancel Button */
+.jippy-food-unavailability-cancel-btn {
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  color: #333333;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.jippy-food-unavailability-cancel-btn:hover {
+  background: #f5f5f5;
+  border-color: #bdbdbd;
+}
+
+/* Confirm Button */
+.jippy-food-unavailability-confirm-btn {
+  border: none;
+  background: #ff6b00;
+  color: #ffffff;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 135px;
+}
+
+.jippy-food-unavailability-confirm-btn:hover {
+  background: #e85f00;
+}
+
+.jippy-food-unavailability-confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   FOOD VARIANTS CELL & BUTTONS
+   ============================================================ */
+
+.jippy-food-variants-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.jippy-food-variants-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  background: #f3f0ff;
+  border: 1px solid #d8b4fe;
+  border-radius: 6px;
+  color: #7c3aed;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jippy-food-variants-btn svg {
+  font-size: 13px;
+}
+
+.jippy-food-variants-btn:hover:not(:disabled) {
+  background: #e9d5ff;
+  border-color: #c084fc;
+  color: #6d28d9;
+}
+
+.jippy-food-variants-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.jippy-food-add-variants-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jippy-food-add-variants-btn svg {
+  font-size: 15px;
+}
+
+.jippy-food-add-variants-btn:hover:not(:disabled) {
+  background: #fff3eb;
+  border-color: #f47b20;
+  color: #f47b20;
+}
+
+.jippy-food-add-variants-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   PRODUCT VARIANTS MODAL
+   ============================================================ */
+
+.jippy-food-variants-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.jippy-food-variants-dialog {
+  width: 520px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
+.jippy-food-variants-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.jippy-food-variants-dialog-header p {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #f47b20;
+}
+
+.jippy-food-variants-dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.jippy-food-variants-dialog-header button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f8fafc;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.jippy-food-variants-dialog-header button:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.jippy-food-variants-state {
+  padding: 32px 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.jippy-food-variants-error {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.jippy-food-variants-content {
+  margin-top: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 4px;
+}
+
+.jippy-food-variant-group {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.jippy-food-variant-group h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.jippy-food-variant-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jippy-food-variant-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.jippy-food-variant-option strong {
+  font-size: 13px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.jippy-food-variant-option span {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.jippy-food-variant-option b {
+  font-size: 14px;
+  color: #16a34a;
+  font-weight: 700;
+}

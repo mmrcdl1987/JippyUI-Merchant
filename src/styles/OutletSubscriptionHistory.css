@@ -1,0 +1,672 @@
+/* ============================================================
+   SUBSCRIPTION HISTORY WRAPPER
+   ============================================================ */
+
+.jippy-outlet-subscription-history-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   MAIN HISTORY CARD
+   ============================================================ */
+
+.jippy-outlet-subscription-history-card {
+  background: #ffffff;
+  border: 1px solid #e2e5e9;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   HISTORY HEADER
+   ============================================================ */
+
+.jippy-outlet-subscription-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 22px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e8eaed;
+
+  gap: 20px;
+}
+
+
+/* ============================================================
+   HEADER LEFT
+   ============================================================ */
+
+.jippy-outlet-subscription-history-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+
+.jippy-outlet-subscription-history-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff1e8;
+  color: #f47b20;
+
+  border-radius: 8px;
+
+  font-size: 19px;
+
+  flex-shrink: 0;
+}
+
+
+.jippy-outlet-subscription-history-header-left h3 {
+  margin: 0 0 5px 0;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #202124;
+}
+
+
+.jippy-outlet-subscription-history-header-left span {
+  font-size: 13px;
+  color: #73777d;
+}
+
+
+/* ============================================================
+   EXPAND BUTTON
+   ============================================================ */
+
+.jippy-outlet-subscription-history-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 9px 15px;
+
+  border: 1px solid #f47b20;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #f47b20;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+
+.jippy-outlet-subscription-history-expand-btn:hover {
+  background: #f47b20;
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   SUMMARY
+   ============================================================ */
+
+.jippy-outlet-subscription-history-summary {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  border-bottom: 1px solid #e8eaed;
+}
+
+
+.jippy-outlet-subscription-history-summary-item {
+  padding: 17px 20px;
+
+  border-right: 1px solid #e8eaed;
+
+  min-width: 0;
+}
+
+
+.jippy-outlet-subscription-history-summary-item:last-child {
+  border-right: none;
+}
+
+
+.jippy-outlet-subscription-history-summary-item span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #74787e;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.jippy-outlet-subscription-history-summary-item strong {
+  display: block;
+
+  color: #25282c;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  word-break: break-word;
+}
+
+
+/* ============================================================
+   EXPANDED DETAILS
+   ============================================================ */
+
+.jippy-outlet-subscription-history-details {
+  background: #fafbfc;
+
+  padding: 18px 20px 22px;
+}
+
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+
+.jippy-outlet-subscription-history-section {
+  background: #ffffff;
+
+  border: 1px solid #e1e4e8;
+
+  border-radius: 9px;
+
+  overflow: hidden;
+
+  margin-bottom: 16px;
+}
+
+
+.jippy-outlet-subscription-history-section:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ============================================================
+   SECTION TITLE
+   ============================================================ */
+
+.jippy-outlet-subscription-history-section-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 14px 18px;
+
+  background: #f6f7f9;
+
+  border-bottom: 1px solid #e1e4e8;
+
+  color: #25282c;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+.jippy-outlet-subscription-history-section-title svg {
+  color: #f47b20;
+
+  font-size: 15px;
+}
+
+
+/* ============================================================
+   DETAILS GRID
+   ============================================================ */
+
+.jippy-outlet-subscription-history-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+}
+
+
+.jippy-outlet-subscription-history-grid > div {
+  padding: 16px 18px;
+
+  border-right: 1px solid #eceef0;
+  border-bottom: 1px solid #eceef0;
+
+  min-width: 0;
+}
+
+
+.jippy-outlet-subscription-history-grid > div:nth-child(4n) {
+  border-right: none;
+}
+
+
+.jippy-outlet-subscription-history-grid > div:nth-last-child(-n + 4) {
+  border-bottom: none;
+}
+
+
+.jippy-outlet-subscription-history-grid span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #777d84;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.jippy-outlet-subscription-history-grid strong {
+  display: block;
+
+  color: #272a2e;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  word-break: break-word;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.jippy-outlet-subscription-status-value {
+  color: #168a45 !important;
+}
+
+
+.jippy-outlet-subscription-na-value {
+  color: #8b8f94 !important;
+}
+
+
+/* ============================================================
+   MEAL TIMING TABLE
+   ============================================================ */
+
+.jippy-outlet-subscription-meal-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.jippy-outlet-subscription-meal-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 650px;
+}
+
+
+/* TABLE HEADER */
+
+.jippy-outlet-subscription-meal-table thead th {
+  padding: 13px 16px;
+
+  text-align: left;
+
+  background: #eef1f4;
+
+  color: #34383d;
+
+  border-bottom: 2px solid #d9dde2;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* TABLE BODY */
+
+.jippy-outlet-subscription-meal-table tbody td {
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #e5e7e9;
+
+  color: #454a50;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  background: #ffffff;
+}
+
+
+.jippy-outlet-subscription-meal-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+.jippy-outlet-subscription-meal-table tbody tr:hover td {
+  background: #fff8f3;
+}
+
+
+/* MEAL NAME */
+
+.jippy-outlet-subscription-meal-name {
+  color: #22262b !important;
+
+  font-weight: 700 !important;
+}
+
+
+/* ============================================================
+   BANNER GRID
+   ============================================================ */
+
+.jippy-outlet-subscription-banner-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+}
+
+
+.jippy-outlet-subscription-banner-item {
+  padding: 17px 18px;
+
+  border-right: 1px solid #eceef0;
+
+  min-width: 0;
+}
+
+
+.jippy-outlet-subscription-banner-item:last-child {
+  border-right: none;
+}
+
+
+.jippy-outlet-subscription-banner-item span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #777d84;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.jippy-outlet-subscription-banner-item a {
+  display: inline-block;
+
+  color: #2878d7;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  word-break: break-word;
+}
+
+
+.jippy-outlet-subscription-banner-item a:hover {
+  text-decoration: underline;
+}
+
+
+.jippy-outlet-subscription-banner-item strong {
+  color: #777d84;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   NO INNER DATA
+   ============================================================ */
+
+.jippy-outlet-subscription-no-inner-data {
+  padding: 25px;
+
+  text-align: center;
+
+  color: #7a7f85;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.jippy-outlet-subscription-history-empty {
+  min-height: 250px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e5e9;
+
+  border-radius: 10px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.jippy-outlet-subscription-history-empty svg {
+  font-size: 32px;
+
+  color: #b4b8bd;
+
+  margin-bottom: 10px;
+}
+
+
+.jippy-outlet-subscription-history-empty h3 {
+  margin: 4px 0 7px;
+
+  color: #33373b;
+
+  font-size: 16px;
+}
+
+
+.jippy-outlet-subscription-history-empty p {
+  margin: 0;
+
+  color: #858a90;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.jippy-outlet-subscription-history-error {
+  padding: 30px;
+
+  background: #fff5f5;
+
+  border: 1px solid #ffd4d4;
+
+  border-radius: 9px;
+
+  color: #c62828;
+
+  text-align: center;
+
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.jippy-outlet-subscription-history-loading {
+  min-height: 250px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #73777d;
+
+  font-size: 14px;
+}
+
+
+.jippy-outlet-subscription-history-spinner {
+  width: 30px;
+  height: 30px;
+
+  border: 3px solid #eeeeee;
+
+  border-top-color: #f47b20;
+
+  border-radius: 50%;
+
+  animation: jippySubscriptionSpinner 0.8s linear infinite;
+}
+
+
+@keyframes jippySubscriptionSpinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+
+  .jippy-outlet-subscription-history-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jippy-outlet-subscription-history-summary-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .jippy-outlet-subscription-history-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jippy-outlet-subscription-history-grid > div:nth-child(4n) {
+    border-right: 1px solid #eceef0;
+  }
+
+  .jippy-outlet-subscription-history-grid > div:nth-child(2n) {
+    border-right: none;
+  }
+
+  .jippy-outlet-subscription-banner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-subscription-banner-item {
+    border-right: none;
+    border-bottom: 1px solid #eceef0;
+  }
+
+  .jippy-outlet-subscription-banner-item:last-child {
+    border-bottom: none;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 650px) {
+
+  .jippy-outlet-subscription-history-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .jippy-outlet-subscription-history-expand-btn {
+    width: 100%;
+  }
+
+  .jippy-outlet-subscription-history-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-subscription-history-summary-item {
+    border-right: none;
+
+    border-bottom: 1px solid #e8eaed;
+  }
+
+  .jippy-outlet-subscription-history-summary-item:last-child {
+    border-bottom: none;
+  }
+
+  .jippy-outlet-subscription-history-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jippy-outlet-subscription-history-grid > div,
+  .jippy-outlet-subscription-history-grid > div:nth-child(2n),
+  .jippy-outlet-subscription-history-grid > div:nth-child(4n) {
+    border-right: none;
+
+    border-bottom: 1px solid #eceef0;
+  }
+
+  .jippy-outlet-subscription-history-grid > div:last-child {
+    border-bottom: none;
+  }
+
+  .jippy-outlet-subscription-history-details {
+    padding: 12px;
+  }
+}

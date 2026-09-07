@@ -16,7 +16,7 @@ const EditOutlet = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(""); // Added state for backend errors
+  const [errorList, setErrorList] = useState([]); // Updated to handle array of validation errors
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [areas, setAreas] = useState([]);
@@ -94,13 +94,11 @@ const EditOutlet = () => {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
-      setErrorMessage("");
+      setErrorList([]);
 
-      // Fetch states list
       const statesRes = await getStates();
       setStates(statesRes || []);
 
-      // Fetch outlet details
       const response = await getOutletById(id);
       const outlet = response.data?.data || response.data || response;
 
@@ -108,14 +106,11 @@ const EditOutlet = () => {
         ...prev,
         ...outlet,
         outletId: outlet.outletId || id,
-        // Ensure email doesn't contain accidental spaces from mismapping
         outletEmail: (outlet.outletEmail || "").replace(/\s+/g, ""),
-        // Pre-fill building / road mappings if backend returns buildingNumber / road
         buildingNo: outlet.buildingNumber || outlet.buildingNo || "",
         streetName: outlet.road || outlet.streetName || "",
       }));
 
-      // Cascade fetch cities and areas if present
       if (outlet.stateId) {
         const citiesRes = await getCities(outlet.stateId);
         setCities(citiesRes || []);
@@ -126,17 +121,14 @@ const EditOutlet = () => {
       }
     } catch (error) {
       console.error("Error loading outlet data:", error);
-      setErrorMessage("Failed to load outlet details from server.");
+      setErrorList(["Failed to load outlet details from server."]);
     } finally {
       setLoading(false);
     }
   };
 
-  // General Top-Level Field Handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    // Sanitize email by removing any spaces to prevent validation errors
     const processedValue = name === "outletEmail" ? value.replace(/\s+/g, "") : value;
 
     setFormData((prev) => ({
@@ -145,7 +137,6 @@ const EditOutlet = () => {
     }));
   };
 
-  // Location Dropdown Handlers
   const handleStateChange = async (e) => {
     const stateId = e.target.value;
     setFormData((prev) => ({ ...prev, stateId, cityId: "", areaId: "" }));
@@ -167,14 +158,12 @@ const EditOutlet = () => {
     }
   };
 
-  // Outlet Timings Handler
   const handleTimingChange = (index, field, value) => {
     const updatedTimings = [...formData.timings];
     updatedTimings[index][field] = value;
     setFormData((prev) => ({ ...prev, timings: updatedTimings }));
   };
 
-  // Category Handlers
   const handleCategoryChange = (catIndex, field, value) => {
     const updatedCategories = [...formData.categories];
     updatedCategories[catIndex][field] = value;
@@ -187,36 +176,34 @@ const EditOutlet = () => {
     setFormData((prev) => ({ ...prev, categories: updatedCategories }));
   };
 
-  // Product Field Handlers
   const handleProductChange = (catIndex, prodIndex, field, value) => {
     const updatedCategories = [...formData.categories];
     updatedCategories[catIndex].products[prodIndex][field] = value;
     setFormData((prev) => ({ ...prev, categories: updatedCategories }));
   };
 
-  // Product Variant Price Handler
   const handleVariantChange = (catIndex, prodIndex, variantIndex, value) => {
     const updatedCategories = [...formData.categories];
     updatedCategories[catIndex].products[prodIndex].variants[variantIndex].price = value;
     setFormData((prev) => ({ ...prev, categories: updatedCategories }));
   };
 
-  // Product Timing Handler
   const handleProductTimingChange = (catIndex, prodIndex, timingIndex, field, value) => {
     const updatedCategories = [...formData.categories];
     updatedCategories[catIndex].products[prodIndex].productTimings[timingIndex][field] = value;
     setFormData((prev) => ({ ...prev, categories: updatedCategories }));
   };
 
-  // Submit Handler mapped to API requirements
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Reset previous error message
+    setErrorList([]); // Reset errors on new submission
 
     try {
-      const payload = {
-        outletId: Number(id),
+      const merchantId = localStorage.getItem("merchantId");
 
+      const payload = {
+        merchantId: merchantId ? Number(merchantId) : null, // Ensured merchantId is passed to prevent validation failure
+        outletId: Number(id),
         outletName: formData.outletName,
         outletEmail: formData.outletEmail,
         outletPhone: formData.outletPhone,
@@ -322,21 +309,26 @@ const EditOutlet = () => {
 
       console.log("Update Payload", payload);
 
-      await updateOutlet(payload);
+      await updateOutlet(id, payload);
 
       alert("Outlet Updated Successfully");
       navigate(`/outlets/view/${id}`);
     } catch (error) {
       console.error("API Error:", error);
-      
-      // Extract exact backend error message safely
-      const backendMsg =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        error.message ||
-        "Failed to update outlet";
 
-      setErrorMessage(backendMsg);
+      const errorData = error.response?.data;
+
+      // Extract backend validation error array or fallback to message
+      if (errorData?.errors && Array.isArray(errorData.errors)) {
+        setErrorList(errorData.errors);
+      } else {
+        const backendMsg =
+          errorData?.message ||
+          errorData?.error ||
+          error.message ||
+          "Failed to update outlet";
+        setErrorList([backendMsg]);
+      }
     }
   };
 
@@ -344,7 +336,6 @@ const EditOutlet = () => {
 
   return (
     <div className="edit-outlet-container">
-      {/* Top Header */}
       <div className="header-bar">
         <button className="back-btn" type="button" onClick={() => navigate(-1)}>
           ← Back
@@ -352,15 +343,19 @@ const EditOutlet = () => {
         <h2>Edit Outlet</h2>
       </div>
 
-      {/* Backend Error Notification Box */}
-      {errorMessage && (
-        <div className="error-banner" style={{ background: "#ffebee", color: "#c62828", padding: "12px 16px", borderRadius: "4px", margin: "16px 0", border: "1px solid #ef9a9a", fontWeight: "500" }}>
-          ⚠️ <strong>Error:</strong> {errorMessage}
+      {/* Dynamic Validation Error Banner */}
+      {errorList.length > 0 && (
+        <div className="error-banner" style={{ background: "#ffebee", color: "#c62828", padding: "12px 16px", borderRadius: "4px", margin: "16px 0", border: "1px solid #ef9a9a" }}>
+          <strong>⚠️ Please fix the following validation errors:</strong>
+          <ul style={{ margin: "8px 0 0 20px", padding: 0 }}>
+            {errorList.map((err, index) => (
+              <li key={index}>{err}</li>
+            ))}
+          </ul>
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* --- 1. Outlet Information --- */}
         <div className="form-section">
           <h3>Outlet Information</h3>
           <hr />
@@ -445,7 +440,6 @@ const EditOutlet = () => {
           </div>
         </div>
 
-        {/* --- 2. Address Details --- */}
         <div className="form-section">
           <h3>Address Details</h3>
           <hr />
@@ -538,7 +532,6 @@ const EditOutlet = () => {
           </div>
         </div>
 
-        {/* --- 3. Bank Details --- */}
         <div className="form-section">
           <h3>Bank Details</h3>
           <hr />
@@ -585,7 +578,6 @@ const EditOutlet = () => {
           </div>
         </div>
 
-        {/* --- 4. Outlet Timings --- */}
         <div className="form-section">
           <h3>Outlet Timings</h3>
           <hr />
@@ -631,7 +623,6 @@ const EditOutlet = () => {
           </table>
         </div>
 
-        {/* --- 5. Categories & Nested Products --- */}
         <div className="form-section">
           <h3>Categories</h3>
           <hr />
@@ -720,7 +711,6 @@ const EditOutlet = () => {
                         </div>
                       </div>
 
-                      {/* Variants Subsection */}
                       <div className="subsection">
                         <h4>Variants</h4>
                         <div className="variants-grid">
@@ -739,7 +729,6 @@ const EditOutlet = () => {
                         </div>
                       </div>
 
-                      {/* Product Timings Subsection */}
                       <div className="subsection">
                         <h4>Product Timings</h4>
                         <table className="timings-table sub-table">
@@ -795,7 +784,6 @@ const EditOutlet = () => {
           ))}
         </div>
 
-        {/* --- Action Buttons --- */}
         <div className="form-actions">
           <button type="button" className="cancel-btn" onClick={() => navigate(-1)}>
             Cancel
