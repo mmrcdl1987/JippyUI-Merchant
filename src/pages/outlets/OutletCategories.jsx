@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/OutletCategories.css";
+import "../../styles/OutletCategories.css";
 
 import {
   getOutletDetails,
@@ -526,23 +526,23 @@ const OutletCategories = ({ outlet }) => {
           <thead>
             <tr>
               <th className="jippy-category-expand-column">
-                {/* Expand */}
-              </th>
-
-              <th className="jippy-category-id-column">
-                Category ID
+                #
               </th>
 
               <th className="jippy-category-name-column">
-                Category Name
+                Category
+              </th>
+
+              <th className="jippy-category-products-column">
+                Products
               </th>
 
               <th className="jippy-category-available-column">
-                isAvailable
+                Availability
               </th>
 
               <th className="jippy-category-toggle-column">
-                isToggle
+                Action
               </th>
             </tr>
           </thead>
@@ -610,12 +610,19 @@ const OutletCategories = ({ outlet }) => {
 
                       </td>
 
-                      <td className="jippy-category-id-cell">
-                        {category.categoryId}
+                      <td className="jippy-category-name-cell">
+                        {category.categoryName || "-"}
                       </td>
 
-                      <td className="jippy-category-name-cell">
-                        {category.categoryName}
+                      <td className="jippy-category-products-cell">
+                        {category.productCount ??
+                          category.productsCount ??
+                          category.totalProducts ??
+                          (Array.isArray(category.products)
+                            ? category.products.length
+                            : Array.isArray(category.items)
+                            ? category.items.length
+                            : 0)}
                       </td>
 
                       <td className="jippy-category-available-cell">

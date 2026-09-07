@@ -1266,6 +1266,106 @@
   width: 15px;
   height: 15px;
 }
+/* ============================================================
+   OUTLET PROFILE - CATEGORIES TABLE
+   ============================================================ */
+
+.jippy-outlet-profile-category-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.jippy-outlet-profile-category-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+.jippy-outlet-profile-category-table thead {
+  background: #ff6b00;
+}
+
+.jippy-outlet-profile-category-table th {
+  padding: 10px 12px;
+  background: #ff6b00;
+  color: #ffffff;
+  border-bottom: 1px solid #ff6b00;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.jippy-outlet-profile-category-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eeeeee;
+  color: #333333;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.jippy-outlet-profile-category-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.jippy-outlet-profile-category-table tbody tr:hover {
+  background: #fffaf6;
+}
+
+.jippy-outlet-profile-category-table .category-number-column {
+  width: 60px;
+  text-align: center;
+}
+
+.jippy-outlet-profile-category-table .category-products-column {
+  width: 18%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.jippy-outlet-profile-category-table .category-status-column {
+  width: 20%;
+  text-align: center;
+}
+
+.jippy-outlet-profile-category-table .category-name-column {
+  font-weight: 600;
+  color: #222222;
+}
+
+.jippy-category-status-available,
+.jippy-category-status-unavailable {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 85px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.jippy-category-status-available {
+  color: #16803a;
+  background: #eaf8ef;
+  border: 1px solid #bde8cb;
+}
+
+.jippy-category-status-unavailable {
+  color: #c2410c;
+  background: #fff1e8;
+  border: 1px solid #ffc9a8;
+}
+
+@media (max-width: 600px) {
+  .jippy-outlet-profile-category-table {
+    min-width: 550px;
+  }
+}
 
 
 

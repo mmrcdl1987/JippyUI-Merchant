@@ -1155,7 +1155,6 @@ function OutletFoods({
                   Description
                 </th>
                 <th>Merchant Price</th>
-                <th>Online Price</th>
                 <th>Veg</th>
                 <th>Product Variants</th>
                 <th>isToggle</th>
@@ -1225,11 +1224,7 @@ function OutletFoods({
                         </td>
 
                         {/* ONLINE PRICE */}
-                        <td>
-                          <span className="jippy-food-online-price">
-                            {formatPrice(food?.onlinePrice)}
-                          </span>
-                        </td>
+                      
 
                         {/* VEG */}
                         <td>

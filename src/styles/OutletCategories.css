@@ -105,12 +105,13 @@
   width: 42px;
 }
 
-.jippy-category-id-column {
-  width: 18%;
+.jippy-category-name-column {
+  width: 38%;
 }
 
-.jippy-category-name-column {
-  width: 42%;
+.jippy-category-products-column {
+  width: 15%;
+  text-align: center !important;
 }
 
 .jippy-category-available-column {
@@ -131,7 +132,14 @@
   border-bottom: 1px solid #eeeeee;
   color: #333333;
   vertical-align: middle;
-  font-size: 18px;
+  font-size: 15px;
+}
+
+.jippy-category-products-cell {
+  text-align: center;
+  font-size: 15px !important;
+  font-weight: 600;
+  color: #333333;
 }
 
 .jippy-category-data-table tbody tr:last-child

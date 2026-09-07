@@ -39,31 +39,77 @@ function OutletCategories({ categories = [] }) {
   }
 
   return (
-    <div className="jippy-outlet-profile-category-list">
-      {categories.map((category, index) => {
-        const products = Array.isArray(category?.products)
-          ? category.products
-          : [];
+    <div className="jippy-outlet-profile-category-table-wrapper">
+      <table className="jippy-outlet-profile-category-table">
+        <thead>
+          <tr>
+            <th className="category-number-column">#</th>
+            <th>Category</th>
+            <th className="category-products-column">Products</th>
+            <th className="category-status-column">Availability</th>
+          </tr>
+        </thead>
 
-        const categoryName =
-          category?.categoryName ??
-          category?.name ??
-          category?.category ??
-          category?.categoryId ??
-          `Category ${index + 1}`;
+        <tbody>
+          {categories.map((category, index) => {
+            const products = Array.isArray(category?.products)
+              ? category.products
+              : [];
 
-        return (
-          <div
-            className="jippy-outlet-profile-category-item"
-            key={category?.categoryId ?? category?.id ?? index}
-          >
-            <div className="jippy-outlet-profile-category-header">
-              <strong>{categoryName}</strong>
-              <span>{products.length} product{products.length === 1 ? "" : "s"}</span>
-            </div>
-          </div>
-        );
-      })}
+            const categoryName =
+              category?.categoryName ??
+              category?.name ??
+              category?.category ??
+              category?.categoryId ??
+              `Category ${index + 1}`;
+
+            const productCount =
+              category?.productCount ??
+              category?.productsCount ??
+              category?.totalProducts ??
+              products.length;
+
+            const isAvailable =
+              category?.isAvailable !== false;
+
+            return (
+              <tr
+                key={
+                  category?.categoryId ??
+                  category?.id ??
+                  index
+                }
+              >
+                <td className="category-number-column">
+                  {index + 1}
+                </td>
+
+                <td className="category-name-column">
+                  <strong>{categoryName}</strong>
+                </td>
+
+                <td className="category-products-column">
+                  {productCount}
+                </td>
+
+                <td className="category-status-column">
+                  <span
+                    className={
+                      isAvailable
+                        ? "jippy-category-status-available"
+                        : "jippy-category-status-unavailable"
+                    }
+                  >
+                    {isAvailable
+                      ? "Available"
+                      : "Unavailable"}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
