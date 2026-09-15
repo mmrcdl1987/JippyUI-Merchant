@@ -104,6 +104,10 @@ const [loadingPromotionTypes, setLoadingPromotionTypes] = useState(true);
   }
 };
 
+
+
+
+
 const getPromotionConfig = (id) => {
   switch (id) {
     case 1:

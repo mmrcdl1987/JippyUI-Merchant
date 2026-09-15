@@ -156,3 +156,6 @@ export const getPromotionPlanTypes = async () => {
   const response = await api.get("/api/fm/promotion-plan-types");
   return response.data;
 };
+
+
+

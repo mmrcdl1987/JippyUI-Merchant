@@ -203,9 +203,12 @@ const Outlets = () => {
       // OPEN OUTLET PROFILE
       // =====================================================
 
-      navigate(
-        `/outlets/view/${outletId}`
-      );
+      // navigate(
+      //   `/outlets/view/${outletId}`
+      // );
+
+
+      navigate(`/outlets/profile/${outletId}`);
 
     } catch (error) {
       console.error(
