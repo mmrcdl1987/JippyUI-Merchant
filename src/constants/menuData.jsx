@@ -24,11 +24,11 @@ export const menuData = [
     icon: <FaStore />,
     path: "/outlets",
   },
-  {
-    name: "Foods",
-    icon: <FaHamburger />,
-    path: "/foods",
-  },
+  // {
+  //   name: "Foods",
+  //   icon: <FaHamburger />,
+  //   path: "/foods",
+  // },
   {
     name: "Orders",
     icon: <FaShoppingBag />,
