@@ -7,18 +7,9 @@
   box-sizing: border-box;
 }
 .plans-status-section {
-  /* width: calc(100vw - 240px);
-  max-width: 1450px;
-  margin: 18px auto 30px; */
-
-
   width: 100%;
   max-width: none;
   margin: 18px 0 30px;
-
-  
-
-
 
   padding: 24px 26px 28px;
 
@@ -562,12 +553,11 @@
 ========================================================= */
 
 .plans-table {
-  /* width: 100%;
-
-  table-layout: auto; */
-
-   width: 100%;
-  min-width: 1100px;
+  width: 100%;
+  /* Raised from 1100px so the wider Plan Type / Offer Name
+     columns below have room without forcing them to
+     shrink back down and overflow again. */
+  min-width: 1320px;
   table-layout: auto;
 
   border-collapse: separate;
@@ -626,6 +616,16 @@
   white-space: nowrap;
 
   vertical-align: middle;
+
+  /* Safety net: no cell can ever bleed into its neighbor —
+     anything that doesn't fit its column truncates with an
+     ellipsis instead of overlapping the next cell's text.
+     (This is what was missing before — the column widths
+     below were being set, but nothing stopped overflow
+     content from rendering on top of the next column.) */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0; /* combined with the column widths below, forces the ellipsis to respect them */
 }
 
 .plans-table tbody tr:last-child td {
@@ -639,87 +639,53 @@
 
 /* =========================================================
    COLUMN WIDTHS
+   Widened the columns that most often overflowed
+   (Plan Type, Offer Name, Area) so real-world values like
+   "Restaurant Offer (Premium)" fit without truncation in
+   the common case, while the ellipsis rule above still
+   protects anything longer.
 ========================================================= */
 
-/* .plans-table .col-id {
-  width: 55px;
-}
-
-.plans-table .col-type {
-  width: 95px;
-}
-
-.plans-table .col-offer {
-  width: 120px;
-}
-
-.plans-table .col-area {
-  width: 90px;
-}
-
-.plans-table .col-min-order {
-  width: 105px;
-}
-
-.plans-table .col-amount {
-  width: 95px;
-}
-
-.plans-table .col-date {
-  width: 92px;
-}
-
-.plans-table .col-time {
-  width: 82px;
-}
-
-.plans-table .col-status {
-  width: 78px;
-}
-
-.plans-table .col-actions {
-  width: 108px;
-} */
-
 .plans-table .col-id {
-  width: 55px;
+  width: 60px;
 }
 
 .plans-table .col-type {
-  width: 95px;
+  width: 190px;
 }
 
 .plans-table .col-offer {
-  width: 120px;
+  width: 170px;
 }
 
 .plans-table .col-area {
-  width: 90px;
+  width: 110px;
 }
 
 .plans-table .col-min-order {
-  width: 105px;
+  width: 115px;
 }
 
 .plans-table .col-amount {
-  width: 95px;
+  width: 105px;
 }
 
 .plans-table .col-date {
-  width: 92px;
+  width: 100px;
 }
 
 .plans-table .col-time {
-  width: 82px;
+  width: 92px;
 }
 
 .plans-table .col-status {
-  width: 78px;
+  width: 90px;
 }
 
 .plans-table .col-actions {
-  width: 108px;
+  width: 120px;
 }
+
 /* =========================================================
    TABLE CELLS
 ========================================================= */
@@ -735,13 +701,13 @@
 }
 
 .plan-offer-cell {
-  max-width: 130px;
+  max-width: 170px;
 }
 
 .plan-offer-cell span {
   display: block;
 
-  max-width: 130px;
+  max-width: 170px;
 
   overflow: hidden;
 
@@ -1034,18 +1000,18 @@
 
 .plans-edit-modal {
   width: 100%;
-  max-width: 720px;
+  max-width: 780px;
   max-height: 90vh;
 
   overflow-y: auto;
 
   background: #ffffff;
 
-  border-radius: 12px;
+  border-radius: 14px;
 
   box-shadow:
-    0 20px 50px
-      rgba(15, 23, 42, 0.25);
+    0 24px 60px
+      rgba(15, 23, 42, 0.28);
 }
 
 
@@ -1056,45 +1022,59 @@
   align-items: flex-start;
   justify-content: space-between;
 
-  padding: 18px 20px;
+  padding: 22px 26px;
+
+  background: linear-gradient(
+    90deg,
+    #eff6ff 0%,
+    #ffffff 60%
+  );
 
   border-bottom: 1px solid #e5e7eb;
+  border-radius: 14px 14px 0 0;
 }
 
 .plans-modal-header h3 {
   margin: 0;
 
-  color: #1e293b;
+  color: #0f172a;
 
-  font-size: 17px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
 }
 
 .plans-modal-header p {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
 
-  color: #94a3b8;
+  color: #64748b;
 
-  font-size: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 .plans-modal-close {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
 
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
 
-  background: #f1f5f9;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
 
   color: #64748b;
 
   font-size: 20px;
 
   cursor: pointer;
+
+  transition: all 0.15s ease;
 }
 
 .plans-modal-close:hover {
   background: #fee2e2;
+  border-color: #fca5a5;
   color: #dc2626;
 }
 
@@ -1107,44 +1087,52 @@
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 15px;
+  gap: 18px 22px;
 
-  padding: 20px;
+  padding: 24px 26px;
 }
 
 .plans-edit-field {
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  gap: 7px;
 }
 
 .plans-edit-field label {
-  color: #475569;
+  color: #1e293b;
 
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 700;
 }
 
 .plans-edit-field input,
 .plans-edit-field select {
   width: 100%;
-  height: 38px;
+  height: 42px;
 
-  padding: 0 10px;
+  padding: 0 13px;
 
   box-sizing: border-box;
 
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1.5px solid #d7deea;
+  border-radius: 8px;
 
   outline: none;
 
   background: #ffffff;
 
-  color: #334155;
+  color: #1e293b;
 
-  font-size: 11px;
+  font-size: 13.5px;
+  font-weight: 500;
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.plans-edit-field input:hover,
+.plans-edit-field select:hover {
+  border-color: #b6c2d6;
 }
 
 .plans-edit-field input:focus,
@@ -1152,8 +1140,166 @@
   border-color: #2563eb;
 
   box-shadow:
-    0 0 0 3px
-      rgba(37, 99, 235, 0.08);
+    0 0 0 3.5px
+      rgba(37, 99, 235, 0.12);
+}
+/* =========================================================
+   EDIT MODAL — REMOVE NUMBER SPINNERS
+========================================================= */
+
+.plans-edit-field input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.plans-edit-field input[type="number"]::-webkit-inner-spin-button,
+.plans-edit-field input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* =========================================================
+   EDIT MODAL — APPLIES ON
+========================================================= */
+
+.plans-edit-full {
+  grid-column: 1 / -1;
+}
+
+.plans-edit-apply-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plans-edit-apply-btn {
+  height: 36px;
+
+  padding: 0 16px;
+
+  border: 1.5px solid #d7deea;
+  border-radius: 999px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-size: 12.5px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+.plans-edit-apply-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.plans-edit-apply-btn.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.plans-edit-apply-summary {
+  margin-top: 9px;
+
+  padding: 11px 14px;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+
+  background: #f8fafc;
+  color: #475569;
+
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.plans-edit-apply-picker {
+  margin-top: 9px;
+}
+
+.plans-edit-apply-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+
+  margin-bottom: 9px;
+}
+
+.plans-edit-apply-chip {
+  padding: 5px 12px;
+
+  border-radius: 999px;
+
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.plans-edit-apply-loading {
+  padding: 16px;
+
+  text-align: center;
+
+  color: #94a3b8;
+
+  font-size: 12.5px;
+  font-weight: 500;
+
+  border: 1px dashed #e2e8f0;
+  border-radius: 8px;
+} ₹
+
+.plans-edit-apply-checklist {
+  max-height: 210px;
+  overflow-y: auto;
+
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+
+  padding: 7px;
+}
+
+.plans-edit-apply-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 9px 10px;
+  margin-bottom: 3px;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.plans-edit-apply-check-row:hover {
+  background: #f8fafc;
+}
+
+.plans-edit-apply-check-row.checked {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.plans-edit-apply-check-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+
+  accent-color: #2563eb;
+
+  cursor: pointer;
 }
 
 
@@ -1164,29 +1310,35 @@
 
   justify-content: flex-end;
 
-  gap: 8px;
+  gap: 10px;
 
-  padding: 15px 20px;
+  padding: 18px 26px;
 
   border-top: 1px solid #e5e7eb;
+
+  background: #f8fafc;
+
+  border-radius: 0 0 14px 14px;
 }
 
 .plans-cancel-btn,
 .plans-save-btn {
-  height: 36px;
+  height: 42px;
 
-  padding: 0 16px;
+  padding: 0 22px;
 
-  border-radius: 6px;
+  border-radius: 8px;
 
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
 
   cursor: pointer;
+
+  transition: all 0.15s ease;
 }
 
 .plans-cancel-btn {
-  border: 1px solid #cbd5e1;
+  border: 1.5px solid #d7deea;
 
   background: #ffffff;
 
@@ -1194,25 +1346,30 @@
 }
 
 .plans-cancel-btn:hover {
-  background: #f8fafc;
+  background: #f1f5f9;
+  border-color: #b6c2d6;
 }
 
 .plans-save-btn {
-  border: 1px solid #2563eb;
+  border: 1.5px solid #2563eb;
 
   background: #2563eb;
 
   color: #ffffff;
+
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 .plans-save-btn:hover:not(:disabled) {
   background: #1d4ed8;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.32);
 }
 
 .plans-save-btn:disabled,
 .plans-cancel-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 
@@ -1309,5 +1466,271 @@
     padding: 0 6px;
 
     font-size: 9px;
+  }
+}
+
+
+
+
+/* =========================================================
+   EDIT DATE / TIME FIELDS
+========================================================= */
+
+.plans-edit-date-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.plans-edit-date-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 45px;
+  cursor: pointer;
+}
+
+/* Hide browser's default calendar/clock icon */
+.plans-edit-date-wrapper input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 45px;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Our calendar / clock icon */
+.plans-edit-date-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 2;
+  user-select: none;
+}
+
+.plans-edit-date-wrapper input[type="date"],
+.plans-edit-date-wrapper input[type="time"] {
+  color-scheme: light;
+}
+
+
+/* =========================================================================
+   ===========================================================================
+   COLORFUL EDIT MODAL — additive styling only.
+   Nothing above this line was touched; nothing in the JSX's logic changes
+   either. This just gives each field group in the Edit Promotion Plan
+   modal its own icon + tinted card, and dresses up the header/footer,
+   to match the requested colorful mockup.
+   ===========================================================================
+========================================================================= */
+
+/* ---- Modal header icon badge ---- */
+
+.plans-modal-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.plans-modal-header-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #fb923c, #f97316);
+  box-shadow: 0 6px 14px rgba(249, 115, 22, 0.28);
+
+  font-size: 20px;
+}
+
+/* ---- Colored field cards ---- */
+
+.plans-edit-field-colored {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  box-sizing: border-box;
+}
+
+.plans-edit-field-colored .plans-edit-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.plans-edit-field-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  font-size: 16px;
+  color: #ffffff;
+
+  margin-top: 2px;
+}
+
+/* Inputs/selects inside colored cards stay crisp white
+   so they remain easy to read against the tinted background. */
+.plans-edit-field-colored input,
+.plans-edit-field-colored select {
+  background: #ffffff;
+}
+
+/* Orange — Plan Type / Minimum Order Value / Offer Type */
+.plans-edit-color-orange {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-color: #fed7aa;
+}
+.plans-edit-color-orange .plans-edit-field-icon {
+  background: linear-gradient(135deg, #fb923c, #f97316);
+}
+
+/* Pink — Offer Name */
+.plans-edit-color-pink {
+  background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+  border-color: #f9a8d4;
+}
+.plans-edit-color-pink .plans-edit-field-icon {
+  background: linear-gradient(135deg, #f472b6, #ec4899);
+}
+
+/* Green — Start Date / End Date */
+.plans-edit-color-green {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-color: #86efac;
+}
+.plans-edit-color-green .plans-edit-field-icon {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+/* Blue — Start Time / End Time */
+.plans-edit-color-blue {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-color: #93c5fd;
+}
+.plans-edit-color-blue .plans-edit-field-icon {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+/* Purple — Offer Amount / Max Selection */
+.plans-edit-color-purple {
+  background: linear-gradient(135deg, #faf5ff, #ede9fe);
+  border-color: #c4b5fd;
+}
+.plans-edit-color-purple .plans-edit-field-icon {
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+}
+
+/* Teal — Applies On */
+.plans-edit-color-teal {
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+  border-color: #5eead4;
+}
+.plans-edit-color-teal .plans-edit-field-icon {
+  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+}
+
+/* ---- Applies On card body ---- */
+
+.plans-edit-applies-card {
+  flex-direction: column;
+}
+
+.plans-edit-applies-card .plans-edit-field-icon {
+  margin-top: 0;
+}
+
+.plans-edit-applies-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.plans-edit-apply-subtitle {
+  margin: 3px 0 0;
+
+  color: #64748b;
+
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+/* ---- Chips with a remove (×) affordance, like the mockup ---- */
+
+.plans-edit-apply-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plans-edit-apply-chip-remove {
+  border: none;
+  background: transparent;
+
+  color: #2563eb;
+
+  font-size: 11px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  padding: 0;
+}
+
+.plans-edit-apply-chip-remove:hover {
+  color: #1d4ed8;
+}
+
+/* ---- Footer tagline + accent, matching the mockup's bottom bar ---- */
+
+.plans-modal-actions {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plans-modal-actions-tagline {
+  color: #f97316;
+
+  font-size: 12.5px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.plans-modal-actions-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .plans-modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .plans-modal-actions-tagline {
+    display: none;
   }
 }

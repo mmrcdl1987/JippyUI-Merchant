@@ -6,6 +6,8 @@ import Promotions from "../pages/promotions/Promotions";
 import Payments from "../pages/payments/Payments";
 import Subscription from "../pages/subscription/Subscription";
 
+import OrderDetails from "../pages/orders/OrderDetails";
+
 
 
 const pageRegistry = {
@@ -13,6 +15,7 @@ const pageRegistry = {
   Outlets,
   Foods,
   Orders,
+   OrderDetails,
   Promotions,
   Payments,
   Subscription,

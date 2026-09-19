@@ -1,0 +1,1172 @@
+/* =========================================================
+   PROMOTION FORM — card shell
+========================================================= */
+
+.promotion-form {
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    border: 1px solid #e2e7ef;
+    border-radius: 16px;
+    box-shadow: 0 7px 25px rgba(30, 41, 59, .07);
+    /* NOTE: no overflow:hidden here on purpose — the Outlet /
+       Category / Product dropdown panels are position:absolute
+       and need to be able to render outside this box's own
+       flow without being clipped. Corner rounding is handled
+       on the header/body below instead. */
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+
+/* =========================================================
+   FORM HEADER
+========================================================= */
+
+.promotion-form-header {
+    width: 100%;
+    padding: 18px 24px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    background: linear-gradient(90deg, #fffaf7 0%, #ffffff 55%, #fffaf7 100%);
+    border-bottom: 1px solid #edf0f5;
+    border-radius: 16px 16px 0 0;
+}
+
+.promotion-form-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+}
+
+.promotion-form-title-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #ffe4d1;
+    color: #ff6420;
+    font-size: 39px;
+}
+
+.promotion-form-header h2 {
+    margin: 0;
+    color: #10204d;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.promotion-form-header p {
+    margin: 4px 0 0;
+    color: #73819a;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   HEADER BADGE
+========================================================= */
+
+.promotion-form-header-badge {
+    min-height: 38px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+
+    border: 1px solid #ffb48a;
+    border-radius: 20px;
+    background: #fffaf7;
+    color: #ed5419;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FORM BODY
+========================================================= */
+
+.promotion-form-body {
+    padding: 16px 22px 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 0 0 16px 16px;
+}
+
+
+/* =========================================================
+   ERROR / SUCCESS MESSAGE
+========================================================= */
+
+.promotion-form-message {
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.promotion-form-message.error {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #dc2626;
+}
+
+.promotion-form-message.success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.promotion-message-icon {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.promotion-form-message.error .promotion-message-icon {
+    background: #dc2626;
+}
+
+.promotion-form-message.success .promotion-message-icon {
+    background: #16a34a;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.promotion-form-section {
+    position: relative;
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 16px 20px 18px;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 14px;
+    /* overflow left as visible on purpose — the Outlet dropdown
+       lives in the first section and opens as an absolutely
+       positioned panel below the field; overflow:hidden here
+       would clip it (this is what was hiding the outlet list). */
+}
+
+.promotion-form-section:last-of-type {
+    margin-bottom: 0;
+}
+
+
+/* Basic Information — blue */
+.promotion-form-section:nth-of-type(1) {
+    background: linear-gradient(135deg, #eef7ff 0%, #f8fbff 100%);
+    border-color: #cce0fa;
+}
+
+/* Offer Details — orange */
+.promotion-form-section:nth-of-type(2) {
+    background: linear-gradient(135deg, #fff7ed 0%, #fffaf5 100%);
+    border-color: #ffdcb8;
+}
+
+/* Promotion Schedule — green */
+.promotion-form-section:nth-of-type(3) {
+    background: linear-gradient(135deg, #effcf6 0%, #f8fffb 100%);
+    border-color: #c9efdc;
+}
+
+/* Applies On — teal */
+.promotion-form-section:nth-of-type(4) {
+    background: linear-gradient(135deg, #f0fdfa 0%, #f9fffe 100%);
+    border-color: #b8ece1;
+}
+
+/* Selection Settings — grey/purple */
+.promotion-form-section:nth-of-type(5) {
+    background: linear-gradient(135deg, #f5f0ff 0%, #fbf9ff 100%);
+    border-color: #ddd0ff;
+}
+
+
+/* =========================================================
+   SECTION HEADING (icon-dot + title)
+========================================================= */
+
+.promotion-form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 15px;
+}
+
+.promotion-form-section-heading h3 {
+    margin: 0;
+    color: #12224f;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.promotion-form-section-heading > span {
+    width: 31px;
+    height: 31px;
+    min-width: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.promotion-form-section-heading > span::before {
+    content: "i";
+}
+
+.promotion-form-section:nth-of-type(1) .promotion-form-section-heading > span {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.promotion-form-section:nth-of-type(2) .promotion-form-section-heading > span {
+    background: #ffedd5;
+    color: #f97316;
+}
+.promotion-form-section:nth-of-type(2) .promotion-form-section-heading > span::before {
+    content: "\2699";
+}
+
+.promotion-form-section:nth-of-type(3) .promotion-form-section-heading > span {
+    background: #d1fae5;
+    color: #059669;
+}
+.promotion-form-section:nth-of-type(3) .promotion-form-section-heading > span::before {
+    content: "\25A3";
+    font-size: 13px;
+}
+
+.promotion-form-section:nth-of-type(4) .promotion-form-section-heading > span {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+.promotion-form-section:nth-of-type(4) .promotion-form-section-heading > span::before {
+    content: "\2022\2022\2022";
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.promotion-form-section:nth-of-type(5) .promotion-form-section-heading > span {
+    background: #e7dcff;
+    color: #6d28d9;
+}
+.promotion-form-section:nth-of-type(5) .promotion-form-section-heading > span::before {
+    content: "#";
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.promotion-form-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    row-gap: 14px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.promotion-form-field {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;   
+}
+
+.promotion-form-field label {
+    color: #0758d6;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.promotion-form-field label .required {
+    margin-left: 2px;
+    color: #ef4444;
+}
+
+
+/* =========================================================
+   BASE INPUT / SELECT / TEXTAREA
+========================================================= */
+
+.promotion-form input,
+.promotion-form select,
+.promotion-form textarea {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 13px;
+    box-sizing: border-box;
+
+    border: 1px solid #d8dfea;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 12.5px;
+
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.promotion-form input::placeholder,
+.promotion-form textarea::placeholder {
+    color: #9aa6b7;
+    opacity: 1;
+}
+
+.promotion-form input:hover,
+.promotion-form select:hover,
+.promotion-form textarea:hover {
+    border-color: #b7c5d6;
+}
+
+.promotion-form input:focus,
+.promotion-form select:focus,
+.promotion-form textarea:focus {
+    outline: none;
+    border-color: #5b8def;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
+}
+
+.promotion-form input:disabled,
+.promotion-form select:disabled {
+    background: #f4f6f9;
+    color: #9aa6b7;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   REMOVE NUMBER INPUT SPINNERS
+========================================================= */
+
+.promotion-form input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.promotion-form input[type="number"]::-webkit-inner-spin-button,
+.promotion-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* =========================================================
+   CUSTOM DROPDOWN (Outlet)
+========================================================= */
+
+.promotion-form-custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.promotion-form-dropdown-trigger {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 13px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    border: 1px solid #d8dfea;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12.5px;
+    text-align: left;
+
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.promotion-form-dropdown-trigger:hover {
+    border-color: #b7c5d6;
+}
+
+.promotion-form-dropdown-trigger.open {
+    border-color: #5b8def;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
+}
+
+.promotion-form-dropdown-trigger:disabled {
+    background: #f4f6f9;
+    color: #9aa6b7;
+    cursor: not-allowed;
+}
+
+.promotion-form-dropdown-trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    flex: 1;
+}
+
+.promotion-form-dropdown-trigger-left span.selected {
+    color: #344054;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.promotion-form-dropdown-trigger-left span.placeholder {
+    color: #9aa6b7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.promotion-form-store-icon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: #ffe4d1;
+    color: #f4510b;
+}
+
+.promotion-form-chevron {
+    color: #8b95a5;
+    transition: transform .2s ease;
+    flex-shrink: 0;
+}
+
+.promotion-form-chevron.open {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
+
+.promotion-form-dropdown-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 20;
+
+    background: #ffffff;
+    border: 1px solid #e2e7ef;
+    border-radius: 10px;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, .12);
+    overflow: hidden;
+}
+
+.promotion-form-dropdown-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eef1f6;
+    color: #8b95a5;
+}
+
+.promotion-form-dropdown-search input {
+    border: none;
+    min-height: 20px;
+    padding: 0;
+    font-size: 12px;
+}
+
+.promotion-form-dropdown-search input:focus {
+    box-shadow: none;
+}
+
+.promotion-form-dropdown-count {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #8b95a5;
+    border-bottom: 1px solid #eef1f6;
+    background: #fafbfc;
+}
+
+.promotion-form-dropdown-count strong {
+    color: #344054;
+}
+
+.promotion-form-dropdown-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eef1f6;
+    background: #fafbfc;
+}
+
+.promotion-form-dropdown-actions button {
+    border: none;
+    background: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #0758d6;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.promotion-form-dropdown-actions button:hover {
+    background: #eaf1ff;
+}
+
+.promotion-form-dropdown-list {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 6px;
+}
+
+.promotion-form-dropdown-empty {
+    padding: 20px 12px;
+    text-align: center;
+    color: #9aa6b7;
+    font-size: 12px;
+}
+
+
+/* Outlet option row */
+.promotion-form-outlet-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 9px 10px;
+    margin-bottom: 2px;
+
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
+
+.promotion-form-outlet-option:hover {
+    background: #f5f7fa;
+}
+
+.promotion-form-outlet-option.selected {
+    background: #eef5ff;
+}
+
+.promotion-form-checkbox {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 5px;
+    color: #ffffff;
+    background: #ffffff;
+}
+
+.promotion-form-checkbox.checked {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.promotion-form-outlet-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.promotion-form-outlet-name {
+    color: #10204d;
+    font-size: 12.5px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.promotion-form-outlet-id {
+    color: #97a2b4;
+    font-size: 10.5px;
+}
+
+
+/* =========================================================
+   READONLY FIELD (Plan Type)
+========================================================= */
+
+.promotion-form-readonly {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 13px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border: 1px solid #e7dcff;
+    border-radius: 8px;
+    background: #f5f0ff;
+    color: #6d28d9;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.promotion-form-readonly svg {
+    color: #6d28d9;
+    flex-shrink: 0;
+}
+
+.promotion-form-readonly span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   INPUT WITH SYMBOL (₹ / %)
+========================================================= */
+
+.promotion-form-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.promotion-form-input-wrapper input {
+    padding-left: 40px;
+}
+
+.promotion-form-input-symbol {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+    background: #ffe4d1;
+    color: #f4510b;
+    font-size: 12.5px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   SELECT WRAPPER (Offer Type)
+========================================================= */
+
+.promotion-form-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.promotion-form-select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+.promotion-form-select-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #8b95a5;
+    border-bottom: 2px solid #8b95a5;
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   DATE / TIME
+========================================================= */
+
+.promotion-form-date-wrapper {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.promotion-form-date-wrapper input {
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.promotion-form-date-wrapper input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    cursor: pointer;
+}
+
+
+.promotion-form-date-wrapper input[type="date"],
+.promotion-form-date-wrapper input[type="time"] {
+    color-scheme: light;
+}
+
+.promotion-form-date-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.promotion-form-section:nth-of-type(3) .promotion-form-date-icon {
+    color: #059669;
+}
+
+
+/* =========================================================
+   APPLIES ON — SELECTION BOX
+========================================================= */
+
+.promotion-form-selection {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.promotion-form-apply-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.promotion-form-apply-card {
+    position: relative;
+    min-height: 68px;
+    padding: 13px 14px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    border: 1px solid #dce3ec;
+    border-radius: 10px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.promotion-form-apply-card:hover {
+    border-color: #14b8a6;
+    background: #f0fdfa;
+}
+
+.promotion-form-apply-card.active {
+    border-color: #14b8a6;
+    background: #ecfdf9;
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, .10);
+}
+
+.promotion-form-apply-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.promotion-form-radio-custom {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    margin-top: 1px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.promotion-form-radio-custom > span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.promotion-form-apply-card.active .promotion-form-radio-custom {
+    border-color: #14b8a6;
+}
+
+.promotion-form-apply-card.active .promotion-form-radio-custom > span {
+    background: #14b8a6;
+}
+
+.promotion-form-apply-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.promotion-form-apply-content strong {
+    color: #10204d;
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.promotion-form-apply-content small {
+    color: #7a879c;
+    font-size: 10.5px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   CATEGORY / PRODUCT DROPDOWN
+========================================================= */
+
+.promotion-form-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 14px;
+}
+
+.promotion-form-dropdown-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.promotion-form-dropdown-label-row label {
+    color: #0758d6;
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+.promotion-form-dropdown-label-row span {
+    color: #97a2b4;
+    font-size: 10.5px;
+}
+
+.promotion-form-selection-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    text-align: left;
+}
+
+.promotion-form-selection-label.selected {
+    color: #344054;
+    font-weight: 600;
+}
+
+.promotion-form-selection-label.placeholder {
+    color: #9aa6b7;
+}
+
+
+/* Selected chips */
+.promotion-form-selected-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.promotion-form-selected-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 4px 6px 4px 10px;
+    border-radius: 999px;
+
+    background: #ecfdf9;
+    border: 1px solid #b8ece1;
+    color: #0f766e;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.promotion-form-selected-chip button {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(15, 118, 110, .12);
+    color: #0f766e;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.promotion-form-selected-chip button:hover {
+    background: rgba(15, 118, 110, .22);
+}
+
+
+/* Checkbox rows inside the category/product menu */
+.promotion-form-checkbox-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 9px 10px;
+    margin-bottom: 2px;
+
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.promotion-form-checkbox-row:hover {
+    background: #f5f7fa;
+}
+
+.promotion-form-checkbox-row.checked {
+    background: #eef5ff;
+}
+
+.promotion-form-checkbox-row input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.promotion-form-custom-checkbox {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 5px;
+    color: #ffffff;
+    background: #ffffff;
+}
+
+.promotion-form-checkbox-row.checked .promotion-form-custom-checkbox {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.promotion-form-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.promotion-form-item-info > span {
+    color: #10204d;
+    font-size: 12.5px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.promotion-form-item-info small {
+    color: #97a2b4;
+    font-size: 10.5px;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.promotion-form-help {
+    color: #94a3b8;
+    font-size: 10.5px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.promotion-form-actions {
+    width: 100%;
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.promotion-form-actions button {
+    min-width: 110px;
+    height: 42px;
+    padding: 0 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.promotion-form-actions button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.promotion-form-reset {
+    border: 1px solid #d5dce6;
+    background: #ffffff;
+    color: #475569;
+}
+
+.promotion-form-reset:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #c4ccd8;
+}
+
+.promotion-form-submit {
+    min-width: 300px;
+    border: none;
+    background: #ff6420;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.promotion-form-submit:hover:not(:disabled) {
+    background: #ed5415;
+    box-shadow: 0 5px 13px rgba(255, 100, 32, .22);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+    .promotion-form-grid {
+        grid-template-columns: 1fr;
+        row-gap: 14px;
+    }
+    .promotion-form-section {
+        padding: 14px;
+    }
+    .promotion-form-body {
+        padding: 12px 16px 18px;
+    }
+    .promotion-form-header {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 650px) {
+    .promotion-form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .promotion-form-header-badge {
+        align-self: flex-start;
+    }
+    .promotion-form-apply-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .promotion-form {
+        border-radius: 12px;
+    }
+    .promotion-form-header h2 {
+        font-size: 18px;
+    }
+    .promotion-form-body {
+        padding: 10px 10px 16px;
+    }
+    .promotion-form-section {
+        padding: 12px;
+    }
+    .promotion-form-actions {
+        flex-direction: column;
+    }
+    .promotion-form-actions button,
+    .promotion-form-submit {
+        width: 100%;
+        min-width: 0;
+    }
+}

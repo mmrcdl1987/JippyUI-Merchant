@@ -1188,7 +1188,7 @@ function OutletProfileDetails({ setActivePage }) {
 
               {/* EMAIL */}
 
-              <div>
+              {/* <div>
                 <span>
                   Email
                 </span>
@@ -1198,12 +1198,12 @@ function OutletProfileDetails({ setActivePage }) {
                     outlet?.outletEmail
                   )}
                 </strong>
-              </div>
+              </div> */}
 
 
               {/* PHONE */}
 
-              <div>
+              {/* <div>
                 <span>
                   Phone
                 </span>
@@ -1213,12 +1213,12 @@ function OutletProfileDetails({ setActivePage }) {
                     outlet?.outletPhone
                   )}
                 </strong>
-              </div>
+              </div> */}
 
 
               {/* ALTERNATE PHONE */}
 
-              <div>
+              {/* <div>
                 <span>
                   Alternate Phone
                 </span>
@@ -1228,7 +1228,7 @@ function OutletProfileDetails({ setActivePage }) {
                     outlet?.alternateOutletPhone
                   )}
                 </strong>
-              </div>
+              </div> */}
 
 
               {/* CUISINE */}
@@ -1246,7 +1246,7 @@ function OutletProfileDetails({ setActivePage }) {
 
               {/* FAVOURITE */}
 
-              <div>
+              {/* <div>
                 <span>
                   Favourite
                 </span>
@@ -1262,7 +1262,7 @@ function OutletProfileDetails({ setActivePage }) {
                     ? "Yes"
                     : "No"}
                 </strong>
-              </div>
+              </div> */}
 
 
               {/* AVAILABILITY */}
@@ -1415,17 +1415,17 @@ function OutletProfileDetails({ setActivePage }) {
               </div>
 
 
-              <div>
-                <span>
-                  City ID
-                </span>
+             {/* <div>
+                  <span>
+                    City
+                  </span>
 
-                <strong>
-                  {displayValue(
-                    outlet?.cityId
-                  )}
-                </strong>
-              </div>
+                  <strong>
+                    {displayValue(
+                      outlet?.cityName
+                    )}
+                  </strong>
+                </div> */}
 
             </div>
 
@@ -1507,7 +1507,7 @@ function OutletProfileDetails({ setActivePage }) {
                 </div>
 
 
-                <div>
+                {/* <div>
                   <span>
                     Area ID
                   </span>
@@ -1517,7 +1517,7 @@ function OutletProfileDetails({ setActivePage }) {
                       outlet?.areaId
                     )}
                   </strong>
-                </div>
+                </div> */}
 
 
                 <div>
@@ -1533,7 +1533,7 @@ function OutletProfileDetails({ setActivePage }) {
                 </div>
 
 
-                <div>
+                {/* <div>
                   <span>
                     City ID
                   </span>
@@ -1543,7 +1543,7 @@ function OutletProfileDetails({ setActivePage }) {
                       outlet?.cityId
                     )}
                   </strong>
-                </div>
+                </div> */}
 
 
                 <div>
@@ -1559,7 +1559,7 @@ function OutletProfileDetails({ setActivePage }) {
                 </div>
 
 
-                <div>
+                {/* <div>
                   <span>
                     State ID
                   </span>
@@ -1569,7 +1569,7 @@ function OutletProfileDetails({ setActivePage }) {
                       outlet?.stateId
                     )}
                   </strong>
-                </div>
+                </div> */}
 
 
                 <div>
