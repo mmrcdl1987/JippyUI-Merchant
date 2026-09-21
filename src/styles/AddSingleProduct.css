@@ -1,0 +1,1118 @@
+/* ================= Add Single Product — Sequential Scroll Layout Styles ================= */
+
+/* ---- Full Page Container ---- */
+.asp-fullpage {
+  width: 100%;
+  min-height: 100vh;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  animation: aspPageIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #1e293b;
+}
+
+@keyframes aspPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Sticky Header ---- */
+.asp-fullpage-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.asp-fullpage-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.asp-back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.asp-back-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  transform: translateX(-2px);
+}
+
+.asp-fullpage-header-text h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.asp-header-icon {
+  color: #ff5722;
+}
+
+.asp-fullpage-header-text p {
+  margin: 3px 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.asp-fullpage-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---- Scrollable Main Container ---- */
+.asp-scroll-container {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* ---- Error Banner ---- */
+.asp-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  animation: aspFadeIn 0.2s ease;
+}
+
+.asp-success-banner {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+/* ---- Sequential Step Cards ---- */
+.asp-step-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.asp-step-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.asp-step-card.asp-step-disabled {
+  background: #f8fafc;
+  opacity: 0.65;
+  border: 1px dashed #cbd5e1;
+  box-shadow: none;
+}
+
+.asp-step-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fafbfc;
+}
+
+.asp-step-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ff5722;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.asp-step-badge.disabled {
+  background: #94a3b8;
+}
+
+.asp-step-title-wrap {
+  flex: 1;
+}
+
+.asp-step-title-wrap h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.asp-step-title-wrap p {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.asp-selected-preview-pill {
+  min-width: 0;
+  max-width: min(42%, 360px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #15803d;
+}
+
+.asp-selected-preview-pill span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.asp-step-body {
+  padding: 24px;
+}
+
+.asp-step-card:has(.asp-pricing-field) .asp-step-body {
+  background: #fcfdff;
+}
+
+/* ---- Inline Action Button ---- */
+.asp-btn-inline-action {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #ea580c;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.asp-btn-inline-action:hover:not(:disabled) {
+  background: #ffedd5;
+  border-color: #fdba74;
+  color: #c2410c;
+}
+
+/* ---- Compact Step 1 Master Categories ---- */
+.asp-step-card-compact {
+  border-radius: 14px;
+}
+
+.asp-step-header-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #fafbfc;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.asp-step-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.asp-category-search-bar-inline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 240px;
+}
+
+.asp-search-icon-sm {
+  position: absolute;
+  left: 10px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.asp-category-search-input-sm {
+  width: 100%;
+  height: 34px;
+  padding: 0 28px 0 32px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 0.84rem;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.asp-category-search-input-sm:focus {
+  border-color: #ff5722;
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.12);
+}
+
+.asp-clear-search-btn-sm {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  font-size: 0.9rem;
+}
+
+.asp-clear-search-btn-sm:hover {
+  color: #475569;
+}
+
+.asp-step-body-compact {
+  padding: 12px 20px;
+}
+
+.asp-categories-grid-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 96px;
+  overflow-y: auto;
+  padding: 2px 2px 4px;
+}
+
+.asp-categories-grid-compact::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.asp-categories-grid-compact::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.asp-category-chip-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.asp-category-chip-compact:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.asp-category-chip-compact.selected {
+  background: #ff5722;
+  border-color: #ff5722;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.25);
+}
+
+.asp-state-message-compact {
+  font-size: 0.84rem;
+  color: #64748b;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ---- Master Products List (Side by Side Grid) ---- */
+.asp-products-scroll-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+.asp-category-search-input-sm.asp-no-icon {
+  padding-left: 12px !important;
+}
+
+.asp-product-card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.asp-product-card-item:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.asp-product-card-item.selected {
+  background: #fff7ed;
+  border-color: #ff5722;
+  box-shadow: 0 2px 8px rgba(255, 87, 34, 0.12);
+}
+
+.asp-product-card-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.asp-product-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.asp-veg-indicator {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #22c55e;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 1px;
+}
+
+.asp-veg-indicator.non-veg {
+  border-color: #ef4444;
+}
+
+.asp-veg-circle {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.asp-veg-indicator.non-veg .asp-veg-circle {
+  background: #ef4444;
+}
+
+.asp-product-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.asp-product-card-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.asp-product-price-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #059669;
+  margin-top: 2px;
+}
+
+.asp-select-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.asp-select-circle.checked {
+  background: #ff5722;
+  border-color: #ff5722;
+}
+
+/* ---- Form Layout Utilities ---- */
+.asp-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 680px) {
+  .asp-form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.asp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.asp-pricing-field,
+.asp-classification-field {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.asp-form-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+}
+
+.asp-form-group .required {
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+.asp-field-hint {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.asp-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.asp-input:focus {
+  outline: none;
+  border-color: #ff5722;
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.15);
+}
+
+.asp-input:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.asp-input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.asp-pricing-field .asp-input-with-icon {
+  max-width: 360px;
+}
+
+.asp-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.asp-input-padded {
+  padding-left: 38px !important;
+}
+
+/* ---- Read-only Food Type Display ---- */
+.asp-readonly-type-badge-wrap {
+  min-height: 42px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.asp-classification-field .asp-readonly-type-badge-wrap {
+  flex: 1;
+}
+
+.asp-readonly-type-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.asp-readonly-type-badge.veg {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.asp-readonly-type-badge.non-veg {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.asp-readonly-tag {
+  padding: 4px 10px;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@media (max-width: 680px) {
+  .asp-selected-preview-pill {
+    width: 100%;
+    max-width: none;
+  }
+
+  .asp-step-header:has(.asp-selected-preview-pill) {
+    flex-wrap: wrap;
+  }
+
+  .asp-pricing-field .asp-input-with-icon {
+    max-width: none;
+  }
+}
+
+/* ---- Timings & Days Styles (Different Hours for Different Days) ---- */
+.asp-timings-presets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.asp-presets-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.asp-preset-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.asp-preset-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Bulk apply bar */
+.asp-bulk-time-bar {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.asp-bulk-time-label {
+  flex: 1 1 240px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.asp-bulk-time-inputs {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.asp-bulk-time-input {
+  width: 120px !important;
+  padding: 6px 10px !important;
+  font-size: 0.85rem !important;
+}
+
+.asp-btn-apply-bulk {
+  padding: 6px 14px;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.asp-btn-apply-bulk:hover {
+  background: #334155;
+}
+
+/* Per Day Schedule Table / Rows */
+.asp-per-day-schedule {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.asp-schedule-header-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 200px;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.asp-day-schedule-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 200px;
+  align-items: center;
+  min-height: 64px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: all 0.18s ease;
+}
+
+.asp-day-schedule-row.active {
+  border-color: #fdba74;
+  background: #ffffff;
+}
+
+.asp-day-schedule-row.disabled {
+  background: #f8fafc;
+  opacity: 0.65;
+}
+
+.asp-day-schedule-left {
+  display: flex;
+  align-items: center;
+}
+
+.asp-day-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.asp-day-checkbox {
+  width: 17px;
+  height: 17px;
+  accent-color: #ff5722;
+  cursor: pointer;
+}
+
+.asp-day-schedule-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.asp-day-schedule-short {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.asp-day-schedule-middle {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.asp-day-time-slots {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.asp-day-time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.asp-time-field-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.asp-sub-time-label {
+  width: 46px;
+  flex: 0 0 46px;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.asp-day-time-input {
+  width: 120px !important;
+  box-sizing: border-box;
+  padding: 6px 10px !important;
+  font-size: 0.86rem !important;
+  font-weight: 600;
+}
+
+.asp-time-sep {
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.asp-add-time-slot,
+.asp-remove-time-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.asp-add-time-slot {
+  gap: 5px;
+  padding: 5px 9px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.asp-remove-time-slot {
+  width: 28px;
+  height: 28px;
+  color: #b91c1c;
+}
+
+.asp-add-time-slot:hover,
+.asp-remove-time-slot:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.asp-add-time-slot:disabled,
+.asp-remove-time-slot:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.asp-day-disabled-text {
+  font-size: 0.84rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.asp-day-schedule-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.asp-day-active-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.asp-day-off-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .asp-schedule-header-row {
+    display: none;
+  }
+  .asp-day-schedule-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .asp-day-schedule-middle,
+  .asp-day-time-slots {
+    width: 100%;
+  }
+  .asp-day-schedule-right {
+    justify-content: flex-start;
+  }
+  .asp-day-time-inputs {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---- Bottom Actions Card ---- */
+.asp-bottom-actions-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 18px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.asp-btn-cancel,
+.asp-btn-cancel-large {
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.asp-btn-cancel:hover,
+.asp-btn-cancel-large:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.asp-btn-submit,
+.asp-btn-submit-large {
+  padding: 10px 22px;
+  background: #ff5722;
+  border: 1px solid #ff5722;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.3);
+  transition: all 0.2s ease;
+}
+
+.asp-btn-submit:hover:not(:disabled),
+.asp-btn-submit-large:hover:not(:disabled) {
+  background: #f4511e;
+  border-color: #f4511e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.35);
+}
+
+.asp-btn-submit:disabled,
+.asp-btn-submit-large:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.asp-btn-submit-large {
+  padding: 14px 28px;
+  font-size: 1rem;
+}
+
+/* ---- Submodal Styles ---- */
+.asp-submodal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+  animation: aspFadeIn 0.2s ease;
+}
+
+.asp-submodal-content {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: aspPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes aspFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes aspPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.asp-submodal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.asp-submodal-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.asp-close-btn-sm {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.asp-close-btn-sm:hover {
+  color: #0f172a;
+}
+
+.asp-submodal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.asp-submodal-footer {
+  padding: 16px 24px;
+  background: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.asp-state-message {
+  padding: 24px 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

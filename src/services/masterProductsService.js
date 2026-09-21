@@ -130,3 +130,48 @@ export const getAllCategories = async (filter = "ALL") => {
 export const createCategory = async (categoryName) => {
   return await FM_API.post("/api/fm/createCategory", { categoryName });
 };
+
+// Get master products by category (with optional keyword search)
+export const getMasterProductsByCategory = async (categoryId, keyword = "") => {
+  const params = keyword ? `?keyword=${encodeURIComponent(keyword)}` : "";
+  return await FM_API.get(
+    `/api/fm/master-products/category/${categoryId}${params}`
+  );
+};
+
+// Get complete product details
+export const getCompleteProductDetails = async (productId) => {
+  return await FM_API.get(
+    `/api/fm/products/getCompleteProductDetails/${productId}`
+  );
+};
+
+// Map all master products for a category into outlet products & variants
+export const mapFromMasterCategory = async (outletCategoryId) => {
+  return await FM_API.post(
+    `/api/fm/products/map-from-master-category/${outletCategoryId}`
+  );
+};
+
+// Activate/deactivate product by product type
+export const toggleProductActiveByType = async (payload) => {
+  const normalizedIsActive =
+    payload?.isActive === true ||
+    payload?.isActive === "Y" ||
+    payload?.isActive === "true" ||
+    payload?.isActive === "TRUE"
+      ? "Y"
+      : "N";
+
+  const normalizedProductType =
+    payload?.productType === "MASTERPRODUCT" ? "MASTERPRODUCT" : "PRODUCT";
+
+  return await FM_API.put(
+    "/api/fm/products/productIsActiveToggleByProductType",
+    {
+      productId: payload?.productId,
+      isActive: normalizedIsActive,
+      productType: normalizedProductType,
+    }
+  );
+};

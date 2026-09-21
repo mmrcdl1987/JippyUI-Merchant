@@ -2,10 +2,39 @@ import React, { useEffect, useState } from "react";
 import "../../styles/OutletCategories.css";
 
 import {
-  getOutletDetails,
-  setCategoryUnavailable,
-  restoreCategoryUnavailable,
-} from "../services/outletListService";
+  getOutletById,
+  getAdminOutletDetails,
+  addCategoryToOutlet,
+  createOutletUnavailability,
+  restoreOutletAvailability,
+} from "../../services/outletService";
+import {
+  getAllCategories,
+  mapFromMasterCategory,
+} from "../../services/masterProductsService";
+import {
+  FiFolderPlus,
+  FiPlus,
+  FiX,
+  FiLoader,
+  FiCheckCircle,
+  FiAlertCircle,
+} from "react-icons/fi";
+
+const getCategoryId = (category) =>
+  category?.categoryId ?? category?.category_id ?? category?.id;
+
+const getOutletCategoryId = (category) =>
+  category?.outletCategoryId ??
+  category?.outlet_category_id;
+
+const isCategoryEnabled = (category) => {
+  const value = category?.isToggle ?? category?.is_toggle;
+  if (value !== undefined && value !== null) {
+    return value === true || value === "true" || value === "Y" || value === 1;
+  }
+  return category?.isAvailable !== false;
+};
 
 const OutletCategories = ({ outlet }) => {
   const [categories, setCategories] = useState([]);
@@ -18,6 +47,18 @@ const OutletCategories = ({ outlet }) => {
 
   const [savingUnavailability, setSavingUnavailability] =
     useState(false);
+  const [mappingCategoryId, setMappingCategoryId] = useState(null);
+  const [mappedCategoryIds, setMappedCategoryIds] = useState({});
+
+  // Create Category state
+  const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [masterCategories, setMasterCategories] = useState([]);
+  const [loadingMasterCategories, setLoadingMasterCategories] = useState(false);
+  const [selectedMasterCatId, setSelectedMasterCatId] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const [createCategoryError, setCreateCategoryError] = useState("");
+  const [createCategorySuccess, setCreateCategorySuccess] = useState("");
 
   const [unavailabilityForm, setUnavailabilityForm] = useState({
     fromDate: "",
@@ -46,18 +87,23 @@ const OutletCategories = ({ outlet }) => {
   const loadCategories = async () => {
     if (!outlet?.outletId) {
       setCategories([]);
+      setMappedCategoryIds({});
       return;
     }
 
     try {
+      setMappedCategoryIds({});
       console.log(
         "Loading categories for outlet:",
         outlet.outletId
       );
 
-      const response = await getOutletDetails(
-        Number(outlet.outletId)
-      );
+      let response;
+      try {
+        response = await getOutletById(Number(outlet.outletId));
+      } catch (err) {
+        response = await getAdminOutletDetails(Number(outlet.outletId));
+      }
 
       console.log(
         "CATEGORY OUTLET DETAILS RESPONSE:",
@@ -160,7 +206,7 @@ const OutletCategories = ({ outlet }) => {
   // ============================================================
 
   const handleCategoryToggle = (category) => {
-    if (!category?.categoryId) {
+    if (!getOutletCategoryId(category)) {
       console.error("Category ID not found");
       return;
     }
@@ -169,7 +215,7 @@ const OutletCategories = ({ outlet }) => {
     // ON → OFF
     // ==========================================================
 
-    if (category.isToggle === true) {
+    if (isCategoryEnabled(category)) {
       setSelectedCategory(category);
 
       setUnavailabilityForm({
@@ -200,12 +246,45 @@ const OutletCategories = ({ outlet }) => {
     });
   };
 
+  const handleMapProductsToggle = async (category) => {
+    const outletCategoryId = Number(getOutletCategoryId(category));
+
+    if (!outletCategoryId || mappingCategoryId !== null) {
+      return;
+    }
+
+    setMappingCategoryId(outletCategoryId);
+
+    try {
+      const response = await mapFromMasterCategory(outletCategoryId);
+      console.log(
+        "[CATEGORY-MAP] map-from-master-category response:",
+        response
+      );
+      setMappedCategoryIds((previous) => ({
+        ...previous,
+        [outletCategoryId]: true,
+      }));
+    } catch (error) {
+      console.error(
+        "[CATEGORY-MAP] map-from-master-category error:",
+        error
+      );
+      alert(
+        error?.response?.data?.message ||
+          "Failed to map master products to this category."
+      );
+    } finally {
+      setMappingCategoryId(null);
+    }
+  };
+
   // ============================================================
   // EDIT EXISTING UNAVAILABILITY
   // ============================================================
 
   const handleEditUnavailability = (category) => {
-    const categoryId = category.categoryId;
+    const categoryId = getCategoryId(category);
 
     const existing =
       unavailabilityData[categoryId];
@@ -298,13 +377,13 @@ const OutletCategories = ({ outlet }) => {
       // POST CATEGORY UNAVAILABILITY
       // ========================================================
 
-      const response =
-        await setCategoryUnavailable(
-          Number(category.categoryId),
-          fromDate,
-          toDate,
-          reason.trim()
-        );
+      const response = await createOutletUnavailability({
+        type: "OUTLET_CATEGORY",
+        unavailabilityId: Number(getOutletCategoryId(category)),
+        unavailabilityFromDate: fromDate,
+        unavailabilityToDate: toDate,
+        reason: reason.trim(),
+      });
 
       console.log(
         "CATEGORY UNAVAILABILITY RESPONSE:",
@@ -319,15 +398,13 @@ const OutletCategories = ({ outlet }) => {
         fromDate,
         toDate,
         reason: reason.trim(),
-        markedOn:
-          response?.timestamp ||
-          new Date().toISOString(),
+        markedOn: new Date().toISOString(),
       };
 
       setUnavailabilityData((prev) => {
         const updated = {
           ...prev,
-          [category.categoryId]: savedData,
+          [getCategoryId(category)]: savedData,
         };
 
         localStorage.setItem(
@@ -344,8 +421,8 @@ const OutletCategories = ({ outlet }) => {
 
       setCategories((prev) =>
         prev.map((item) =>
-          Number(item.categoryId) ===
-          Number(category.categoryId)
+          Number(getCategoryId(item)) ===
+          Number(getCategoryId(category))
             ? {
                 ...item,
                 isToggle: false,
@@ -375,7 +452,7 @@ const OutletCategories = ({ outlet }) => {
 
       // Keep expanded
       setExpandedCategoryId(
-        Number(category.categoryId)
+        Number(getCategoryId(category))
       );
     } catch (error) {
       console.error(
@@ -399,17 +476,17 @@ const OutletCategories = ({ outlet }) => {
 
   const handleConfirmCategoryRestore =
     async () => {
-      if (!selectedCategory?.categoryId) {
+      if (!getOutletCategoryId(selectedCategory)) {
         return;
       }
 
       try {
         setSavingUnavailability(true);
 
-        const response =
-          await restoreCategoryUnavailable(
-            Number(selectedCategory.categoryId)
-          );
+        const response = await restoreOutletAvailability({
+          type: "OUTLET_CATEGORY",
+          unavailabilityId: Number(getOutletCategoryId(selectedCategory)),
+        });
 
         console.log(
           "CATEGORY RESTORE RESPONSE:",
@@ -422,10 +499,8 @@ const OutletCategories = ({ outlet }) => {
 
         setCategories((prev) =>
           prev.map((item) =>
-            Number(item.categoryId) ===
-            Number(
-              selectedCategory.categoryId
-            )
+            Number(getCategoryId(item)) ===
+            Number(getCategoryId(selectedCategory))
               ? {
                   ...item,
                   isToggle: true,
@@ -445,7 +520,7 @@ const OutletCategories = ({ outlet }) => {
           };
 
           delete updated[
-            selectedCategory.categoryId
+            getCategoryId(selectedCategory)
           ];
 
           localStorage.setItem(
@@ -491,6 +566,81 @@ const OutletCategories = ({ outlet }) => {
     };
 
   // ============================================================
+  // FETCH MASTER CATEGORIES FROM getAllCategories
+  // ============================================================
+
+  const fetchMasterCategories = async () => {
+    try {
+      setLoadingMasterCategories(true);
+      const res = await getAllCategories("ALL");
+      const list = res.data?.data || res.data || [];
+      setMasterCategories(Array.isArray(list) ? list : []);
+    } catch (err) {
+      console.error("Error fetching master categories from getAllCategories:", err);
+    } finally {
+      setLoadingMasterCategories(false);
+    }
+  };
+
+  const openCreateCategoryModal = () => {
+    setCreateCategoryError("");
+    setCreateCategorySuccess("");
+    setNewCategoryName("");
+    setSelectedMasterCatId("");
+    setShowCreateCategoryModal(true);
+    fetchMasterCategories();
+  };
+
+  // ============================================================
+  // CREATE CATEGORY
+  // ============================================================
+
+  const handleCreateCategory = async (e) => {
+    if (e) e.preventDefault();
+
+    if (!selectedMasterCatId) {
+      setCreateCategoryError("Please select a category from the list.");
+      return;
+    }
+
+    if (!outlet?.outletId) {
+      setCreateCategoryError("No outlet selected. Cannot add category.");
+      return;
+    }
+
+    try {
+      setCreatingCategory(true);
+      setCreateCategoryError("");
+
+      const res = await addCategoryToOutlet(
+        outlet.outletId,
+        selectedMasterCatId
+      );
+      console.log("Add category to outlet response:", res);
+
+      const catName = newCategoryName || `Category #${selectedMasterCatId}`;
+      setCreateCategorySuccess(`Category "${catName}" added to outlet successfully!`);
+
+      // Refresh categories list & master categories list
+      await Promise.all([loadCategories(), fetchMasterCategories()]);
+
+      setTimeout(() => {
+        setCreateCategorySuccess("");
+        setShowCreateCategoryModal(false);
+        setNewCategoryName("");
+        setSelectedMasterCatId("");
+      }, 1000);
+    } catch (err) {
+      console.error("Error adding category to outlet:", err);
+      setCreateCategoryError(
+        err?.response?.data?.message || err?.message || "Failed to add category to outlet. Please try again."
+      );
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
+
+  // ============================================================
   // CLOSE MODAL
   // ============================================================
 
@@ -519,6 +669,18 @@ const OutletCategories = ({ outlet }) => {
   return (
     <div className="jippy-category-screen">
 
+      {/* Top Header / Action Toolbar */}
+      <div className="jippy-categories-toolbar">
+        <div className="jippy-categories-toolbar-left">
+          <div className="jippy-categories-badge">
+            <FiFolderPlus size={16} />
+            <span>
+              {categories.length} {categories.length === 1 ? "Category" : "Categories"}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="jippy-category-table-container">
 
         <table className="jippy-category-data-table">
@@ -542,7 +704,11 @@ const OutletCategories = ({ outlet }) => {
               </th>
 
               <th className="jippy-category-toggle-column">
-                Action
+                Toggle
+              </th>
+
+              <th className="jippy-category-map-column">
+                Map Products
               </th>
             </tr>
           </thead>
@@ -551,7 +717,7 @@ const OutletCategories = ({ outlet }) => {
             {categories.length === 0 ? (
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="6"
                   className="jippy-category-empty-cell"
                 >
                   No categories found for this outlet.
@@ -559,8 +725,11 @@ const OutletCategories = ({ outlet }) => {
               </tr>
             ) : (
               categories.map((category) => {
-                const categoryId =
-                  category.categoryId;
+                const categoryId = getCategoryId(category);
+                const categoryEnabled = isCategoryEnabled(category);
+                const outletCategoryId = Number(
+                  getOutletCategoryId(category)
+                );
 
                 const isExpanded =
                   Number(expandedCategoryId) ===
@@ -572,7 +741,7 @@ const OutletCategories = ({ outlet }) => {
                   ];
 
                 const isUnavailable =
-                  category.isToggle === false &&
+                  !categoryEnabled &&
                   existingUnavailability;
 
                 return (
@@ -646,12 +815,12 @@ const OutletCategories = ({ outlet }) => {
                         <button
                           type="button"
                           aria-label={
-                            category.isToggle
+                            categoryEnabled
                               ? "Turn category off"
                               : "Turn category on"
                           }
                           className={
-                            category.isToggle
+                            categoryEnabled
                               ? "jippy-category-switch jippy-category-switch-on"
                               : "jippy-category-switch jippy-category-switch-off"
                           }
@@ -666,6 +835,44 @@ const OutletCategories = ({ outlet }) => {
 
                       </td>
 
+                      <td className="jippy-category-map-cell">
+                        <button
+                          type="button"
+                          aria-label={
+                            mappedCategoryIds[
+                              outletCategoryId
+                            ]
+                              ? "Master products mapped"
+                              : "Map master products"
+                          }
+                          className={
+                            mappedCategoryIds[
+                              outletCategoryId
+                            ]
+                              ? "jippy-category-switch jippy-category-switch-on"
+                              : "jippy-category-switch jippy-category-switch-off"
+                          }
+                          onClick={() => handleMapProductsToggle(category)}
+                          disabled={
+                            mappingCategoryId !== null ||
+                            Boolean(
+                              mappedCategoryIds[
+                                outletCategoryId
+                              ]
+                            )
+                          }
+                        >
+                          <span></span>
+                        </button>
+                        {mappingCategoryId ===
+                          outletCategoryId && (
+                          <FiLoader
+                            className="jippy-category-map-loader"
+                            aria-label="Mapping products"
+                          />
+                        )}
+                      </td>
+
                     </tr>
 
                     {/* ==================================================
@@ -676,7 +883,7 @@ const OutletCategories = ({ outlet }) => {
                       existingUnavailability && (
                         <tr className="jippy-category-details-row">
 
-                          <td colSpan="5">
+                          <td colSpan="6">
 
                             <div className="jippy-category-unavailability-panel">
 
@@ -1001,6 +1208,138 @@ const OutletCategories = ({ outlet }) => {
 
           </div>
         )}
+
+      {/* ======================================================
+          CREATE CATEGORY MODAL
+          ====================================================== */}
+      {showCreateCategoryModal && (
+        <div
+          className="jippy-category-modal-backdrop"
+          onClick={() => !creatingCategory && setShowCreateCategoryModal(false)}
+        >
+          <div
+            className="jippy-create-category-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="jippy-create-category-header">
+              <div className="jippy-create-category-title">
+                <FiFolderPlus className="jippy-create-category-icon" />
+                <h3>Create New Category</h3>
+              </div>
+              <button
+                type="button"
+                className="jippy-category-modal-close"
+                onClick={() => setShowCreateCategoryModal(false)}
+                disabled={creatingCategory}
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCategory}>
+              <div className="jippy-create-category-body">
+                {createCategoryError && (
+                  <div className="jippy-cat-alert-error">
+                    <FiAlertCircle />
+                    <span>{createCategoryError}</span>
+                  </div>
+                )}
+                {createCategorySuccess && (
+                  <div className="jippy-cat-alert-success">
+                    <FiCheckCircle />
+                    <span>{createCategorySuccess}</span>
+                  </div>
+                )}
+
+                {/* Dropdown to pick existing categories from getAllCategories */}
+                <div className="jippy-create-category-field">
+                  <label>Select from Existing Categories</label>
+                  <select
+                    className="jippy-create-category-input"
+                    value={selectedMasterCatId}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSelectedMasterCatId(val);
+                      if (val) {
+                        const matched = masterCategories.find(
+                          (c) => String(c.id || c.categoryId) === String(val)
+                        );
+                        if (matched) {
+                          setNewCategoryName(matched.categoryName || matched.name || "");
+                        }
+                      }
+                    }}
+                    disabled={creatingCategory || loadingMasterCategories}
+                  >
+                    <option value="">
+                      {loadingMasterCategories
+                        ? "Loading categories from getAllCategories..."
+                        : "-- Choose an existing Category or type below --"}
+                    </option>
+                    {masterCategories.map((cat) => (
+                      <option
+                        key={cat.id || cat.categoryId}
+                        value={cat.id || cat.categoryId}
+                      >
+                        {cat.categoryName || cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="jippy-create-category-field">
+                  <label>
+                    Category Name <span className="jippy-required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="jippy-create-category-input"
+                    placeholder="e.g. Beverages, Starters, Desserts"
+                    value={newCategoryName}
+                    onChange={(e) => {
+                      setNewCategoryName(e.target.value);
+                      setSelectedMasterCatId("");
+                    }}
+                    autoFocus
+                    disabled={creatingCategory}
+                  />
+                  <small className="jippy-field-hint">
+                    This name is auto-filled when you select a category above.
+                  </small>
+                </div>
+              </div>
+
+              <div className="jippy-create-category-footer">
+                <button
+                  type="button"
+                  className="jippy-category-cancel-button"
+                  onClick={() => setShowCreateCategoryModal(false)}
+                  disabled={creatingCategory}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="jippy-category-submit-button"
+                  disabled={creatingCategory || !selectedMasterCatId}
+                >
+                  {creatingCategory ? (
+                    <>
+                      <FiLoader className="jippy-spin" />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiPlus />
+                      <span>Add to Outlet</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

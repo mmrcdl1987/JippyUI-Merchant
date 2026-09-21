@@ -5,12 +5,14 @@ import {
   getStates,
   getCities,
   getAreas,
+  getCuisineTypes,
 } from "../../services/outletService";
 import { getMerchantProfile } from "../../services/merchantService";
 import "../../styles/CreateOutlet.css";
 
 const CreateOutlet = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [sameAsMerchant, setSameAsMerchant] = useState(false);
   
@@ -31,6 +33,8 @@ const CreateOutlet = () => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [cuisineTypes, setCuisineTypes] = useState([]);
+  const [cuisineMenuOpen, setCuisineMenuOpen] = useState(false);
 
   /* State for common timing toggle */
   const [sameTimingForAll, setSameTimingForAll] = useState(false);
@@ -41,14 +45,21 @@ const CreateOutlet = () => {
 
   const [formData, setFormData] = useState({
     outletName: "",
+    outletType: "Restaurant",
+    customOutletType: "",
     merchantId: localStorage.getItem("merchantId") || "",
-    cuisineType: "",
+    cuisineType: [],
     outletPhone: "",
     outletEmail: "",
+    outletPicUrl: "",
     alternateOutletPhone: "",
 
-    fssaiNumber: "", // Will enforce 14 chars limit
-    gstNumber: "",   // Will enforce 15 chars limit
+    isVegOutlet: false,
+    isGstApplied: false,
+    aadharNumber: "",
+    panNumber: "",
+    fssaiNumber: "",
+    gstNumber: "",
 
     username: "",
     password: "",
@@ -94,10 +105,57 @@ const CreateOutlet = () => {
     }));
   };
 
+  const addTimingForDay = (dayOfWeekId) => {
+    setFormData((prev) => {
+      const lastIndex = prev.operatingDays.reduce(
+        (index, item, currentIndex) =>
+          item.dayOfWeekId === dayOfWeekId ? currentIndex : index,
+        -1
+      );
+      const timing = {
+        dayOfWeekId,
+        isOpen: true,
+        openingTime: "",
+        closingTime: "",
+      };
+      const operatingDays = [...prev.operatingDays];
+      operatingDays.splice(lastIndex + 1, 0, timing);
+      return { ...prev, operatingDays };
+    });
+  };
+
+  const removeOperatingTime = (index) => {
+    setFormData((previous) => ({
+      ...previous,
+      operatingDays: previous.operatingDays.filter(
+        (_, timingIndex) => timingIndex !== index
+      ),
+    }));
+  };
+
   useEffect(() => {
     loadMerchantBankDetails();
     loadStates();
+    loadCuisineTypes();
   }, []);
+
+  const loadCuisineTypes = async () => {
+    try {
+      const response = await getCuisineTypes();
+      const list =
+        response?.data?.data ||
+        response?.data ||
+        response ||
+        [];
+      setCuisineTypes(Array.isArray(list) ? list : []);
+    } catch (error) {
+      console.error("Failed to load cuisine types:", error);
+      setErrorDetails({
+        message: "Unable to load cuisine types",
+        errors: ["Please refresh and try again."],
+      });
+    }
+  };
 
   const loadMerchantBankDetails = async () => {
     try {
@@ -181,11 +239,38 @@ const CreateOutlet = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
+
+  const toggleCuisine = (cuisineId) => {
+    setFormData((prev) => ({
+      ...prev,
+      cuisineType: prev.cuisineType.includes(cuisineId)
+        ? prev.cuisineType.filter((id) => id !== cuisineId)
+        : [...prev.cuisineType, cuisineId],
+    }));
+  };
+
+  const getCuisineName = (cuisineId) =>
+    cuisineTypes.find((cuisine) =>
+      Number(
+        cuisine.cuisineTypesId ??
+          cuisine.cuisineTypeId ??
+          cuisine.id
+      ) === cuisineId
+    )?.cuisineTypesName ||
+    cuisineTypes.find((cuisine) =>
+      Number(
+        cuisine.cuisineTypesId ??
+          cuisine.cuisineTypeId ??
+          cuisine.id
+      ) === cuisineId
+    )?.cuisineTypeName ||
+    "Selected";
 
   const handleSameBank = (e) => {
     const checked = e.target.checked;
@@ -219,15 +304,6 @@ const CreateOutlet = () => {
     });
   };
 
-  const removeOperatingTime = (index) => {
-    const updated = [...formData.operatingDays];
-    updated.splice(index, 1);
-    setFormData({
-      ...formData,
-      operatingDays: updated,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorDetails({ message: "", errors: [] }); // Reset errors
@@ -235,9 +311,9 @@ const CreateOutlet = () => {
     let payload = {
       ...formData,
       merchantId: Number(formData.merchantId),
-      stateId: Number(formData.stateId),
-      cityId: Number(formData.cityId),
-      areaId: Number(formData.areaId),
+      stateId: formData.stateId ? Number(formData.stateId) : null,
+      cityId: formData.cityId ? Number(formData.cityId) : null,
+      areaId: formData.areaId ? Number(formData.areaId) : null,
       isActive: "Y",
       operatingDays: sameTimingForAll
         ? [1, 2, 3, 4, 5, 6, 7].map((day) => ({
@@ -257,7 +333,11 @@ const CreateOutlet = () => {
 
     delete payload.stateName;
     delete payload.areaName;
-    delete payload.uploadedBy;
+    if (payload.outletType === "Other") {
+      payload.outletType = payload.customOutletType.trim();
+    }
+    delete payload.customOutletType;
+    payload.uploadedBy = "Admin";
 
     try {
       console.log("Submitting Payload:", payload);
@@ -284,9 +364,11 @@ const CreateOutlet = () => {
     <div className="create-outlet-container">
       <div className="page-header">
         <h2>Create Outlet</h2>
-        <button className="back-btn" onClick={() => navigate("/outlets")}>
-          Back
-        </button>
+        <div className="create-outlet-header-actions">
+          <button className="back-btn" onClick={() => navigate("/outlets")}>
+            Back
+          </button>
+        </div>
       </div>
 
       {/* Enhanced Multi-Error UI Banner */}
@@ -322,21 +404,77 @@ const CreateOutlet = () => {
               value={formData.outletName}
               onChange={handleChange}
               maxLength={100}
+              required
             />
 
-            <input
-              name="merchantId"
-              placeholder="Merchant Id"
-              value={formData.merchantId}
-              readOnly
-            />
-
-            <input
-              name="cuisineType"
-              placeholder="Cuisine Type"
-              value={formData.cuisineType}
+            <select
+              name="outletType"
+              value={formData.outletType}
               onChange={handleChange}
-            />
+            >
+              <option value="">Select Outlet Type</option>
+              <option value="Restaurant">Restaurant</option>
+              <option value="Take Away Point">Take Away Point</option>
+              <option value="Cloud Kitchen">Cloud Kitchen</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Other">Other</option>
+            </select>
+            {formData.outletType === "Other" && (
+              <input
+                name="customOutletType"
+                value={formData.customOutletType}
+                onChange={handleChange}
+                placeholder="Enter Outlet Type"
+                required
+              />
+            )}
+
+            <div className="create-outlet-field-label create-outlet-cuisine-field">
+              <div className="create-outlet-cuisine-select">
+                <button
+                  type="button"
+                  className="create-outlet-cuisine-trigger"
+                  onClick={() => setCuisineMenuOpen((open) => !open)}
+                  aria-expanded={cuisineMenuOpen}
+                >
+                  {formData.cuisineType.length > 0
+                    ? formData.cuisineType.map(getCuisineName).join(", ")
+                    : "Select cuisines"}
+                  <span>▾</span>
+                </button>
+                {cuisineMenuOpen && (
+                  <div className="create-outlet-cuisine-menu">
+                    {cuisineTypes.length > 0 ? (
+                      cuisineTypes.map((cuisine) => {
+                        const id = Number(
+                          cuisine.cuisineTypesId ??
+                            cuisine.cuisineTypeId ??
+                            cuisine.id
+                        );
+                        const selected = formData.cuisineType.includes(id);
+                        return (
+                          <button
+                            type="button"
+                            key={id}
+                            className={`create-outlet-cuisine-option ${
+                              selected ? "selected" : ""
+                            }`}
+                            onClick={() => toggleCuisine(id)}
+                          >
+                            <span>{cuisine.cuisineTypesName || cuisine.cuisineTypeName || cuisine.name}</span>
+                            {selected && <strong>✓</strong>}
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <span className="create-outlet-cuisine-empty">
+                        No cuisines available
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <input
               name="outletPhone"
@@ -344,6 +482,7 @@ const CreateOutlet = () => {
               value={formData.outletPhone}
               onChange={handleChange}
               maxLength={15}
+              required
             />
 
             <input
@@ -351,6 +490,7 @@ const CreateOutlet = () => {
               placeholder="Email"
               value={formData.outletEmail}
               onChange={handleChange}
+              required
             />
 
             <input
@@ -361,7 +501,37 @@ const CreateOutlet = () => {
               maxLength={15}
             />
 
-            {/* FSSAI input with strict 14 char limit visual hint */}
+            <div className="create-outlet-checkbox-group">
+              <label className="create-outlet-checkbox">
+                <input
+                  type="checkbox"
+                  name="isVegOutlet"
+                  checked={formData.isVegOutlet}
+                  onChange={handleChange}
+                />
+                Vegetarian Outlet
+              </label>
+
+              <label className="create-outlet-checkbox">
+                <input
+                  type="checkbox"
+                  name="isGstApplied"
+                  checked={formData.isGstApplied}
+                  onChange={handleChange}
+                />
+                GST Applied
+              </label>
+            </div>
+
+
+            <input
+              name="panNumber"
+              placeholder="PAN Number"
+              value={formData.panNumber}
+              onChange={handleChange}
+              maxLength={10}
+            />
+
             <input
               name="fssaiNumber"
               placeholder="FSSAI Number (14 digits)"
@@ -370,7 +540,6 @@ const CreateOutlet = () => {
               maxLength={14}
             />
 
-            {/* GST input with strict 15 char limit visual hint */}
             <input
               name="gstNumber"
               placeholder="GST Number (15 chars)"
@@ -384,15 +553,28 @@ const CreateOutlet = () => {
               placeholder="Username"
               value={formData.username}
               onChange={handleChange}
+              required
             />
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
+            <div className="create-outlet-password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="create-outlet-password-toggle"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -406,6 +588,7 @@ const CreateOutlet = () => {
               placeholder="Building Number"
               value={formData.buildingNumber}
               onChange={handleChange}
+              required
             />
 
             <input
@@ -413,6 +596,7 @@ const CreateOutlet = () => {
               placeholder="Road"
               value={formData.road}
               onChange={handleChange}
+              required
             />
 
             <input
@@ -514,6 +698,7 @@ const CreateOutlet = () => {
               value={formData.accountHolderName}
               onChange={handleChange}
               disabled={sameAsMerchant}
+              required
             />
 
             <input
@@ -522,6 +707,7 @@ const CreateOutlet = () => {
               value={formData.accountNumber}
               onChange={handleChange}
               disabled={sameAsMerchant}
+              required
             />
 
             <input
@@ -531,6 +717,7 @@ const CreateOutlet = () => {
               onChange={handleChange}
               disabled={sameAsMerchant}
               maxLength={11}
+              required
             />
 
             <input
@@ -539,16 +726,17 @@ const CreateOutlet = () => {
               value={formData.bankName}
               onChange={handleChange}
               disabled={sameAsMerchant}
+              required
             />
           </div>
         </div>
 
         {/* Operating Hours */}
         <div className="form-card">
-          <div className="bank-header">
+          <div className="bank-header operating-hours-header">
             <h3>Operating Hours</h3>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <div className="operating-hours-controls">
               <label className="same-bank">
                 <input
                   type="checkbox"
@@ -571,7 +759,7 @@ const CreateOutlet = () => {
           </div>
 
           {sameTimingForAll ? (
-            <div className="form-grid">
+            <div className="form-grid operating-hours-common">
               <div>
                 <label style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px", display: "block" }}>
                   Opening Time
@@ -605,8 +793,10 @@ const CreateOutlet = () => {
               </div>
             </div>
           ) : (
-            formData.operatingDays.map((item, index) => (
+            <div className="operating-hours-list">
+              {formData.operatingDays.map((item, index) => (
               <div key={index} className="operating-row">
+                <span className="operating-row-label">Timing {index + 1}</span>
                 <select
                   value={item.dayOfWeekId}
                   onChange={(e) =>
@@ -651,15 +841,29 @@ const CreateOutlet = () => {
                   }
                 />
 
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => removeOperatingTime(index)}
-                >
-                  Delete
-                </button>
+                {item.dayOfWeekId && (
+                  <div className="timing-actions">
+                    <button
+                      type="button"
+                      className="timing-add-hours-btn"
+                      onClick={() => addTimingForDay(item.dayOfWeekId)}
+                    >
+                      + Add Hours
+                    </button>
+                    <button
+                      type="button"
+                      className="timing-remove-btn"
+                      onClick={() => removeOperatingTime(index)}
+                      aria-label="Remove timing"
+                      title="Remove timing"
+                    >
+                      x
+                    </button>
+                  </div>
+                )}
               </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
 
