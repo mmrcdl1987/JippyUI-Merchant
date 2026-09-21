@@ -26,6 +26,57 @@
   letter-spacing: -0.02em;
 }
 
+.create-outlet-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.outlet-image-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.outlet-image-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 128px;
+  height: 128px;
+  overflow: hidden;
+  border: 3px solid #e2e8f0;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+  text-align: center;
+}
+
+.outlet-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outlet-image-picker {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.outlet-image-picker input {
+  display: none;
+}
+
+.create-outlet-merchant-id {
+  color: #15803d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 /* ==========================================================================
    Form & Card Components
    ========================================================================== */
@@ -85,6 +136,229 @@
   color: #1e293b;
   transition: all 0.2s ease-in-out;
   box-sizing: border-box;
+}
+
+.create-outlet-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.create-outlet-cuisine-field {
+  position: relative;
+}
+
+.edit-outlet-cuisine-label {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.create-outlet-cuisine-select {
+  position: relative;
+}
+
+.create-outlet-cuisine-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.edit-outlet-cuisine-indicator {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 7px;
+  overflow: hidden;
+}
+
+.edit-outlet-cuisine-indicator > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-outlet-cuisine-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: #f97316;
+  box-shadow: 0 0 0 3px #ffedd5;
+}
+
+.create-outlet-cuisine-menu {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 190px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.create-outlet-cuisine-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.create-outlet-cuisine-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: #ffffff;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+}
+
+.create-outlet-cuisine-option:hover,
+.create-outlet-cuisine-option.selected {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.create-outlet-cuisine-empty {
+  display: block;
+  padding: 12px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.create-outlet-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.create-outlet-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 39px;
+  min-height: 40px;
+}
+
+.edit-outlet-checkbox-group {
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  gap: 32px;
+}
+
+.timing-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.timing-actions button {
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.timing-add-hours-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 9px;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  background: #fff7ed;
+  color: #c2410c;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.timing-add-hours-btn:hover {
+  background: #ffedd5;
+  border-color: #fdba74;
+}
+
+.timing-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid #fecaca;
+  border-radius: 50%;
+  background: #fef2f2;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.timing-remove-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.create-outlet-checkbox input {
+  width: auto;
+}
+
+.create-outlet-checkbox-selected {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.create-outlet-checkbox-selected input,
+.create-outlet-locked-checkbox {
+  accent-color: #16a34a;
+}
+
+.create-outlet-password-field {
+  position: relative;
+}
+
+.create-outlet-password-field input {
+  padding-right: 62px;
+}
+
+.create-outlet-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  padding: 3px 4px;
+  border: 0;
+  background: transparent;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-outlet-password-toggle:hover {
+  color: #1d4ed8;
 }
 
 .form-grid input:hover,
@@ -162,14 +436,143 @@
 
 .operating-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 16px;
+  grid-template-columns: minmax(82px, 0.6fr) minmax(150px, 1fr) minmax(110px, 1fr) minmax(110px, 1fr) auto;
+  gap: 12px;
   align-items: center;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.operating-row:hover {
+  border-color: #fdba74;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08);
+}
+
+.operating-row-label {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.operating-hours-header {
   margin-bottom: 16px;
+}
+
+.operating-hours-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.operating-hours-controls .save-btn {
+  padding: 8px 14px;
+  background: #f97316;
+  box-shadow: none;
+}
+
+.operating-hours-controls .save-btn:hover {
+  background: #ea580c;
+}
+
+.operating-hours-common {
+  padding: 16px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+}
+
+.operating-hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.operating-hours-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.operating-hours-table thead th {
+  padding: 0 12px 4px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.operating-hours-table tbody tr {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.operating-hours-table tbody td {
   padding: 12px;
-  background-color: #f8fafc;
-  border: 1px solid #f1f5f9;
-  border-radius: 8px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 13px;
+}
+
+.operating-hours-table tbody td:first-child {
+  border-left: 1px solid #e2e8f0;
+  border-radius: 10px 0 0 10px;
+  font-weight: 700;
+}
+
+.operating-hours-table tbody td:last-child {
+  border-right: 1px solid #e2e8f0;
+  border-radius: 0 10px 10px 0;
+}
+
+.operating-hours-table input[type="time"] {
+  min-width: 112px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.operating-hours-table input[type="time"]:focus,
+.operating-row input:focus,
+.operating-row select:focus {
+  border-color: #f97316;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.operating-hours-table input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #f97316;
+}
+
+.operating-hours-table .save-btn {
+  padding: 7px 10px;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.operating-hours-table .save-btn:hover {
+  background: #ffedd5;
+}
+
+.operating-hours-hint {
+  color: #94a3b8;
+  font-size: 12px;
 }
 
 .operating-row:last-child {
@@ -267,6 +670,25 @@
   .operating-row {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .operating-hours-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .operating-hours-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .operating-hours-table {
+    min-width: 720px;
+  }
+
+  .timings-table-wrapper {
+    overflow-x: auto;
   }
 
   .bank-header {

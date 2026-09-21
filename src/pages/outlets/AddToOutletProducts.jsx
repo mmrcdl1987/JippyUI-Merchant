@@ -232,6 +232,22 @@ function AddToOutletProducts({
     fetchMasterProducts();
   }, [hasPreselectedProducts]);
 
+  // Pre-populate variant drafts when preselected products are provided (e.g. editing variants for a food)
+  useEffect(() => {
+    if (hasPreselectedProducts && Array.isArray(selectedProducts) && selectedProducts.length > 0) {
+      setVariantDrafts((drafts) => {
+        const next = { ...drafts };
+        selectedProducts.forEach((product) => {
+          const productId = getMasterProductId(product);
+          if (productId && !next[productId]) {
+            next[productId] = toVariantGroups(product);
+          }
+        });
+        return next;
+      });
+    }
+  }, [hasPreselectedProducts, selectedProducts]);
+
   // Pre-fetch values for any pre-existing group IDs
   useEffect(() => {
     Object.values(variantDrafts).forEach((groups) => {
@@ -527,16 +543,22 @@ function AddToOutletProducts({
         return {
           productVariantGroupsId: Number(group.productVariantGroupsId),
           options: (group.options || []).map((option) => ({
-            productVariantOptionsId: Number(option.productVariantOptionsId || option.productVariantGroupValuesId),
-            productVariantGroupValuesId: Number(option.productVariantGroupValuesId),
+            productVariantOptionsId:
+              option.productVariantOptionsId !== undefined &&
+              option.productVariantOptionsId !== null &&
+              Number(option.productVariantOptionsId) > 0
+                ? Number(option.productVariantOptionsId)
+                : null,
+            productVariantGroupValuesId: Number(
+              option.productVariantGroupValuesId || option.valueId || option.id
+            ),
             priceType: calculatedPriceType,
-            variantPrice: Number(option.variantPrice),
+            variantPrice: Number(option.variantPrice || 0),
           })),
         };
       });
 
     const payload = {
-      outletCategoryId: Number(outletCategoryId),
       outletId: Number(outlet),
       categoryId: Number(categoryId),
       products: products.map((product) => {
@@ -614,17 +636,23 @@ function AddToOutletProducts({
           const calculatedPriceType = getPriceTypeForGroup(group, availableVariantGroups);
           return {
             productVariantGroupsId: Number(group.productVariantGroupsId),
-            options: (group.options || []).map((option) => ({
-              productVariantOptionsId:
-                option.productVariantOptionsId &&
-                Number(option.productVariantOptionsId) > 0 &&
-                Number(option.productVariantOptionsId) !== Number(option.productVariantGroupValuesId)
+            options: (group.options || []).map((option) => {
+              const optId =
+                option.productVariantOptionsId !== undefined &&
+                option.productVariantOptionsId !== null &&
+                Number(option.productVariantOptionsId) > 0
                   ? Number(option.productVariantOptionsId)
-                  : null,
-              productVariantGroupValuesId: Number(option.productVariantGroupValuesId),
-              priceType: calculatedPriceType,
-              variantPrice: Number(option.variantPrice),
-            })),
+                  : null;
+              const valId = Number(
+                option.productVariantGroupValuesId || option.valueId || option.id
+              );
+              return {
+                productVariantOptionsId: optId,
+                productVariantGroupValuesId: valId > 0 ? valId : null,
+                priceType: calculatedPriceType,
+                variantPrice: Number(option.variantPrice || 0),
+              };
+            }),
           };
         });
 
@@ -638,7 +666,7 @@ function AddToOutletProducts({
           imageLink: existingProduct.imageLink || "",
           photos: existingProduct.photos || "",
           thumbnail: existingProduct.thumbnail || "",
-          productType: existingProduct.productType || existingProduct.type || "",
+          productType: existingProduct.productType || existingProduct.type || "FOOD",
           timings: (existingProduct.timings || existingProduct.productTimings || []).map((t) => ({
             productAvailableTimingId: t.productAvailableTimingId || t.id || null,
             dayOfWeekId: t.dayOfWeekId || t.dayId || 1,
@@ -653,19 +681,24 @@ function AddToOutletProducts({
         const response = await updateProductDetails(productId, updatePayload);
         console.log("[UPDATE-PRODUCT] Response:", response);
 
-        setMappingResult({
-          savedCount: 1,
-          skippedCount: 0,
-          savedNames: [existingProduct.productName || "Product"],
-          savedProducts: [{
-            productName: existingProduct.productName || "Product",
-            merchantPrice: existingProduct.merchantPrice,
-            timing: "",
-            dayOfWeek: "",
-          }],
-          skippedNames: [],
-          skippedProducts: [],
-        });
+        alert(`Variants for "${existingProduct.productName || "Product"}" saved successfully!`);
+        if (typeof setShowOutletPopup === "function") {
+          setShowOutletPopup(false);
+        } else {
+          setMappingResult({
+            savedCount: 1,
+            skippedCount: 0,
+            savedNames: [existingProduct.productName || "Product"],
+            savedProducts: [{
+              productName: existingProduct.productName || "Product",
+              merchantPrice: existingProduct.merchantPrice,
+              timing: "",
+              dayOfWeek: "",
+            }],
+            skippedNames: [],
+            skippedProducts: [],
+          });
+        }
       } else {
         console.log("MASTER PRODUCT → OUTLET PRODUCT PAYLOAD:", JSON.stringify(payload, null, 2));
 
@@ -1022,27 +1055,38 @@ function AddToOutletProducts({
                               <span />
                             </div>
 
-                            {group.options?.map((option, optionIndex) => (
-                              <div className="variant-option-row" key={optionIndex} style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 1fr 40px", gap: "10px", marginBottom: "8px", alignItems: "center" }}>
-                                
-                                {/* Group Value / Option Name Dropdown */}
-                                <select
-                                  value={option.productVariantGroupValuesId ?? ""}
-                                  disabled={isSaving || !currentGroupId}
-                                  onChange={(event) => updateVariantOptionValue(product, groupIndex, optionIndex, event.target.value)}
-                                  style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
-                                >
-                                  <option value="">Select Value...</option>
-                                  {groupValuesList.map((val) => {
-                                    const vId = val.productVariantGroupValuesId || val.valueId || val.id;
-                                    const vName = val.variantName || val.valueName || val.name || val.value || `Value ${vId}`;
-                                    return (
-                                      <option key={vId} value={vId}>
-                                        {vName}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
+                            {group.options?.map((option, optionIndex) => {
+                              const matchedVal = groupValuesList.find(
+                                (val) =>
+                                  String(val.productVariantGroupValuesId || val.valueId || val.id) === String(option.productVariantGroupValuesId) ||
+                                  String(val.productVariantGroupValuesId || val.valueId || val.id) === String(option.productVariantOptionsId) ||
+                                  (option.optionName && String(val.variantName || val.valueName || val.name || val.value).toLowerCase() === String(option.optionName).toLowerCase())
+                              );
+                              const selectedValId = matchedVal
+                                ? (matchedVal.productVariantGroupValuesId || matchedVal.valueId || matchedVal.id)
+                                : (option.productVariantGroupValuesId || "");
+
+                              return (
+                                <div className="variant-option-row" key={optionIndex} style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 1fr 40px", gap: "10px", marginBottom: "8px", alignItems: "center" }}>
+                                  
+                                  {/* Group Value / Option Name Dropdown */}
+                                  <select
+                                    value={selectedValId ?? ""}
+                                    disabled={isSaving || !currentGroupId}
+                                    onChange={(event) => updateVariantOptionValue(product, groupIndex, optionIndex, event.target.value)}
+                                    style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+                                  >
+                                    <option value="">Select Value...</option>
+                                    {groupValuesList.map((val) => {
+                                      const vId = val.productVariantGroupValuesId || val.valueId || val.id;
+                                      const vName = val.variantName || val.valueName || val.name || val.value || `Value ${vId}`;
+                                      return (
+                                        <option key={vId} value={vId}>
+                                          {vName}
+                                        </option>
+                                      );
+                                    })}
+                                  </select>
 
                                  {/* Price Type (Read-only: ADD for Add-ons group, MAIN for everything else) */}
                                 <input
@@ -1072,7 +1116,8 @@ function AddToOutletProducts({
                                   style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
                                 />
                               </div>
-                            ))}
+                            );
+                          })}
 
                             <button type="button" className="add-option-btn" style={{ marginTop: "10px" }} onClick={() => addVariantOption(product, groupIndex)} disabled={isSaving}>
                               + Add option

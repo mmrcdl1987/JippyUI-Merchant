@@ -1,7 +1,128 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getOutletsByMerchant, getAdminOutletDetails } from "../../services/outletService";
+import {
+  getOutletsByMerchant,
+  getAdminOutletDetails,
+  getOutletById,
+  getOutletStatusById,
+  getOutletImage,
+  toggleOutlet,
+} from "../../services/outletService";
 import "../../styles/Outlets.css";
+
+const getOutletImageUrl = (outlet) =>
+  outlet?.outletPicUrl ||
+  outlet?.outletProfilePic ||
+  outlet?.outletProfilePicUrl ||
+  outlet?.profilePicUrl ||
+  outlet?.imageUrl ||
+  outlet?.outletImageUrl ||
+  outlet?.image ||
+  null;
+
+const extractOutletImageUrl = (response) => {
+  const data =
+    response?.data?.data ||
+    response?.data ||
+    response;
+
+  return (
+    getOutletImageUrl(data) ||
+    data?.outlet?.outletPicUrl ||
+    data?.outletDetails?.outletPicUrl ||
+    (typeof data === "string" ? data : null)
+  );
+};
+
+const extractOutletDetails = (response) => {
+  const data = response?.data?.data ?? response?.data ?? response;
+
+  return (
+    data?.outletDetails ??
+    data?.outlet ??
+    data?.merchantResponse ??
+    data?.customerResponse ??
+    data
+  );
+};
+
+const toBoolean = (value) => {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (typeof value === "number") {
+    return value === 1;
+  }
+
+  if (typeof value === "string") {
+    return ["true", "1", "y", "yes", "active", "enabled"].includes(
+      value.trim().toLowerCase()
+    );
+  }
+
+  return undefined;
+};
+
+const getOutletToggleValue = (outlet) =>
+  toBoolean(
+    outlet?.isToggle ??
+      outlet?.is_toggle ??
+      outlet?.isEnabled ??
+      outlet?.is_enabled ??
+      outlet?.isActive ??
+      outlet?.is_active
+  );
+
+const extractOutletToggleValue = (response) => {
+  const data = response?.data?.data ?? response?.data ?? response;
+  const candidates = [
+    data,
+    data?.outletDetails,
+    data?.outlet,
+    data?.merchantResponse,
+    data?.customerResponse,
+  ];
+
+  for (const candidate of candidates) {
+    const value = toBoolean(
+      candidate?.isToggle ??
+        candidate?.is_toggle ??
+        candidate?.isEnabled ??
+        candidate?.is_enabled
+    );
+    if (typeof value === "boolean") {
+      return value;
+    }
+  }
+
+  return undefined;
+};
+
+const extractOutletActiveValue = (response) => {
+  const data = response?.data?.data ?? response?.data ?? response;
+  const candidates = [
+    data,
+    data?.outletDetails,
+    data?.outlet,
+    data?.merchantResponse,
+    data?.customerResponse,
+  ];
+
+  for (const candidate of candidates) {
+    if (candidate?.isActive === "Y" || candidate?.is_active === "Y") {
+      return true;
+    }
+    if (candidate?.isActive === "N" || candidate?.is_active === "N") {
+      return false;
+    }
+  }
+
+  return undefined;
+};
+
+const isOutletEnabled = (outlet) =>
+  getOutletToggleValue(outlet) ?? false;
 
 const Outlets = () => {
   const navigate = useNavigate();
@@ -10,6 +131,7 @@ const Outlets = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const [openingOutletId, setOpeningOutletId] = useState(null);
+  const [togglingOutletId, setTogglingOutletId] = useState(null);
 
   // =========================================================
   // SEARCH AND FILTER STATES
@@ -17,6 +139,7 @@ const Outlets = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [activeFilter, setActiveFilter] = useState("ALL");
 
   // =========================================================
   // PAGINATION STATES
@@ -50,9 +173,123 @@ const Outlets = () => {
 
         setOutlets([]);
       } else {
-        setOutlets(
-          Array.isArray(data) ? data : []
+        const outletList = Array.isArray(data)
+          ? data
+          : data?.data || data?.outlets || [];
+
+        const toggleResults = await Promise.all(
+          outletList
+            .filter((outlet) => outlet?.outletId)
+            .map(async (outlet) => {
+              try {
+                const response = await getOutletStatusById(outlet.outletId);
+                const details = extractOutletDetails(response);
+                const isActive = extractOutletActiveValue(response);
+                const currentToggle =
+                  extractOutletToggleValue(response) ??
+                  getOutletToggleValue(details);
+
+                if (isActive === false && currentToggle === true) {
+                  await toggleOutlet(outlet.outletId, false);
+                }
+
+                return {
+                  outletId: outlet.outletId,
+                  isToggle: isActive === false ? false : currentToggle,
+                  isActive,
+                };
+              } catch (error) {
+                console.warn(
+                  `Unable to load toggle status for outlet ${outlet.outletId}:`,
+                  error
+                );
+                return {
+                  outletId: outlet.outletId,
+                  isToggle: undefined,
+                  isActive: undefined,
+                };
+              }
+            })
         );
+
+        const toggleByOutletId = new Map(
+          toggleResults
+            .filter((result) => typeof result.isToggle === "boolean")
+            .map((result) => [
+              String(result.outletId),
+              result.isToggle,
+            ])
+        );
+        const activeByOutletId = new Map(
+          toggleResults
+            .filter((result) => typeof result.isActive === "boolean")
+            .map((result) => [String(result.outletId), result.isActive])
+        );
+
+        const outletsWithToggle = outletList.map((outlet) => ({
+          ...outlet,
+          ...(toggleByOutletId.has(String(outlet.outletId))
+            ? { isToggle: toggleByOutletId.get(String(outlet.outletId)) }
+            : {}),
+          ...(activeByOutletId.has(String(outlet.outletId))
+            ? { isActive: activeByOutletId.get(String(outlet.outletId)) ? "Y" : "N" }
+            : {}),
+        }));
+
+        setOutlets(outletsWithToggle);
+
+        const outletsWithoutImages = outletsWithToggle.filter(
+          (outlet) =>
+            outlet?.outletId &&
+            !getOutletImageUrl(outlet)
+        );
+
+        if (outletsWithoutImages.length > 0) {
+          const imageResults = await Promise.all(
+            outletsWithoutImages.map(async (outlet) => {
+              try {
+                const imageResponse = await getOutletImage(
+                  outlet.outletId
+                );
+                return {
+                  outletId: outlet.outletId,
+                  outletPicUrl: extractOutletImageUrl(imageResponse),
+                };
+              } catch (error) {
+                console.warn(
+                  `Unable to load image for outlet ${outlet.outletId}:`,
+                  error
+                );
+                return {
+                  outletId: outlet.outletId,
+                  outletPicUrl: null,
+                };
+              }
+            })
+          );
+
+          const imageByOutletId = new Map(
+            imageResults
+              .filter((result) => result.outletPicUrl)
+              .map((result) => [
+                String(result.outletId),
+                result.outletPicUrl,
+              ])
+          );
+
+          if (imageByOutletId.size > 0) {
+            setOutlets((currentOutlets) =>
+              currentOutlets.map((outlet) => ({
+                ...outlet,
+                outletPicUrl:
+                  getOutletImageUrl(outlet) ||
+                  imageByOutletId.get(
+                    String(outlet.outletId)
+                  ),
+              }))
+            );
+          }
+        }
       }
     } catch (error) {
       console.error(
@@ -251,10 +488,17 @@ const Outlets = () => {
           ?.toLowerCase()
           .includes(searchValue);
 
+      const matchesActive =
+        activeFilter === "ALL" ||
+        (activeFilter === "ACTIVE"
+          ? outlet.isActive === "Y"
+          : outlet.isActive === "N");
+
       // Approved
       if (statusFilter === "APPROVED") {
         return (
           matchesSearch &&
+          matchesActive &&
           outlet.isApproved === true
         );
       }
@@ -263,12 +507,13 @@ const Outlets = () => {
       if (statusFilter === "PENDING") {
         return (
           matchesSearch &&
+          matchesActive &&
           outlet.isApproved === false
         );
       }
 
       // All
-      return matchesSearch;
+      return matchesSearch && matchesActive;
     }
   );
 
@@ -314,7 +559,47 @@ const Outlets = () => {
 
   const handleStatusChange = (e) => {
     setStatusFilter(e.target.value);
+  };
+
+  const handleActiveFilterChange = (e) => {
+    setActiveFilter(e.target.value);
     setCurrentPage(1);
+    setCurrentPage(1);
+  };
+
+  const handleOutletToggle = async (outlet) => {
+    const outletId = outlet?.outletId;
+    if (!outletId) {
+      setErrorMsg("Outlet ID is missing.");
+      return;
+    }
+    if (outlet.isActive !== "Y") {
+      return;
+    }
+
+    const nextStatus = !isOutletEnabled(outlet);
+
+    try {
+      setTogglingOutletId(outletId);
+      setErrorMsg(null);
+      await toggleOutlet(outletId, nextStatus);
+      setOutlets((currentOutlets) =>
+        currentOutlets.map((currentOutlet) =>
+          currentOutlet.outletId === outletId
+            ? { ...currentOutlet, isToggle: nextStatus }
+            : currentOutlet
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update outlet status:", error);
+      setErrorMsg(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update outlet status."
+      );
+    } finally {
+      setTogglingOutletId(null);
+    }
   };
 
   // =========================================================
@@ -443,6 +728,16 @@ const Outlets = () => {
 
         </select>
 
+        <select
+          value={activeFilter}
+          onChange={handleActiveFilterChange}
+          className="status-select"
+        >
+          <option value="ALL">All Active Status</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+
         {/* TOTAL */}
 
         <span className="total-count">
@@ -491,15 +786,15 @@ const Outlets = () => {
                   </th>
 
                   <th>
-                    State
-                  </th>
-
-                  <th>
                     City
                   </th>
 
                   <th>
                     Status
+                  </th>
+
+                  <th>
+                    isToggle
                   </th>
 
                   <th>
@@ -525,6 +820,7 @@ const Outlets = () => {
                         key={
                           outlet.outletId
                         }
+                        className={outlet.isActive === "N" ? "outlet-row-inactive" : ""}
                       >
 
                         {/* =================================================
@@ -556,10 +852,39 @@ const Outlets = () => {
                             title="View Outlet Details"
                           >
 
-                            {
-                              outlet.outletName ||
-                              "N/A"
-                            }
+                            {getOutletImageUrl(outlet) && (
+                              <img
+                                src={getOutletImageUrl(outlet)}
+                                alt=""
+                                className="outlet-list-image"
+                                onError={(event) => {
+                                  event.currentTarget.style.display = "none";
+                                  event.currentTarget.nextElementSibling.style.display = "inline-flex";
+                                }}
+                              />
+                            )}
+                            <span
+                              className="outlet-list-image outlet-list-image-placeholder"
+                              style={{
+                                display: getOutletImageUrl(outlet)
+                                  ? "none"
+                                  : "inline-flex",
+                              }}
+                            >
+                              {(outlet.outletName || "O").charAt(0).toUpperCase()}
+                            </span>
+                            <span>
+                              {outlet.outletName || "N/A"}
+                            </span>
+                            <span
+                              className={`outlet-active-badge ${
+                                outlet.isActive === "Y"
+                                  ? "outlet-active-badge-active"
+                                  : "outlet-active-badge-inactive"
+                              }`}
+                            >
+                              {outlet.isActive === "Y" ? "Active" : "Inactive"}
+                            </span>
 
                           </button>
 
@@ -577,17 +902,6 @@ const Outlets = () => {
                         </td>
 
                         {/* =================================================
-                            STATE
-                            ================================================= */}
-
-                        <td>
-                          {
-                            outlet.stateName ||
-                            "N/A"
-                          }
-                        </td>
-
-                        {/* =================================================
                             CITY
                             ================================================= */}
 
@@ -599,26 +913,58 @@ const Outlets = () => {
                         </td>
 
                         {/* =================================================
-                            STATUS
+                            OUTLET STATUS
                             ================================================= */}
 
                         <td>
-
                           <span
                             className={`badge ${
-                              outlet.isApproved
+                              outlet.isApproved === true
                                 ? "badge-approved"
-                                : "badge-pending"
+                                : outlet.isApproved === false
+                                ? "badge-pending"
+                                : "badge-unknown"
                             }`}
                           >
-
-                            {
-                              outlet.isApproved
-                                ? "Approved"
-                                : "Pending"
-                            }
-
+                            {outlet.isApproved === true
+                              ? "Approved"
+                              : outlet.isApproved === false
+                              ? "Pending"
+                              : "Unknown"}
                           </span>
+                        </td>
+
+                        {/* =================================================
+                            ACTIVE STATUS
+                            ================================================= */}
+
+                        <td>
+                          <button
+                            type="button"
+                            className={`outlet-toggle ${
+                              isOutletEnabled(outlet)
+                                ? "active"
+                                : "inactive"
+                            }`}
+                            onClick={() => handleOutletToggle(outlet)}
+                            disabled={
+                              outlet.isActive !== "Y" ||
+                              togglingOutletId === outlet.outletId
+                            }
+                            title={
+                              outlet.isActive !== "Y"
+                                ? "Activate the outlet before changing isToggle"
+                                : `Mark outlet ${
+                                    isOutletEnabled(outlet)
+                                      ? "inactive"
+                                      : "active"
+                                  }`
+                            }
+                          >
+                            <span className="outlet-toggle-track">
+                              <span className="outlet-toggle-thumb" />
+                            </span>
+                          </button>
 
                         </td>
 
@@ -661,8 +1007,16 @@ const Outlets = () => {
                                 )
                               }
                               className="btn-edit"
+                              disabled={outlet.isApproved !== true}
+                              title={
+                                outlet.isApproved !== true
+                                  ? "Outlet has not approved yet to edit"
+                                  : "Edit outlet"
+                              }
                             >
-                              ✏ Edit
+                              {outlet.isApproved === true
+                                ? "✏ Edit"
+                                : "Edit"}
                             </button>
 
                           </div>

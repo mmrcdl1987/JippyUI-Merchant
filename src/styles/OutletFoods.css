@@ -406,6 +406,16 @@
   line-height: 1.4;
 }
 
+.jippy-food-name-clickable {
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.jippy-food-name-clickable:hover {
+  color: #ff5722 !important;
+  text-decoration: underline;
+}
+
 
 /* ============================================================
    CATEGORY
@@ -500,13 +510,7 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 62px;
-
-  padding: 6px 10px;
-
   box-sizing: border-box;
-
-  border-radius: 15px;
 
   font-size: 12px;
 

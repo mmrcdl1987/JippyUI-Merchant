@@ -54,6 +54,225 @@ export const getOutletById = async (outletId) => {
 };
 
 /**
+ * Get the persisted active/toggle status for one outlet.
+ */
+export const getOutletStatusById = async (outletId) => {
+  if (!outletId) {
+    throw new Error("Outlet ID is required.");
+  }
+
+  try {
+    const response = await api.get(
+      `/api/fm/outlets/getOutletById/${outletId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching outlet status:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get available cuisine types for outlet creation.
+ */
+export const getCuisineTypes = async () => {
+  try {
+    const response = await api.get("/api/fm/cuisine-types");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cuisine types:", error);
+    throw error;
+  }
+};
+
+/**
+ * Create outlet/category unavailability.
+ */
+export const createOutletUnavailability = async (payload) => {
+  try {
+    const response = await api.post(
+      "/api/fm/outlet-unavailability",
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating outlet unavailability:", error);
+    throw error;
+  }
+};
+
+/**
+ * Restore outlet/category availability.
+ */
+export const restoreOutletAvailability = async (payload) => {
+  try {
+    const response = await api.patch(
+      "/api/fm/outlet-unavailability/restore",
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error restoring outlet availability:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get the current availability of an outlet category.
+ */
+export const getOutletCategoryAvailability = async (outletCategoryId) => {
+  if (!outletCategoryId) {
+    throw new Error("Outlet category ID is required.");
+  }
+
+  try {
+    const response = await api.get(
+      `/api/fm/outlet-unavailability/outlet-category/${outletCategoryId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching outlet category availability:", error);
+    throw error;
+  }
+};
+
+/**
+ * Enable or disable an outlet for outlet operations.
+ */
+export const toggleOutlet = async (outletId, isToggle) => {
+  if (!outletId) {
+    throw new Error("Outlet ID is required.");
+  }
+
+  try {
+    const response = await api.put(
+      "/api/fm/outlets/toggleForOutlet",
+      {
+        outletId: Number(outletId),
+        isToggle: Boolean(isToggle),
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error toggling outlet status:", error);
+    throw error;
+  }
+};
+
+/**
+ * Upload or replace an outlet image.
+ */
+export const uploadOutletImage = async (outletId, imageFile) => {
+  if (!outletId) {
+    throw new Error("Outlet ID is required.");
+  }
+
+  if (!(imageFile instanceof File)) {
+    throw new Error("A valid image file is required.");
+  }
+
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  try {
+    const response = await api.post(
+      `/api/fm/outlets/${outletId}/image`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading outlet image:", error);
+    throw error;
+  }
+};
+
+/**
+ * Upload an outlet image using the merchant upload endpoint.
+ */
+export const uploadOutletImageByMerchant = async (merchantId, imageFile) => {
+  if (!merchantId) {
+    throw new Error("Merchant ID is required.");
+  }
+
+  if (!(imageFile instanceof File)) {
+    throw new Error("A valid image file is required.");
+  }
+
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  try {
+    const response = await api.post(
+      "/api/fm/outlets/upload-image",
+      formData,
+      {
+        params: { merchantId },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading merchant outlet image:", error);
+    throw error;
+  }
+};
+
+/**
+ * Update an outlet image URL directly.
+ */
+export const updateOutletProfilePic = async (outletId, outletPicUrl) => {
+  if (!outletId) {
+    throw new Error("Outlet ID is required.");
+  }
+
+  if (!outletPicUrl) {
+    throw new Error("Outlet image URL is required.");
+  }
+
+  try {
+    const response = await api.put(
+      "/api/fm/outlets/updateOutletProfilePic",
+      { outletId: Number(outletId), outletPicUrl }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating outlet image URL:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get the current outlet image URL.
+ */
+export const getOutletImage = async (outletId) => {
+  if (!outletId) {
+    throw new Error("Outlet ID is required.");
+  }
+
+  try {
+    const response = await api.get(
+      `/api/fm/outlets/getOutletById/${outletId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching outlet image:", error);
+    throw error;
+  }
+};
+
+/**
  * Create new outlet
  */
 export const createOutlet = async (payload) => {
@@ -486,36 +705,128 @@ export const updateMerchantPrice = async (
     );
 
     /* ---------------------------------------------
-       CALL API
+       1. Update Price via Product Update API
     --------------------------------------------- */
+    try {
+      let detailData = {};
+      try {
+        const detailRes = await api.get(
+          `/api/fm/products/getCompleteProductDetails/${productId}`
+        );
+        detailData =
+          detailRes?.data?.data ||
+          detailRes?.data ||
+          detailRes ||
+          {};
+      } catch (getErr) {
+        console.warn("[MERCHANT-PRICE] getCompleteProductDetails failed, trying /productdetails:", getErr);
+        try {
+          const fbRes = await api.get(`/api/fm/products/productdetails/${productId}`);
+          detailData = fbRes?.data?.data || fbRes?.data || fbRes || {};
+        } catch (_) {}
+      }
 
-    const response = await api.put(
-      `/api/fm/products/${productId}/merchant-price`,
-      requestBody
-    );
+      const updatePayload = {
+        productName: detailData.productName || "Product",
+        outletCategoryId: Number(
+          detailData.outletCategoryId || detailData.categoryId || 1
+        ),
+        description: detailData.description || "",
+        isVeg:
+          detailData.isVeg !== undefined ? Boolean(detailData.isVeg) : true,
+        hasProductVariants: Boolean(
+          detailData.hasProductVariants ||
+            (detailData.variantGroups && detailData.variantGroups.length > 0)
+        ),
+        merchantPrice: numericPrice,
+        imageLink: detailData.imageLink || "",
+        photos: detailData.photos || "",
+        thumbnail: detailData.thumbnail || "",
+        productType: detailData.productType || "FOOD",
+        timings: detailData.timings || detailData.productTimings || [],
+        variantGroups:
+          detailData.variantGroups || detailData.productVariantGroups || [],
+      };
 
-    console.log(
-      "[MERCHANT-PRICE] Update response:",
-      response.data
-    );
+      const updateResponse = await api.put(
+        `/api/fm/products/updateCategoryAndProductDetails/${productId}`,
+        updatePayload
+      );
 
-    return response.data;
+      console.log(
+        "[MERCHANT-PRICE] Price updated successfully via updateCategoryAndProductDetails:",
+        updateResponse.data
+      );
+
+      return updateResponse.data;
+    } catch (fullUpdateErr) {
+      console.warn(
+        "[MERCHANT-PRICE] updateCategoryAndProductDetails failed, trying updateproduct API:",
+        fullUpdateErr
+      );
+
+      try {
+        const response = await api.put(
+          `/api/fm/products/updateproduct/${productId}`,
+          {
+            merchantPrice: numericPrice,
+          }
+        );
+        return response.data;
+      } catch (fbErr) {
+        console.error("[MERCHANT-PRICE] updateproduct fallback error:", fbErr);
+        throw fullUpdateErr;
+      }
+    }
   } catch (error) {
     console.error(
       "[MERCHANT-PRICE] Error updating merchant price:",
       error
     );
 
-    console.error(
-      "[MERCHANT-PRICE] Status:",
-      error.response?.status
+    throw error;
+  }
+};
+
+/* =========================================================
+   OUTLET CATEGORIES – Link a category to an outlet
+   POST /api/fm/api/outlet-categories
+   ========================================================= */
+
+/**
+ * Link an existing category to an outlet.
+ *
+ * Idempotent: returns 200 with the existing record if already linked,
+ * or 201 on new creation.
+ *
+ * @param {number|string} outletId   - The outlet ID.
+ * @param {number|string} categoryId - The category ID to link.
+ * @returns {Promise} Axios response
+ */
+export const addCategoryToOutlet = async (outletId, categoryId) => {
+  try {
+    if (!outletId) throw new Error("Outlet ID is required.");
+    if (!categoryId) throw new Error("Category ID is required.");
+
+    const payload = {
+      outletId: Number(outletId),
+      categoryId: Number(categoryId),
+    };
+
+    console.log("[OUTLET-CATEGORIES] Payload:", payload);
+
+    const response = await api.post(
+      "/api/fm/api/outlet-categories",
+      payload
     );
 
-    console.error(
-      "[MERCHANT-PRICE] Response:",
-      error.response?.data
-    );
+    console.log("[OUTLET-CATEGORIES] Response:", response.data);
 
+    return response.data;
+  } catch (error) {
+    console.error("[OUTLET-CATEGORIES] Error:", error);
+    console.error("[OUTLET-CATEGORIES] Status:", error.response?.status);
+    console.error("[OUTLET-CATEGORIES] Response:", error.response?.data);
     throw error;
   }
 };

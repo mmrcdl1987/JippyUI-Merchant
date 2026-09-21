@@ -1,795 +1,913 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getOutletById,
-  updateOutlet,
   getStates,
   getCities,
   getAreas,
+  getCuisineTypes,
+  getOutletImage,
+  getOutletStatusById,
+  uploadOutletImage,
+  updateOutlet,
 } from "../../services/outletService";
-import "../../styles/EditOutlet.css";
+import { getMerchantProfile } from "../../services/merchantService";
+import "../../styles/CreateOutlet.css";
 
-const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const DAYS_OF_WEEK = [
+  { id: 1, name: "Monday" },
+  { id: 2, name: "Tuesday" },
+  { id: 3, name: "Wednesday" },
+  { id: 4, name: "Thursday" },
+  { id: 5, name: "Friday" },
+  { id: 6, name: "Saturday" },
+  { id: 7, name: "Sunday" },
+];
+
+const STANDARD_OUTLET_TYPES = [
+  "Restaurant",
+  "Take Away Point",
+  "Cloud Kitchen",
+  "Hotel",
+];
+
+const emptyTiming = (dayOfWeekId) => ({
+  dayOfWeekId,
+  isOpen: true,
+  openingTime: "09:00",
+  closingTime: "22:00",
+});
+
+const getValue = (value, fallback = "") =>
+  value === null || value === undefined ? fallback : value;
+
+const extractOutletDetails = (response) => {
+  const data = response?.data?.data ?? response?.data ?? response ?? {};
+  return (
+    data?.outletDetails ??
+    data?.outlet ??
+    data?.merchantResponse ??
+    data?.customerResponse ??
+    data
+  );
+};
+
+const extractBooleanField = (response, fieldNames) => {
+  const data = response?.data?.data ?? response?.data ?? response ?? {};
+  const candidates = [
+    data,
+    data?.outletDetails,
+    data?.outlet,
+    data?.merchantResponse,
+    data?.customerResponse,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    for (const fieldName of fieldNames) {
+      if (candidate[fieldName] !== null && candidate[fieldName] !== undefined) {
+        return toBoolean(candidate[fieldName]);
+      }
+    }
+  }
+
+  return undefined;
+};
+
+const extractProductVegValue = (response) => {
+  const data = response?.data?.data ?? response?.data ?? response ?? {};
+  const candidates = [
+    data,
+    data?.outletDetails,
+    data?.outlet,
+    data?.merchantResponse,
+    data?.customerResponse,
+  ];
+  const productValues = candidates.flatMap((candidate) =>
+    Array.isArray(candidate?.categories)
+      ? candidate.categories.flatMap((category) =>
+          Array.isArray(category?.products)
+            ? category.products
+                .filter(
+                  (product) =>
+                    product?.isVeg !== null &&
+                    product?.isVeg !== undefined
+                )
+                .map((product) => toBoolean(product.isVeg))
+            : []
+        )
+      : []
+  );
+
+  if (productValues.length === 0) return undefined;
+  return productValues.every(Boolean);
+};
+
+const getOutletImageUrl = (outlet) =>
+  outlet?.outletPicUrl ||
+  outlet?.outletProfilePic ||
+  outlet?.outletProfilePicUrl ||
+  outlet?.profilePicUrl ||
+  outlet?.imageUrl ||
+  outlet?.outletImageUrl ||
+  outlet?.image ||
+  "";
+
+const extractImageResponse = (response) => {
+  const data = response?.data?.data || response?.data || response;
+  return (
+    getOutletImageUrl(data) ||
+    getOutletImageUrl(data?.outlet) ||
+    getOutletImageUrl(data?.outletDetails) ||
+    (typeof data === "string" ? data : "")
+  );
+};
+
+const toBoolean = (value) => {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value === 1;
+  return ["true", "1", "y", "yes", "active", "enabled"].includes(
+    String(value || "").trim().toLowerCase()
+  );
+};
+
+const toTime = (value, fallback) => {
+  if (!value) return fallback;
+  if (typeof value === "string") return value.substring(0, 5);
+  if (typeof value === "object" && value.hour !== undefined) {
+    return `${String(value.hour).padStart(2, "0")}:${String(
+      value.minute || 0
+    ).padStart(2, "0")}`;
+  }
+  return fallback;
+};
+
+const normalizeCuisines = (value) => {
+  if (Array.isArray(value)) {
+    return value.map((item) =>
+      Number(item?.cuisineTypesId ?? item?.cuisineTypeId ?? item?.id ?? item)
+    ).filter(Boolean);
+  }
+  if (typeof value === "number") return [value];
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => Number(item.trim()))
+      .filter(Boolean);
+  }
+  return [];
+};
+
+const normalizeTimings = (outlet) => {
+  const source =
+    outlet?.operatingDays ||
+    outlet?.outletTimings ||
+    outlet?.timings ||
+    [];
+  const byDay = new Map();
+
+  if (Array.isArray(source)) {
+    source.forEach((item) => {
+      const dayOfWeekId = Number(
+        item?.dayOfWeekId ??
+          item?.dayId ??
+          item?.dayOfWeek ??
+          DAYS_OF_WEEK.find(
+            (day) => day.name.toLowerCase() === String(item?.day).toLowerCase()
+          )?.id
+      );
+      if (dayOfWeekId >= 1 && dayOfWeekId <= 7) {
+        const timing = {
+          dayOfWeekId,
+          isOpen: item.isOpen !== false && item.isAvailable !== false,
+          openingTime: toTime(
+            item.openingTime ?? item.startTime,
+            "09:00"
+          ),
+          closingTime: toTime(
+            item.closingTime ?? item.endTime,
+            "22:00"
+          ),
+        };
+        byDay.set(dayOfWeekId, [...(byDay.get(dayOfWeekId) || []), timing]);
+      }
+    });
+  }
+
+  return DAYS_OF_WEEK.flatMap((day) =>
+    byDay.get(day.id) || [emptyTiming(day.id)]
+  );
+};
 
 const EditOutlet = () => {
-  const { id } = useParams();
+  const { outletId } = useParams();
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(true);
-  const [errorList, setErrorList] = useState([]); // Updated to handle array of validation errors
+  const [saving, setSaving] = useState(false);
+  const [errorList, setErrorList] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [areas, setAreas] = useState([]);
-
-  // Main Form Data State
+  const [cuisineTypes, setCuisineTypes] = useState([]);
+  const [cuisineMenuOpen, setCuisineMenuOpen] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [sameAsMerchant, setSameAsMerchant] = useState(false);
+  const [merchantBank, setMerchantBank] = useState({
+    accountHolderName: "",
+    accountNumber: "",
+    ifscCode: "",
+    bankName: "",
+  });
   const [formData, setFormData] = useState({
     outletName: "",
-    outletId: "",
+    merchantId: "",
+    cuisineType: [],
     outletEmail: "",
     outletPhone: "",
     alternateOutletPhone: "",
-    cuisineType: "",
-    favourite: false,
-    available: true,
-
-    // Address
-    buildingNo: "",
-    streetName: "",
+    outletType: "",
+    customOutletType: "",
+    outletPicUrl: "",
+    isVegOutlet: false,
+    isGstApplied: false,
+    description: "",
+    username: "",
+    password: "",
+    accountNumber: "",
+    ifscCode: "",
+    bankName: "",
+    accountHolderName: "",
+    aadharNumber: "",
+    panNumber: "",
+    fssaiNumber: "",
+    gstNumber: "",
+    buildingNumber: "",
+    road: "",
     landmark: "",
     stateId: "",
     cityId: "",
     areaId: "",
     latitude: "",
     longitude: "",
-
-    // Bank Details
-    accountHolderName: "",
-    bankName: "",
-    accountNumber: "",
-    ifscCode: "",
-
-    // Timings
-    timings: daysOfWeek.map((day) => ({
-      day,
-      isOpen: true,
-      startTime: "09:00",
-      endTime: "22:00",
-    })),
-
-    // Categories & Nested Products
-    categories: [
-      {
-        categoryId: "cat_1",
-        categoryName: "Chicken",
-        isCategoryAvailable: true,
-        expanded: true,
-        products: [
-          {
-            productId: "prod_1",
-            productName: "Chicken Grill",
-            price: 250,
-            description: "Juicy grilled chicken",
-            isVeg: false,
-            isAvailable: true,
-            variants: [
-              { name: "Small", price: 120 },
-              { name: "Medium", price: 180 },
-              { name: "Large", price: 250 },
-            ],
-            productTimings: daysOfWeek.map((day) => ({
-              day,
-              startTime: "09:00",
-              endTime: "18:00",
-            })),
-          },
-        ],
-      },
-    ],
+    isActive: "Y",
+    operatingDays: DAYS_OF_WEEK.map((day) => emptyTiming(day.id)),
   });
 
   useEffect(() => {
-    fetchInitialData();
-  }, [id]);
-
-  const fetchInitialData = async () => {
-    try {
-      setLoading(true);
-      setErrorList([]);
-
-      const statesRes = await getStates();
-      setStates(statesRes || []);
-
-      const response = await getOutletById(id);
-      const outlet = response.data?.data || response.data || response;
-
-      setFormData((prev) => ({
-        ...prev,
-        ...outlet,
-        outletId: outlet.outletId || id,
-        outletEmail: (outlet.outletEmail || "").replace(/\s+/g, ""),
-        buildingNo: outlet.buildingNumber || outlet.buildingNo || "",
-        streetName: outlet.road || outlet.streetName || "",
-      }));
-
-      if (outlet.stateId) {
-        const citiesRes = await getCities(outlet.stateId);
-        setCities(citiesRes || []);
+    const load = async () => {
+      try {
+        setLoading(true);
+        setErrorList([]);
+        const [
+          outletResponse,
+          statusResponse,
+          statesResponse,
+          cuisineResponse,
+        ] =
+          await Promise.all([
+            getOutletById(outletId),
+            getOutletStatusById(outletId),
+            getStates(),
+            getCuisineTypes(),
+          ]);
+        const outlet = extractOutletDetails(outletResponse);
+        const statusData =
+          statusResponse?.data?.data ?? statusResponse?.data ?? statusResponse;
+        const statusIsVegOutlet = extractBooleanField(statusResponse, [
+          "isVegOutlet",
+          "is_veg_outlet",
+          "isVeg",
+          "is_veg",
+        ]);
+        const productIsVegOutlet = extractProductVegValue(outletResponse);
+        const statusIsGstApplied = extractBooleanField(statusResponse, [
+          "isGstApplied",
+          "is_gst_applied",
+          "gstApplied",
+          "gst_applied",
+        ]);
+        let outletImageUrl = getOutletImageUrl(outlet);
+        if (!outletImageUrl) {
+          try {
+            outletImageUrl = extractImageResponse(await getOutletImage(outletId));
+          } catch (imageError) {
+            console.error("Error loading outlet image:", imageError);
+          }
+        }
+        setStates(statesResponse || []);
+        const cuisineList =
+          cuisineResponse?.data?.data ||
+          cuisineResponse?.data ||
+          cuisineResponse ||
+          [];
+        setCuisineTypes(Array.isArray(cuisineList) ? cuisineList : []);
+        setFormData((previous) => ({
+          ...previous,
+          ...outlet,
+          outletType: STANDARD_OUTLET_TYPES.includes(outlet.outletType)
+            ? outlet.outletType
+            : outlet.outletType
+              ? "Other"
+              : "",
+          customOutletType: STANDARD_OUTLET_TYPES.includes(outlet.outletType)
+            ? ""
+            : getValue(outlet.outletType),
+          outletPicUrl: outletImageUrl,
+          outletName: getValue(outlet.outletName),
+          merchantId: getValue(
+            outlet.merchantId,
+            localStorage.getItem("merchantId") || ""
+          ),
+          cuisineType: normalizeCuisines(
+            outlet.cuisineType ?? outlet.cuisineTypes
+          ),
+          outletEmail: getValue(outlet.outletEmail).replace(/\s+/g, ""),
+          alternateOutletPhone: getValue(outlet.alternateOutletPhone),
+          buildingNumber: getValue(
+            outlet.buildingNumber ?? outlet.buildingNo
+          ),
+          road: getValue(outlet.road ?? outlet.streetName),
+          stateId: getValue(outlet.stateId),
+          cityId: getValue(outlet.cityId),
+          areaId: getValue(outlet.areaId),
+          panNumber: getValue(
+            outlet.panNumber ?? outlet.panNo ?? outlet.pan ?? outlet.outletPanNumber
+          ),
+          fssaiNumber: getValue(
+            outlet.fssaiNumber ??
+              outlet.fssaiNo ??
+              outlet.fssai ??
+              outlet.outletFssaiNumber
+          ),
+          gstNumber: getValue(
+            outlet.gstNumber ?? outlet.gstNo ?? outlet.gst ?? outlet.outletGstNumber
+          ),
+          isVegOutlet:
+            productIsVegOutlet ??
+            statusIsVegOutlet ??
+            extractBooleanField(outlet, [
+              "isVegOutlet",
+              "is_veg_outlet",
+              "isVeg",
+              "is_veg",
+            ]) ??
+            false,
+          isGstApplied:
+            statusIsGstApplied ??
+            extractBooleanField(outlet, [
+              "isGstApplied",
+              "is_gst_applied",
+              "gstApplied",
+              "gst_applied",
+            ]) ??
+            false,
+          isActive:
+            statusData?.isActive === "Y" ||
+            statusData?.is_active === "Y"
+              ? "Y"
+              : statusData?.isActive === "N" ||
+                statusData?.is_active === "N"
+                ? "N"
+                : toBoolean(outlet.isActive ?? outlet.isAvailable)
+                  ? "Y"
+                  : "N",
+          operatingDays: normalizeTimings(outlet),
+        }));
+        if (outlet.stateId) {
+          setCities((await getCities(outlet.stateId)) || []);
+        }
+        if (outlet.cityId) {
+          setAreas((await getAreas(outlet.cityId)) || []);
+        }
+      } catch (error) {
+        console.error("Error loading outlet details:", error);
+        setErrorList([
+          error?.response?.data?.message ||
+            error?.message ||
+            "Failed to load outlet details.",
+        ]);
+      } finally {
+        setLoading(false);
       }
-      if (outlet.cityId) {
-        const areasRes = await getAreas(outlet.cityId);
-        setAreas(areasRes || []);
+    };
+    if (outletId) load();
+  }, [outletId]);
+
+  useEffect(() => {
+    const loadMerchantBankDetails = async () => {
+      try {
+        const data = await getMerchantProfile();
+        setMerchantBank({
+          accountHolderName: data?.accountHolderName || "",
+          accountNumber: data?.accountNumber || "",
+          ifscCode: data?.ifscCode || "",
+          bankName: data?.bankName || "",
+        });
+      } catch (error) {
+        console.error("Failed to fetch merchant bank details:", error);
       }
-    } catch (error) {
-      console.error("Error loading outlet data:", error);
-      setErrorList(["Failed to load outlet details from server."]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const processedValue = name === "outletEmail" ? value.replace(/\s+/g, "") : value;
+    loadMerchantBankDetails();
+  }, []);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : processedValue,
+  const cuisineNames = useMemo(
+    () =>
+      formData.cuisineType
+        .map((id) => {
+          const item = cuisineTypes.find(
+            (cuisine) =>
+              Number(
+                cuisine.cuisineTypesId ??
+                  cuisine.cuisineTypeId ??
+                  cuisine.id
+              ) === Number(id)
+          );
+          return item?.cuisineTypesName || item?.cuisineTypeName || item?.name;
+        })
+        .filter(Boolean)
+        .join(", "),
+    [cuisineTypes, formData.cuisineType]
+  );
+
+  const updateField = (name, value) =>
+    setFormData((previous) => ({ ...previous, [name]: value }));
+
+  const handleSameBank = (event) => {
+    const checked = event.target.checked;
+    setSameAsMerchant(checked);
+
+    setFormData((previous) => ({
+      ...previous,
+      ...(checked
+        ? merchantBank
+        : {
+            accountHolderName: "",
+            accountNumber: "",
+            ifscCode: "",
+            bankName: "",
+          }),
     }));
   };
 
-  const handleStateChange = async (e) => {
-    const stateId = e.target.value;
-    setFormData((prev) => ({ ...prev, stateId, cityId: "", areaId: "" }));
-    setCities([]);
-    setAreas([]);
-    if (stateId) {
-      const res = await getCities(stateId);
-      setCities(res || []);
+  const handleImageChange = async (event) => {
+    const imageFile = event.target.files?.[0];
+    event.target.value = "";
+    if (!imageFile) return;
+    if (!imageFile.type.startsWith("image/")) {
+      setErrorList(["Please select a valid image file."]);
+      return;
     }
-  };
-
-  const handleCityChange = async (e) => {
-    const cityId = e.target.value;
-    setFormData((prev) => ({ ...prev, cityId, areaId: "" }));
-    setAreas([]);
-    if (cityId) {
-      const res = await getAreas(cityId);
-      setAreas(res || []);
-    }
-  };
-
-  const handleTimingChange = (index, field, value) => {
-    const updatedTimings = [...formData.timings];
-    updatedTimings[index][field] = value;
-    setFormData((prev) => ({ ...prev, timings: updatedTimings }));
-  };
-
-  const handleCategoryChange = (catIndex, field, value) => {
-    const updatedCategories = [...formData.categories];
-    updatedCategories[catIndex][field] = value;
-    setFormData((prev) => ({ ...prev, categories: updatedCategories }));
-  };
-
-  const toggleCategoryExpand = (catIndex) => {
-    const updatedCategories = [...formData.categories];
-    updatedCategories[catIndex].expanded = !updatedCategories[catIndex].expanded;
-    setFormData((prev) => ({ ...prev, categories: updatedCategories }));
-  };
-
-  const handleProductChange = (catIndex, prodIndex, field, value) => {
-    const updatedCategories = [...formData.categories];
-    updatedCategories[catIndex].products[prodIndex][field] = value;
-    setFormData((prev) => ({ ...prev, categories: updatedCategories }));
-  };
-
-  const handleVariantChange = (catIndex, prodIndex, variantIndex, value) => {
-    const updatedCategories = [...formData.categories];
-    updatedCategories[catIndex].products[prodIndex].variants[variantIndex].price = value;
-    setFormData((prev) => ({ ...prev, categories: updatedCategories }));
-  };
-
-  const handleProductTimingChange = (catIndex, prodIndex, timingIndex, field, value) => {
-    const updatedCategories = [...formData.categories];
-    updatedCategories[catIndex].products[prodIndex].productTimings[timingIndex][field] = value;
-    setFormData((prev) => ({ ...prev, categories: updatedCategories }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorList([]); // Reset errors on new submission
 
     try {
-      const merchantId = localStorage.getItem("merchantId");
+      setUploadingImage(true);
+      setErrorList([]);
+      const response = await uploadOutletImage(outletId, imageFile);
+      const imageUrl = extractImageResponse(response);
+      if (!imageUrl) {
+        throw new Error("Image uploaded, but no image URL was returned.");
+      }
+      updateField("outletPicUrl", imageUrl);
+    } catch (error) {
+      console.error("Error uploading outlet image:", error);
+      setErrorList([
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to upload outlet image.",
+      ]);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
+  const toggleCuisine = (id) =>
+    updateField(
+      "cuisineType",
+      formData.cuisineType.includes(id)
+        ? formData.cuisineType.filter((item) => item !== id)
+        : [...formData.cuisineType, id]
+    );
+
+  const handleStateChange = async (event) => {
+    const stateId = event.target.value;
+    updateField("stateId", stateId);
+    updateField("cityId", "");
+    updateField("areaId", "");
+    setCities(stateId ? (await getCities(stateId)) || [] : []);
+    setAreas([]);
+  };
+
+  const handleCityChange = async (event) => {
+    const cityId = event.target.value;
+    updateField("cityId", cityId);
+    updateField("areaId", "");
+    setAreas(cityId ? (await getAreas(cityId)) || [] : []);
+  };
+
+  const updateTiming = (index, field, value) => {
+    setFormData((previous) => ({
+      ...previous,
+      operatingDays: previous.operatingDays.map((timing, timingIndex) =>
+        timingIndex === index ? { ...timing, [field]: value } : timing
+      ),
+    }));
+  };
+
+  const addTimingForDay = (index) => {
+    setFormData((previous) => {
+      const source = previous.operatingDays[index];
+      const timing = {
+        ...emptyTiming(source.dayOfWeekId),
+        openingTime: "",
+        closingTime: "",
+      };
+      const operatingDays = [...previous.operatingDays];
+      operatingDays.splice(index + 1, 0, timing);
+      return { ...previous, operatingDays };
+    });
+  };
+
+  const removeTiming = (index) => {
+    setFormData((previous) => ({
+      ...previous,
+      operatingDays: previous.operatingDays.filter(
+        (_, timingIndex) => timingIndex !== index
+      ),
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      setSaving(true);
+      setErrorList([]);
+      const merchantId = Number(
+        formData.merchantId || localStorage.getItem("merchantId")
+      );
       const payload = {
-        merchantId: merchantId ? Number(merchantId) : null, // Ensured merchantId is passed to prevent validation failure
-        outletId: Number(id),
         outletName: formData.outletName,
+        merchantId,
+        cuisineType: formData.cuisineType,
+        isActive: formData.isActive,
         outletEmail: formData.outletEmail,
         outletPhone: formData.outletPhone,
         alternateOutletPhone: formData.alternateOutletPhone,
-        cuisineType: formData.cuisineType,
-
-        latitude: Number(formData.latitude),
-        longitude: Number(formData.longitude),
-
+        outletType:
+          formData.outletType === "Other"
+            ? formData.customOutletType.trim()
+            : formData.outletType,
+        outletPicUrl: formData.outletPicUrl,
+        isVegOutlet: formData.isVegOutlet,
+        isGstApplied: formData.isGstApplied,
+        description: formData.description,
+        username: formData.username,
+        password: formData.password,
         accountNumber: formData.accountNumber,
         ifscCode: formData.ifscCode,
         bankName: formData.bankName,
         accountHolderName: formData.accountHolderName,
-
-        buildingNumber: formData.buildingNo,
-        road: formData.streetName,
+        aadharNumber: formData.aadharNumber,
+        panNumber: formData.panNumber,
+        fssaiNumber: formData.fssaiNumber,
+        gstNumber: formData.gstNumber,
+        buildingNumber: formData.buildingNumber,
+        road: formData.road,
         landmark: formData.landmark,
-
         stateId: Number(formData.stateId),
-        stateName:
-          states.find((s) => s.stateId === Number(formData.stateId))
-            ?.stateName || "",
-
         cityId: Number(formData.cityId),
-        cityName:
-          cities.find((c) => c.cityId === Number(formData.cityId))
-            ?.cityName || "",
-
         areaId: Number(formData.areaId),
-        areaName:
-          areas.find((a) => a.areaId === Number(formData.areaId))
-            ?.areaName || "",
-
-        isFavourite: formData.favourite,
-        isAvailable: formData.available,
-
-        outletTimings: formData.timings.map((item) => ({
-          day: item.day,
-          isOpen: item.isOpen,
-
-          openingTime: {
-            hour: Number(item.startTime.split(":")[0]),
-            minute: Number(item.startTime.split(":")[1]),
-            second: 0,
-            nano: 0,
-          },
-
-          closingTime: {
-            hour: Number(item.endTime.split(":")[0]),
-            minute: Number(item.endTime.split(":")[1]),
-            second: 0,
-            nano: 0,
-          },
+        latitude: String(formData.latitude),
+        longitude: String(formData.longitude),
+        operatingDays: formData.operatingDays.map((timing) => ({
+          ...timing,
+          dayOfWeekId: Number(timing.dayOfWeekId),
         })),
-
-        categories: formData.categories.map((cat) => ({
-          categoryId: cat.categoryId,
-          categoryName: cat.categoryName,
-          isAvailable: cat.isCategoryAvailable,
-
-          products: cat.products.map((prod) => ({
-            productId: prod.productId,
-            productName: prod.productName,
-            description: prod.description,
-
-            merchantPrice: Number(prod.price),
-            price: Number(prod.price),
-
-            isVeg: prod.isVeg,
-            isAvailable: prod.isAvailable,
-            hasProductVariants: !!prod.variants?.length,
-            isProductFavourite: false,
-
-            variants:
-              prod.variants?.map((v) => ({
-                variantId: v.variantId,
-                variantName: v.variantName || v.name,
-                merchantPrice: Number(v.price),
-                price: Number(v.price),
-              })) || [],
-
-            productTimings:
-              prod.productTimings?.map((t) => ({
-                day: t.day,
-
-                startTime: {
-                  hour: Number(t.startTime.split(":")[0]),
-                  minute: Number(t.startTime.split(":")[1]),
-                  second: 0,
-                  nano: 0,
-                },
-
-                endTime: {
-                  hour: Number(t.endTime.split(":")[0]),
-                  minute: Number(t.endTime.split(":")[1]),
-                  second: 0,
-                  nano: 0,
-                },
-              })) || [],
-          })),
-        })),
+        updatedBy: 101,
       };
-
-      console.log("Update Payload", payload);
-
-      await updateOutlet(id, payload);
-
-      alert("Outlet Updated Successfully");
-      navigate(`/outlets/view/${id}`);
+      await updateOutlet(outletId, payload);
+      alert("Outlet updated successfully.");
+      navigate("/outlets");
     } catch (error) {
-      console.error("API Error:", error);
-
-      const errorData = error.response?.data;
-
-      // Extract backend validation error array or fallback to message
-      if (errorData?.errors && Array.isArray(errorData.errors)) {
-        setErrorList(errorData.errors);
-      } else {
-        const backendMsg =
-          errorData?.message ||
-          errorData?.error ||
-          error.message ||
-          "Failed to update outlet";
-        setErrorList([backendMsg]);
-      }
+      console.error("Error updating outlet:", error);
+      const response = error.response?.data;
+      setErrorList(
+        Array.isArray(response?.errors)
+          ? response.errors
+          : [response?.message || error.message || "Failed to update outlet."]
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (loading) return <div className="loading-spinner">Loading Outlet Details...</div>;
+  const hasValue = (value) =>
+    value !== null && value !== undefined && String(value).trim() !== "";
+
+  const readOnlyProps = { readOnly: true, disabled: true };
+
+  const getFieldProps = (name) => {
+    if (hasValue(formData[name])) {
+      return { readOnly: true, disabled: true };
+    }
+    return {
+      value: formData[name],
+      onChange: (event) => updateField(name, event.target.value),
+    };
+  };
+
+  const getBooleanFieldProps = (name) =>
+    formData[name]
+      ? { disabled: true, className: "create-outlet-locked-checkbox" }
+      : {
+          onChange: (event) => updateField(name, event.target.checked),
+        };
+
+  if (loading) {
+    return <div className="loading-spinner">Loading Outlet Details...</div>;
+  }
 
   return (
-    <div className="edit-outlet-container">
-      <div className="header-bar">
-        <button className="back-btn" type="button" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
-        <h2>Edit Outlet</h2>
+    <div className="create-outlet-container">
+      <div className="page-header">
+        <h2>Update Outlet</h2>
+        <div className="create-outlet-header-actions">
+          <button className="back-btn" type="button" onClick={() => navigate("/outlets")}>
+            Back
+          </button>
+        </div>
       </div>
 
-      {/* Dynamic Validation Error Banner */}
       {errorList.length > 0 && (
-        <div className="error-banner" style={{ background: "#ffebee", color: "#c62828", padding: "12px 16px", borderRadius: "4px", margin: "16px 0", border: "1px solid #ef9a9a" }}>
-          <strong>⚠️ Please fix the following validation errors:</strong>
-          <ul style={{ margin: "8px 0 0 20px", padding: 0 }}>
-            {errorList.map((err, index) => (
-              <li key={index}>{err}</li>
-            ))}
+        <div className="error-banner">
+          <strong>Unable to update outlet</strong>
+          <ul>
+            {errorList.map((error, index) => <li key={index}>{error}</li>)}
           </ul>
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h3>Outlet Information</h3>
-          <hr />
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Outlet Name</label>
+      <form onSubmit={handleSubmit} className="outlet-form">
+        <div className="form-card">
+          <div className="outlet-image-editor">
+            <label className="outlet-image-picker">
+              <div className="outlet-image-preview">
+                {formData.outletPicUrl ? (
+                  <img src={formData.outletPicUrl} alt="Outlet" />
+                ) : (
+                  <span>No outlet image</span>
+                )}
+              </div>
               <input
-                type="text"
-                name="outletName"
-                value={formData.outletName || ""}
-                onChange={handleChange}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={uploadingImage}
+                aria-label="Change outlet image"
+              />
+            </label>
+          </div>
+          <div className="form-grid">
+            <input {...getFieldProps("outletName")} value={formData.outletName} placeholder="Outlet Name" />
+            <select
+              name="outletType"
+              value={formData.outletType}
+              onChange={(event) => {
+                updateField("outletType", event.target.value);
+                if (event.target.value !== "Other") {
+                  updateField("customOutletType", "");
+                }
+              }}
+            >
+              <option value="">Select Outlet Type</option>
+              {STANDARD_OUTLET_TYPES.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+              <option value="Other">Other</option>
+            </select>
+            {formData.outletType === "Other" && (
+              <input
+                name="customOutletType"
+                value={formData.customOutletType}
+                onChange={(event) => updateField("customOutletType", event.target.value)}
+                placeholder="Enter Outlet Type"
                 required
               />
-            </div>
-
-            <div className="form-group">
-              <label>Outlet ID</label>
-              <input type="text" value={formData.outletId || ""} disabled className="read-only" />
-            </div>
-
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="outletEmail"
-                value={formData.outletEmail || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Phone</label>
-              <input
-                type="tel"
-                name="outletPhone"
-                value={formData.outletPhone || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Alternate Phone</label>
-              <input
-                type="tel"
-                name="alternateOutletPhone"
-                value={formData.alternateOutletPhone || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Cuisine</label>
-              <select name="cuisineType" value={formData.cuisineType || ""} onChange={handleChange}>
-                <option value="">Select Cuisine</option>
-                <option value="Italian">Italian</option>
-                <option value="Indian">Indian</option>
-                <option value="Chinese">Chinese</option>
-                <option value="Fast Food">Fast Food</option>
-              </select>
-            </div>
-
-            <div className="form-group checkbox-group">
-              <label>
-                <input
-                  type="checkbox"
-                  name="favourite"
-                  checked={!!formData.favourite}
-                  onChange={handleChange}
-                />
-                Favourite
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="available"
-                  checked={!!formData.available}
-                  onChange={handleChange}
-                />
-                Available
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Address Details</h3>
-          <hr />
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Building Number</label>
-              <input
-                type="text"
-                name="buildingNo"
-                value={formData.buildingNo || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Road / Street Name</label>
-              <input
-                type="text"
-                name="streetName"
-                value={formData.streetName || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Landmark</label>
-              <input
-                type="text"
-                name="landmark"
-                value={formData.landmark || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>State</label>
-              <select value={formData.stateId || ""} onChange={handleStateChange}>
-                <option value="">Select State</option>
-                {states.map((st) => (
-                  <option key={st.stateId} value={st.stateId}>
-                    {st.stateName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>City</label>
-              <select value={formData.cityId || ""} onChange={handleCityChange}>
-                <option value="">Select City</option>
-                {cities.map((ct) => (
-                  <option key={ct.cityId} value={ct.cityId}>
-                    {ct.cityName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Area</label>
-              <select name="areaId" value={formData.areaId || ""} onChange={handleChange}>
-                <option value="">Select Area</option>
-                {areas.map((ar) => (
-                  <option key={ar.areaId} value={ar.areaId}>
-                    {ar.areaName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Latitude</label>
-              <input
-                type="text"
-                name="latitude"
-                value={formData.latitude || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Longitude</label>
-              <input
-                type="text"
-                name="longitude"
-                value={formData.longitude || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Bank Details</h3>
-          <hr />
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Account Holder</label>
-              <input
-                type="text"
-                name="accountHolderName"
-                value={formData.accountHolderName || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Bank Name</label>
-              <input
-                type="text"
-                name="bankName"
-                value={formData.bankName || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Account Number</label>
-              <input
-                type="text"
-                name="accountNumber"
-                value={formData.accountNumber || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>IFSC Code</label>
-              <input
-                type="text"
-                name="ifscCode"
-                value={formData.ifscCode || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Outlet Timings</h3>
-          <hr />
-          <table className="timings-table">
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Open</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.timings.map((item, index) => (
-                <tr key={item.day}>
-                  <td>{item.day}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={item.isOpen}
-                      onChange={(e) => handleTimingChange(index, "isOpen", e.target.checked)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="time"
-                      value={item.startTime}
-                      disabled={!item.isOpen}
-                      onChange={(e) => handleTimingChange(index, "startTime", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="time"
-                      value={item.endTime}
-                      disabled={!item.isOpen}
-                      onChange={(e) => handleTimingChange(index, "endTime", e.target.value)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="form-section">
-          <h3>Categories</h3>
-          <hr />
-          {formData.categories.map((category, catIdx) => (
-            <div key={category.categoryId || catIdx} className="category-block">
-              <div className="category-header">
+            )}
+            <div className="create-outlet-field-label create-outlet-cuisine-field">
+              <span className="edit-outlet-cuisine-label">Cuisine Type</span>
+              <div className="create-outlet-cuisine-select">
                 <button
                   type="button"
-                  className="accordion-toggle"
-                  onClick={() => toggleCategoryExpand(catIdx)}
+                  className="create-outlet-cuisine-trigger"
+                  onClick={() => setCuisineMenuOpen((open) => !open)}
                 >
-                  {category.expanded ? "▼" : "►"} {category.categoryName}
+                  <span className="edit-outlet-cuisine-indicator">
+                    <span className="edit-outlet-cuisine-dot" aria-hidden="true" />
+                    <span>{cuisineNames || "No cuisine selected"}</span>
+                  </span>
+                  <span aria-hidden="true">▾</span>
                 </button>
-
-                <label className="category-availability">
-                  <input
-                    type="checkbox"
-                    checked={category.isCategoryAvailable}
-                    onChange={(e) =>
-                      handleCategoryChange(catIdx, "isCategoryAvailable", e.target.checked)
-                    }
-                  />
-                  Category Available
-                </label>
+                {cuisineMenuOpen && (
+                  <div className="create-outlet-cuisine-menu">
+                    {cuisineTypes.map((cuisine) => {
+                      const id = Number(
+                        cuisine.cuisineTypesId ??
+                          cuisine.cuisineTypeId ??
+                          cuisine.id
+                      );
+                      const selected = formData.cuisineType.includes(id);
+                      return (
+                        <button
+                          type="button"
+                          key={id}
+                          className={`create-outlet-cuisine-option ${selected ? "selected" : ""}`}
+                          onClick={() => toggleCuisine(id)}
+                        >
+                          <span>{cuisine.cuisineTypesName || cuisine.cuisineTypeName || cuisine.name}</span>
+                          {selected && <strong>✓</strong>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-
-              {category.expanded && (
-                <div className="products-container">
-                  {category.products?.map((product, prodIdx) => (
-                    <div key={product.productId || prodIdx} className="product-card">
-                      <div className="form-grid">
-                        <div className="form-group">
-                          <label>Product Name</label>
-                          <input
-                            type="text"
-                            value={product.productName || ""}
-                            onChange={(e) =>
-                              handleProductChange(catIdx, prodIdx, "productName", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="form-group">
-                          <label>Price</label>
-                          <input
-                            type="number"
-                            value={product.price || ""}
-                            onChange={(e) =>
-                              handleProductChange(catIdx, prodIdx, "price", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="form-group full-width">
-                          <label>Description</label>
-                          <textarea
-                            rows={2}
-                            value={product.description || ""}
-                            onChange={(e) =>
-                              handleProductChange(catIdx, prodIdx, "description", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div className="form-group checkbox-group">
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={!!product.isVeg}
-                              onChange={(e) =>
-                                handleProductChange(catIdx, prodIdx, "isVeg", e.target.checked)
-                              }
-                            />
-                            Veg
-                          </label>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={!!product.isAvailable}
-                              onChange={(e) =>
-                                handleProductChange(catIdx, prodIdx, "isAvailable", e.target.checked)
-                              }
-                            />
-                            Available
-                          </label>
-                        </div>
-                      </div>
-
-                      <div className="subsection">
-                        <h4>Variants</h4>
-                        <div className="variants-grid">
-                          {product.variants?.map((variant, vIdx) => (
-                            <div key={variant.name} className="form-group inline">
-                              <label>{variant.name}</label>
-                              <input
-                                type="number"
-                                value={variant.price || ""}
-                                onChange={(e) =>
-                                  handleVariantChange(catIdx, prodIdx, vIdx, e.target.value)
-                                }
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="subsection">
-                        <h4>Product Timings</h4>
-                        <table className="timings-table sub-table">
-                          <thead>
-                            <tr>
-                              <th>Day</th>
-                              <th>Timing Window</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {product.productTimings?.map((timing, tIdx) => (
-                              <tr key={timing.day}>
-                                <td>{timing.day}</td>
-                                <td>
-                                  <input
-                                    type="time"
-                                    value={timing.startTime || "09:00"}
-                                    onChange={(e) =>
-                                      handleProductTimingChange(
-                                        catIdx,
-                                        prodIdx,
-                                        tIdx,
-                                        "startTime",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  {" - "}
-                                  <input
-                                    type="time"
-                                    value={timing.endTime || "18:00"}
-                                    onChange={(e) =>
-                                      handleProductTimingChange(
-                                        catIdx,
-                                        prodIdx,
-                                        tIdx,
-                                        "endTime",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          ))}
+            <input {...getFieldProps("outletPhone")} value={formData.outletPhone} placeholder="Phone" />
+            <input {...getFieldProps("outletEmail")} value={formData.outletEmail} placeholder="Email" />
+            <input
+              name="alternateOutletPhone"
+              value={formData.alternateOutletPhone}
+              onChange={(event) => updateField("alternateOutletPhone", event.target.value)}
+              placeholder="Alternate Phone"
+            />
+            <div className="create-outlet-checkbox-group edit-outlet-checkbox-group">
+              <label className={`create-outlet-checkbox ${formData.isGstApplied ? "create-outlet-checkbox-selected" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={formData.isGstApplied}
+                  {...getBooleanFieldProps("isGstApplied")}
+                />
+                GST Applied
+              </label>
+              <label className="create-outlet-checkbox">
+                <input
+                  type="checkbox"
+                  checked={formData.isActive === "Y"}
+                  onChange={(event) =>
+                    updateField("isActive", event.target.checked ? "Y" : "N")
+                  }
+                />
+                Active
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-card">
+          <h3>Address & Details</h3>
+          <div className="form-grid">
+            <input {...getFieldProps("buildingNumber")} value={formData.buildingNumber} placeholder="Building Number" />
+            <input {...getFieldProps("road")} value={formData.road} placeholder="Road" />
+            <input {...getFieldProps("landmark")} value={formData.landmark} placeholder="Landmark" />
+            <select
+              {...(hasValue(formData.stateId)
+                ? { disabled: true }
+                : { onChange: handleStateChange })}
+              value={formData.stateId}
+            >
+              <option value="">State</option>
+              {states.map((state) => <option key={state.stateId} value={state.stateId}>{state.stateName}</option>)}
+            </select>
+            <select
+              {...(hasValue(formData.cityId)
+                ? { disabled: true }
+                : { onChange: handleCityChange })}
+              value={formData.cityId}
+            >
+              <option value="">City</option>
+              {cities.map((city) => <option key={city.cityId} value={city.cityId}>{city.cityName}</option>)}
+            </select>
+            <select
+              {...(hasValue(formData.areaId)
+                ? { disabled: true }
+                : { onChange: (event) => updateField("areaId", event.target.value) })}
+              value={formData.areaId}
+            >
+              <option value="">Area</option>
+              {areas.map((area) => <option key={area.areaId} value={area.areaId}>{area.areaName}</option>)}
+            </select>
+            <input {...getFieldProps("latitude")} value={formData.latitude} placeholder="Latitude" />
+            <input {...getFieldProps("longitude")} value={formData.longitude} placeholder="Longitude" />
+          </div>
+          <label className="create-outlet-field-label" style={{ marginTop: "16px" }}>
+            Outlet Description / Notes
+            <textarea
+              value={formData.description}
+              onChange={(event) => updateField("description", event.target.value)}
+              placeholder="Outlet Description / Notes"
+              rows={3}
+            />
+          </label>
+        </div>
+
+        <div className="form-card">
+          <div className="bank-header">
+            <h3>Bank & Verification Details</h3>
+            <label className="same-bank">
+              <input
+                type="checkbox"
+                checked={sameAsMerchant}
+                onChange={handleSameBank}
+              />
+              Same as Merchant Bank Details
+            </label>
+          </div>
+          <div className="form-grid">
+            {[
+              ["accountHolderName", "Account Holder Name"],
+              ["accountNumber", "Account Number"],
+              ["ifscCode", "IFSC Code"],
+              ["bankName", "Bank Name"],
+              // ["panNumber", "PAN Number"],
+              // ["fssaiNumber", "FSSAI Number"],
+              // ["gstNumber", "GST Number"],
+            ].map(([name, placeholder]) => (
+              <input
+                key={name}
+                {...getFieldProps(name)}
+                value={formData[name]}
+                placeholder={placeholder}
+                onChange={(event) => updateField(name, event.target.value)}
+                disabled={sameAsMerchant}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="form-card">
+          <div className="bank-header operating-hours-header">
+            <h3>Operating Hours</h3>
+            <span className="operating-hours-hint">Add multiple time slots for the same day</span>
+          </div>
+          <div className="timings-table-wrapper">
+            <table className="timings-table operating-hours-table">
+              <thead><tr><th>Day</th><th>Open</th><th>Opening Time</th><th>Closing Time</th><th>Actions</th></tr></thead>
+              <tbody>
+                {formData.operatingDays.map((timing, index) => (
+                  <tr key={`${timing.dayOfWeekId}-${index}`}>
+                    <td>{DAYS_OF_WEEK.find((day) => day.id === Number(timing.dayOfWeekId))?.name || "Day"}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={timing.isOpen}
+                        onChange={(event) => updateTiming(index, "isOpen", event.target.checked)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="time"
+                        value={timing.openingTime}
+                        disabled={!timing.isOpen}
+                        onChange={(event) => updateTiming(index, "openingTime", event.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="time"
+                        value={timing.closingTime}
+                        disabled={!timing.isOpen}
+                        onChange={(event) => updateTiming(index, "closingTime", event.target.value)}
+                      />
+                    </td>
+                    <td className="timing-actions">
+                      <button
+                        type="button"
+                        className="timing-add-hours-btn"
+                        onClick={() => addTimingForDay(index)}
+                      >
+                        + Add Hours
+                      </button>
+                      <button
+                        type="button"
+                        className="timing-remove-btn"
+                        onClick={() => removeTiming(index)}
+                        aria-label="Remove timing"
+                        title="Remove timing"
+                      >
+                        x
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="form-actions">
-          <button type="button" className="cancel-btn" onClick={() => navigate(-1)}>
-            Cancel
-          </button>
-          <button type="submit" className="submit-btn">
-            Update Outlet
+          <button type="button" className="cancel-btn" onClick={() => navigate("/outlets")}>Cancel</button>
+          <button type="submit" className="save-btn" disabled={saving}>
+            {saving ? "Updating..." : "Update Outlet"}
           </button>
         </div>
       </form>

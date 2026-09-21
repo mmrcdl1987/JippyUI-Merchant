@@ -5,7 +5,16 @@ import "../../styles/OutletProfileDetails.css";
 
 import {
   getAdminOutletDetails,
+  getOutletStatusById,
+  uploadOutletImage,
+  createOutletUnavailability,
+  restoreOutletAvailability,
+  getOutletCategoryAvailability,
 } from "../../services/outletService";
+import {
+  createCategory,
+  getAllCategories,
+} from "../../services/masterProductsService";
 
 import OutletFoods from "./OutletFoods";
 
@@ -19,7 +28,59 @@ import {
   FiShoppingBag,
   FiStar,
   FiUser,
+  FiX,
+  FiLoader,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiFolderPlus,
+  FiChevronDown,
+  FiChevronUp,
 } from "react-icons/fi";
+
+const getOutletImageUrl = (outlet) =>
+  outlet?.outletPicUrl ||
+  outlet?.outletProfilePic ||
+  outlet?.outletProfilePicUrl ||
+  outlet?.profilePicUrl ||
+  outlet?.imageUrl ||
+  outlet?.outletImageUrl ||
+  outlet?.image ||
+  null;
+
+const getProductVegStatus = (outlet) => {
+  const products = (outlet?.categories || []).flatMap((category) =>
+    Array.isArray(category?.products) ? category.products : []
+  );
+  const vegValues = products
+    .filter((product) => product?.isVeg !== null && product?.isVeg !== undefined)
+    .map((product) =>
+      product.isVeg === true ||
+      product.isVeg === 1 ||
+      ["true", "1", "y", "yes"].includes(
+        String(product.isVeg).trim().toLowerCase()
+      )
+    );
+
+  return vegValues.length > 0 && vegValues.every(Boolean);
+};
+
+const isOutletActive = (outlet) =>
+  outlet?.isActive === "Y" || outlet?.is_active === "Y";
+
+const getEndOfDayDateTime = () => {
+  const date = new Date();
+  date.setHours(23, 59, 59, 0);
+  return toLocalDateTime(date);
+};
+
+const toLocalDateTime = (date) => {
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
+    date.getSeconds()
+  )}`;
+};
 
 
 
@@ -28,6 +89,164 @@ import {
    ============================================================ */
 
 function OutletCategories({ categories = [] }) {
+  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
+  const [savingCategoryId, setSavingCategoryId] = useState(null);
+  const [categoryToggleState, setCategoryToggleState] = useState({});
+
+  const getCategoryId = (category) =>
+    category?.categoryId ?? category?.category_id ?? category?.id;
+
+  const getOutletCategoryId = (category) => {
+    const visited = new Set();
+    const outletCategoryKeys = new Set([
+      "outletcategoryid",
+      "outletcategoriesid",
+      "outlet_category_id",
+      "outlet_categories_id",
+      "outletcategorymappingid",
+      "outlet_category_mapping_id",
+    ]);
+
+    const findId = (value) => {
+      if (!value || typeof value !== "object" || visited.has(value)) {
+        return null;
+      }
+      visited.add(value);
+
+      for (const [key, item] of Object.entries(value)) {
+        const normalizedKey = key.replace(/[-\s]/g, "").toLowerCase();
+        if (outletCategoryKeys.has(normalizedKey)) {
+          const numericId = Number(item);
+          if (Number.isInteger(numericId) && numericId > 0) {
+            return numericId;
+          }
+        }
+        if (
+          (normalizedKey === "outletcategory" ||
+            normalizedKey === "outletcategorymapping") &&
+          item &&
+          typeof item === "object"
+        ) {
+          const nestedObjectId = Number(item.id);
+          if (Number.isInteger(nestedObjectId) && nestedObjectId > 0) {
+            return nestedObjectId;
+          }
+        }
+      }
+
+      for (const item of Object.values(value)) {
+        const nestedId = findId(item);
+        if (nestedId) return nestedId;
+      }
+
+      return null;
+    };
+
+    return findId(category);
+  };
+
+  const isCategoryEnabled = (category) => {
+    const categoryId = getCategoryId(category);
+    if (Object.prototype.hasOwnProperty.call(categoryToggleState, categoryId)) {
+      return categoryToggleState[categoryId];
+    }
+
+    const value = category?.isToggle ?? category?.is_toggle;
+    if (value !== undefined && value !== null) {
+      return value === true || value === "true" || value === "Y" || value === 1;
+    }
+    return category?.isAvailable !== false;
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadAvailability = async () => {
+      const entries = await Promise.all(
+        categories.map(async (category) => {
+          const categoryId = getCategoryId(category);
+          const outletCategoryId = Number(getOutletCategoryId(category));
+          if (!categoryId || !outletCategoryId) return null;
+
+          try {
+            const response = await getOutletCategoryAvailability(
+              outletCategoryId
+            );
+            const data = response?.data ?? response;
+            return [categoryId, data?.available === true];
+          } catch (error) {
+            console.error(
+              `Failed to load availability for outlet category ${outletCategoryId}:`,
+              error
+            );
+            return null;
+          }
+        })
+      );
+
+      if (!mounted) return;
+
+      setCategoryToggleState(
+        Object.fromEntries(entries.filter(Boolean))
+      );
+    };
+
+    if (categories.length > 0) {
+      loadAvailability();
+    } else {
+      setCategoryToggleState({});
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [categories]);
+
+  const handleCategoryToggle = async (category) => {
+    const categoryId = getCategoryId(category);
+    const outletCategoryId = Number(getOutletCategoryId(category));
+    if (!categoryId || !outletCategoryId || savingCategoryId !== null) return;
+
+    const enabled = isCategoryEnabled(category);
+    setSavingCategoryId(categoryId);
+
+    try {
+      let availabilityResponse;
+      if (enabled) {
+        await createOutletUnavailability({
+          type: "OUTLET_CATEGORY",
+          unavailabilityId: outletCategoryId,
+          unavailabilityFromDate: toLocalDateTime(new Date()),
+          unavailabilityToDate: getEndOfDayDateTime(),
+          reason: "Disabled from UI",
+        });
+      } else {
+        await restoreOutletAvailability({
+          type: "OUTLET_CATEGORY",
+          unavailabilityId: outletCategoryId,
+        });
+      }
+
+      availabilityResponse = await getOutletCategoryAvailability(
+        outletCategoryId
+      );
+      const availabilityData =
+        availabilityResponse?.data ?? availabilityResponse;
+      setCategoryToggleState((previous) => ({
+        ...previous,
+        [categoryId]: availabilityData?.available === true,
+      }));
+    } catch (error) {
+      console.error("Failed to toggle outlet category:", error);
+      alert(
+        error?.response?.data?.message ||
+          "Failed to update category availability."
+      );
+    } finally {
+      setSavingCategoryId(null);
+    }
+  };
+
   if (!Array.isArray(categories) || categories.length === 0) {
     return (
       <div className="jippy-outlet-profile-empty-tab">
@@ -47,6 +266,7 @@ function OutletCategories({ categories = [] }) {
             <th>Category</th>
             <th className="category-products-column">Products</th>
             <th className="category-status-column">Availability</th>
+            <th className="category-toggle-column">Toggle</th>
           </tr>
         </thead>
 
@@ -69,27 +289,43 @@ function OutletCategories({ categories = [] }) {
               category?.totalProducts ??
               products.length;
 
-            const isAvailable =
-              category?.isAvailable !== false;
+            const isToggle = isCategoryEnabled(category);
+            const isAvailable = isToggle;
+            const outletCategoryId = Number(getOutletCategoryId(category));
+            const categoryId =
+              category?.categoryId ?? category?.id ?? index;
+            const isExpanded = String(expandedCategoryId) === String(categoryId);
 
             return (
-              <tr
-                key={
-                  category?.categoryId ??
-                  category?.id ??
-                  index
-                }
-              >
+              <React.Fragment key={categoryId}>
+                <tr>
                 <td className="category-number-column">
                   {index + 1}
                 </td>
 
                 <td className="category-name-column">
-                  <strong>{categoryName}</strong>
+                  <button
+                    type="button"
+                    className="jippy-category-expand-button"
+                    onClick={() =>
+                      setExpandedCategoryId(isExpanded ? null : categoryId)
+                    }
+                  >
+                    {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+                    <strong>{categoryName}</strong>
+                  </button>
                 </td>
 
                 <td className="category-products-column">
-                  {productCount}
+                  <button
+                    type="button"
+                    className="jippy-category-food-count"
+                    onClick={() =>
+                      setExpandedCategoryId(isExpanded ? null : categoryId)
+                    }
+                  >
+                    {productCount} foods
+                  </button>
                 </td>
 
                 <td className="category-status-column">
@@ -105,7 +341,84 @@ function OutletCategories({ categories = [] }) {
                       : "Unavailable"}
                   </span>
                 </td>
-              </tr>
+
+                <td className="category-toggle-column">
+                  <button
+                    type="button"
+                    className={`jippy-outlet-category-toggle ${
+                      isToggle
+                        ? "jippy-outlet-category-toggle-on"
+                        : "jippy-outlet-category-toggle-off"
+                    }`}
+                    onClick={() => handleCategoryToggle(category)}
+                    disabled={
+                      savingCategoryId === categoryId ||
+                      !outletCategoryId
+                    }
+                    aria-label={isToggle ? "Disable category" : "Enable category"}
+                    title={
+                      !outletCategoryId
+                        ? "Outlet category mapping ID is unavailable"
+                        : savingCategoryId === categoryId
+                        ? "Updating category availability"
+                        : isToggle
+                        ? "Category enabled"
+                        : "Category disabled"
+                    }
+                  >
+                    {savingCategoryId === categoryId ? (
+                      <FiLoader className="jippy-outlet-category-toggle-loader" />
+                    ) : (
+                      <span />
+                    )}
+                  </button>
+                </td>
+                </tr>
+                {isExpanded && (
+                  <tr className="jippy-category-foods-row">
+                    <td colSpan="5">
+                      {products.length > 0 ? (
+                        <div className="jippy-category-food-list">
+                          {products.map((product, productIndex) => {
+                            const isVeg =
+                              product?.isVeg === true ||
+                              product?.isVeg === 1 ||
+                              ["true", "1", "y", "yes"].includes(
+                                String(product?.isVeg).trim().toLowerCase()
+                              );
+                            return (
+                              <div
+                                className="jippy-category-food-item"
+                                key={product?.productId ?? productIndex}
+                              >
+                                <span
+                                  className={`jippy-food-veg-icon ${
+                                    isVeg
+                                      ? "jippy-food-veg"
+                                      : "jippy-food-nonveg"
+                                  }`}
+                                  title={isVeg ? "Vegetarian" : "Non-vegetarian"}
+                                  aria-label={isVeg ? "Vegetarian" : "Non-vegetarian"}
+                                >
+                                </span>
+                                <span>
+                                  {product?.productName ||
+                                    product?.name ||
+                                    `Food ${productIndex + 1}`}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span className="jippy-category-no-foods">
+                          No foods available in this category.
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             );
           })}
         </tbody>
@@ -195,9 +508,83 @@ function OutletProfileDetails({ setActivePage }) {
   const [loading, setLoading] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [coordinateLocation, setCoordinateLocation] =
     useState("");
+
+  // Create Category state
+  const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [masterCategories, setMasterCategories] = useState([]);
+  const [loadingMasterCategories, setLoadingMasterCategories] = useState(false);
+  const [selectedMasterCatId, setSelectedMasterCatId] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const [createCategoryError, setCreateCategoryError] = useState("");
+  const [createCategorySuccess, setCreateCategorySuccess] = useState("");
+
+  const fetchMasterCategories = async () => {
+    try {
+      setLoadingMasterCategories(true);
+      const res = await getAllCategories("ALL");
+      const list = res.data?.data || res.data || [];
+      setMasterCategories(Array.isArray(list) ? list : []);
+    } catch (err) {
+      console.error("Failed to fetch master categories:", err);
+    } finally {
+      setLoadingMasterCategories(false);
+    }
+  };
+
+  const openCreateCategoryModal = () => {
+    setCreateCategoryError("");
+    setCreateCategorySuccess("");
+    setNewCategoryName("");
+    setSelectedMasterCatId("");
+    setShowCreateCategoryModal(true);
+    fetchMasterCategories();
+  };
+
+  const handleCreateCategory = async (e) => {
+    if (e) e.preventDefault();
+    const trimmed = newCategoryName.trim();
+    if (!trimmed) {
+      setCreateCategoryError("Please enter or select a category name.");
+      return;
+    }
+
+    try {
+      setCreatingCategory(true);
+      setCreateCategoryError("");
+      const res = await createCategory(trimmed);
+      console.log("Create category response:", res);
+
+      setCreateCategorySuccess(`Category "${trimmed}" created successfully!`);
+
+      // Refresh outlet details and master categories
+      const id = getCurrentOutletId();
+      if (id) {
+        const refreshed = await getAdminOutletDetails(id);
+        const data = refreshed?.data?.data || refreshed?.data || refreshed;
+        setOutlet(data);
+      }
+      await fetchMasterCategories();
+
+      setTimeout(() => {
+        setCreateCategorySuccess("");
+        setShowCreateCategoryModal(false);
+        setNewCategoryName("");
+        setSelectedMasterCatId("");
+      }, 1000);
+    } catch (err) {
+      console.error("Error creating category:", err);
+      setCreateCategoryError(
+        err?.response?.data?.message || err?.message || "Failed to create category. Please try again."
+      );
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
 
 
   /* ============================================================
@@ -489,7 +876,9 @@ function OutletProfileDetails({ setActivePage }) {
 
             categories:
               details?.categories ??
+              details?.outletCategories ??
               storedOutlet?.categories ??
+              storedOutlet?.outletCategories ??
               [],
           };
         }
@@ -518,7 +907,31 @@ function OutletProfileDetails({ setActivePage }) {
           details
         );
 
-        setOutlet(details);
+        try {
+          const statusResponse = await getOutletStatusById(outletId);
+          const statusData =
+            statusResponse?.data?.data ??
+            statusResponse?.data ??
+            statusResponse;
+          details = {
+            ...details,
+            isActive:
+              statusData?.isActive ?? statusData?.is_active ?? details.isActive,
+            isToggle:
+              statusData?.isToggle ?? statusData?.is_toggle ?? details.isToggle,
+            isApproved:
+              statusData?.isApproved ??
+              statusData?.is_approved ??
+              details.isApproved,
+          };
+        } catch (statusError) {
+          console.error("Failed to fetch outlet active status:", statusError);
+        }
+
+        setOutlet({
+          ...details,
+          isVegOutlet: getProductVegStatus(details),
+        });
 
 
       } catch (error) {
@@ -559,6 +972,65 @@ function OutletProfileDetails({ setActivePage }) {
     }
 
     window.history.back();
+  };
+
+  const handleOutletImageChange = async (event) => {
+    const imageFile = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!imageFile) {
+      return;
+    }
+
+    if (!imageFile.type.startsWith("image/")) {
+      setErrorMessage("Please select a valid image file.");
+      return;
+    }
+
+    const outletId = getCurrentOutletId();
+    if (!outletId) {
+      setErrorMessage("Outlet ID not found.");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      setErrorMessage("");
+
+      const response = await uploadOutletImage(outletId, imageFile);
+      const responseData =
+        response?.data?.data ||
+        response?.data ||
+        response;
+      const outletPicUrl =
+        responseData?.outletPicUrl ||
+        responseData?.outlet?.outletPicUrl;
+
+      if (!outletPicUrl) {
+        throw new Error("Image uploaded, but no image URL was returned.");
+      }
+
+      setOutlet((previousOutlet) => {
+        const updatedOutlet = {
+          ...previousOutlet,
+          outletPicUrl,
+        };
+        sessionStorage.setItem(
+          "selectedOutlet",
+          JSON.stringify(updatedOutlet)
+        );
+        return updatedOutlet;
+      });
+    } catch (error) {
+      console.error("Failed to upload outlet image:", error);
+      setErrorMessage(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to upload outlet image."
+      );
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
 
@@ -882,7 +1354,9 @@ function OutletProfileDetails({ setActivePage }) {
 
   if (loading) {
     return (
-      <div className="jippy-outlet-profile-page">
+      <div className={`jippy-outlet-profile-page ${
+        isOutletActive(outlet) ? "" : "jippy-outlet-profile-inactive"
+      }`}>
 
         <div className="jippy-outlet-profile-loading">
 
@@ -953,7 +1427,37 @@ function OutletProfileDetails({ setActivePage }) {
 
           <div className="jippy-outlet-profile-title-row">
 
-            <FiHome />
+            <label
+              className={`jippy-outlet-profile-title-image ${
+                uploadingImage ? "jippy-outlet-profile-title-image-disabled" : ""
+              }`}
+              title="Replace outlet image"
+            >
+              {getOutletImageUrl(outlet) && (
+                <img
+                  src={getOutletImageUrl(outlet)}
+                  alt=""
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                    event.currentTarget.nextElementSibling.style.display = "flex";
+                  }}
+                />
+              )}
+              <span
+                className="jippy-outlet-profile-title-image-placeholder"
+                style={{
+                  display: getOutletImageUrl(outlet) ? "none" : "flex",
+                }}
+              >
+                {(outlet?.outletName || "O").charAt(0).toUpperCase()}
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleOutletImageChange}
+                disabled={uploadingImage}
+              />
+            </label>
 
             <h1>
               {displayValue(
@@ -963,6 +1467,12 @@ function OutletProfileDetails({ setActivePage }) {
             </h1>
 
           </div>
+
+          {outlet.isApproved !== true && (
+            <div className="jippy-outlet-profile-approval-notice">
+              Outlet has not approved yet
+            </div>
+          )}
 
           <div className="jippy-outlet-profile-breadcrumb">
 
@@ -995,7 +1505,6 @@ function OutletProfileDetails({ setActivePage }) {
         </button>
 
       </div>
-
 
       {/* ======================================================
           TABS
@@ -1112,14 +1621,12 @@ function OutletProfileDetails({ setActivePage }) {
 
                 <strong
                   className={
-                    outlet?.isAvailable === false
-                      ? "jippy-status-danger"
-                      : "jippy-status-success"
+                    isOutletActive(outlet)
+                      ? "jippy-status-success"
+                      : "jippy-status-danger"
                   }
                 >
-                  {outlet?.isAvailable === false
-                    ? "Closed"
-                    : "Open"}
+                  {isOutletActive(outlet) ? "Active" : "Inactive"}
                 </strong>
 
                 <span>
@@ -1736,12 +2243,10 @@ function OutletProfileDetails({ setActivePage }) {
 
           <div className="jippy-outlet-profile-card-heading">
 
-            <FiShoppingBag />
-
-            <span>
-              Outlet Categories
-            </span>
-
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <FiShoppingBag />
+              <span>Outlet Categories</span>
+            </div>
           </div>
 
 
@@ -1896,9 +2401,140 @@ function OutletProfileDetails({ setActivePage }) {
       <div className="jippy-outlet-profile-bottom-actions">
       </div>
 
+      {/* ======================================================
+          CREATE CATEGORY MODAL
+          ====================================================== */}
+      {showCreateCategoryModal && (
+        <div
+          className="jippy-profile-modal-backdrop"
+          onClick={() => !creatingCategory && setShowCreateCategoryModal(false)}
+        >
+          <div
+            className="jippy-profile-create-cat-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="jippy-profile-cat-modal-header">
+              <div className="jippy-profile-cat-modal-title">
+                <FiFolderPlus className="jippy-profile-cat-modal-icon" />
+                <h3>Create New Category</h3>
+              </div>
+              <button
+                type="button"
+                className="jippy-profile-cat-modal-close"
+                onClick={() => setShowCreateCategoryModal(false)}
+                disabled={creatingCategory}
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCategory}>
+              <div className="jippy-profile-cat-modal-body">
+                {createCategoryError && (
+                  <div className="jippy-profile-cat-alert-error">
+                    <FiAlertCircle />
+                    <span>{createCategoryError}</span>
+                  </div>
+                )}
+                {createCategorySuccess && (
+                  <div className="jippy-profile-cat-alert-success">
+                    <FiCheckCircle />
+                    <span>{createCategorySuccess}</span>
+                  </div>
+                )}
+
+                {/* Dropdown to pick existing categories from getAllCategories */}
+                <div className="jippy-profile-cat-form-group">
+                  <label>Select from Existing Categories</label>
+                  <select
+                    className="jippy-profile-cat-input"
+                    value={selectedMasterCatId}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSelectedMasterCatId(val);
+                      if (val) {
+                        const matched = masterCategories.find(
+                          (c) => String(c.id || c.categoryId) === String(val)
+                        );
+                        if (matched) {
+                          setNewCategoryName(matched.categoryName || matched.name || "");
+                        }
+                      }
+                    }}
+                    disabled={creatingCategory || loadingMasterCategories}
+                  >
+                    <option value="">
+                      {loadingMasterCategories
+                        ? "Loading categories from getAllCategories..."
+                        : "-- Choose an existing Category or type below --"}
+                    </option>
+                    {masterCategories.map((cat) => (
+                      <option
+                        key={cat.id || cat.categoryId}
+                        value={cat.id || cat.categoryId}
+                      >
+                        {cat.categoryName || cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="jippy-profile-cat-form-group">
+                  <label>
+                    Category Name <span className="jippy-required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="jippy-profile-cat-input"
+                    placeholder="e.g. Beverages, Starters, Desserts"
+                    value={newCategoryName}
+                    onChange={(e) => {
+                      setNewCategoryName(e.target.value);
+                      setSelectedMasterCatId("");
+                    }}
+                    autoFocus
+                    disabled={creatingCategory}
+                  />
+                  <small className="jippy-profile-cat-hint">
+                    Select an existing category from above or enter a new category name.
+                  </small>
+                </div>
+              </div>
+
+              <div className="jippy-profile-cat-modal-footer">
+                <button
+                  type="button"
+                  className="jippy-profile-cat-btn-cancel"
+                  onClick={() => setShowCreateCategoryModal(false)}
+                  disabled={creatingCategory}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="jippy-profile-cat-btn-submit"
+                  disabled={creatingCategory || !newCategoryName.trim()}
+                >
+                  {creatingCategory ? (
+                    <>
+                      <FiLoader className="jippy-spin" />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiPlus />
+                      <span>Create Category</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
-
 
 export default OutletProfileDetails;

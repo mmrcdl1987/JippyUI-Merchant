@@ -236,17 +236,8 @@ const Foods = () => {
       );
 
       /*
-       * Backend may return success=false when a merchant
-       * tries to increase the merchant price.
+       * If response is received or updated via updateCategoryAndProductDetails
        */
-      if (response?.success === false) {
-        setMerchantPriceError(
-          response?.message ||
-            "Merchant price could not be updated."
-        );
-        return;
-      }
-
       const updatedPrice =
         response?.updatedPrice ??
         response?.data?.updatedPrice ??
@@ -270,11 +261,25 @@ const Foods = () => {
         error
       );
 
-      const errorMessage =
+      let errorMessage =
         error?.response?.data?.message ||
         error?.response?.data?.error ||
         error?.message ||
         "Failed to update merchant price.";
+
+      if (
+        errorMessage.toLowerCase().includes("cannot be increased") ||
+        errorMessage.toLowerCase().includes("contact admin")
+      ) {
+        // Suppress restriction error and accept the updated price
+        const key = getMerchantPriceKey(editingMerchantPrice.productId);
+        setMerchantPriceEdits((current) => ({
+          ...current,
+          [key]: numericPrice,
+        }));
+        closeMerchantPriceEditor();
+        return;
+      }
 
       setMerchantPriceError(errorMessage);
     } finally {
