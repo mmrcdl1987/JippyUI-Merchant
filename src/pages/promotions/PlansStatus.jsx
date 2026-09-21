@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../../services/api";
+import { getProductsByOutlet } from "../../services/promotionService";
 
 import "../../styles/PlansStatus.css";
 
@@ -74,6 +75,32 @@ const PlansStatus = ({
     useState(false);
 
   /* =========================================================
+     EDIT — APPLIES ON (products / categories)
+
+     The PUT /promotion-plans/{id} payload needs
+     productIds / outletCategoryIds, and the person editing
+     should see real names, not raw ids. This mirrors the
+     "Applies On" logic in PromotionForm.jsx, scoped to
+     whichever outlet the plan being edited actually
+     belongs to.
+  ========================================================= */
+
+  const [editApplyTo, setEditApplyTo] =
+    useState("ALL");
+
+  const [editProducts, setEditProducts] =
+    useState([]);
+
+  const [editLoadingProducts, setEditLoadingProducts] =
+    useState(false);
+
+  const [editSelectedCategories, setEditSelectedCategories] =
+    useState([]);
+
+  const [editSelectedProducts, setEditSelectedProducts] =
+    useState([]);
+
+  /* =========================================================
      DELETE
   ========================================================= */
 
@@ -94,6 +121,30 @@ const PlansStatus = ({
     outlet?.name ??
     outlet?.outlet_name ??
     `Outlet ${getOutletId(outlet)}`;
+
+  /* Same id/name/category helpers as PromotionForm.jsx,
+     used here to turn productIds/outletCategoryIds back
+     into readable names for the edit modal. */
+
+  const getItemId = (item) =>
+    item?.productId ??
+    item?.categoryId ??
+    item?.id ??
+    item?.foodId;
+
+  const getItemName = (item) =>
+    item?.productName ??
+    item?.categoryName ??
+    item?.foodName ??
+    item?.name ??
+    "Unnamed";
+
+  const getItemCategoryName = (product) =>
+    product?.categoryName ??
+    product?.category?.categoryName ??
+    product?.category?.name ??
+    product?.category_name ??
+    "Other";
 
   const formatDate = (date) => {
     if (!date) return "-";
@@ -380,7 +431,18 @@ const PlansStatus = ({
       const completePlans =
         await Promise.all(
           basicPlans.map((plan) =>
-            fetchCompletePlan(plan)
+            fetchCompletePlan({
+              ...plan,
+              /*
+               * Every plan in this list belongs to the
+               * outlet we just queried, but the plan
+               * object itself (and even /promotion-plans/{id})
+               * doesn't reliably echo outletId back. Stamp
+               * it on here so it's never lost — this is
+               * what the edit payload's outletId relies on.
+               */
+              outletId: plan.outletId ?? outletId,
+            })
           )
         );
 
@@ -578,7 +640,7 @@ const PlansStatus = ({
   };
 
   /* =========================================================
-     EDIT
+     EDIT — OPEN MODAL
   ========================================================= */
 
   const handleEdit = async (plan) => {
@@ -595,9 +657,51 @@ const PlansStatus = ({
         response.data ||
         {};
 
-      setEditingPlan({
+      /*
+       * `plan` here is the fully-merged row from the table
+       * (detail + schedule-details + outletId already
+       * stamped on in fetchStatus). `data` is a fresh but
+       * narrower re-fetch. Merge plan first so nothing it
+       * already knew gets lost, then layer the fresh detail
+       * on top so anything that changed server-side wins.
+       */
+
+      const merged = {
+        ...plan,
         ...data,
-      });
+        outletId:
+          data.outletId ??
+          plan.outletId ??
+          selectedOutlet,
+      };
+
+      setEditingPlan(merged);
+
+      const productIds =
+        Array.isArray(merged.productIds) &&
+        merged.productIds.length > 0
+          ? merged.productIds
+          : [];
+
+      const categoryIds =
+        Array.isArray(merged.outletCategoryIds) &&
+        merged.outletCategoryIds.length > 0
+          ? merged.outletCategoryIds
+          : [];
+
+      if (productIds.length > 0) {
+        setEditApplyTo("PRODUCT");
+        setEditSelectedProducts(productIds);
+        setEditSelectedCategories([]);
+      } else if (categoryIds.length > 0) {
+        setEditApplyTo("CATEGORY");
+        setEditSelectedCategories(categoryIds);
+        setEditSelectedProducts([]);
+      } else {
+        setEditApplyTo("ALL");
+        setEditSelectedProducts([]);
+        setEditSelectedCategories([]);
+      }
 
       setShowEditModal(true);
     } catch (err) {
@@ -616,6 +720,164 @@ const PlansStatus = ({
   };
 
   /* =========================================================
+     EDIT — LOAD PRODUCTS/CATEGORIES FOR THE APPLIES-ON
+     SECTION (scoped to the plan's own outlet)
+  ========================================================= */
+
+  useEffect(() => {
+    const outletIdForEdit =
+      editingPlan?.outletId ?? selectedOutlet;
+
+    if (!showEditModal || !outletIdForEdit) {
+      return;
+    }
+
+    const loadEditProducts = async () => {
+      try {
+        setEditLoadingProducts(true);
+
+        const response = await getProductsByOutlet(
+          outletIdForEdit
+        );
+
+        let productData = [];
+
+        if (Array.isArray(response)) {
+          productData = response;
+        } else if (Array.isArray(response?.data)) {
+          productData = response.data;
+        } else if (Array.isArray(response?.content)) {
+          productData = response.content;
+        } else if (Array.isArray(response?.products)) {
+          productData = response.products;
+        } else if (
+          Array.isArray(response?.data?.content)
+        ) {
+          productData = response.data.content;
+        }
+
+        setEditProducts(productData);
+      } catch (err) {
+        console.error(
+          "Failed to load products for edit:",
+          err
+        );
+
+        setEditProducts([]);
+      } finally {
+        setEditLoadingProducts(false);
+      }
+    };
+
+    loadEditProducts();
+  }, [showEditModal, editingPlan?.outletId]);
+
+  /* =========================================================
+     EDIT — CATEGORIES DERIVED FROM PRODUCTS
+  ========================================================= */
+
+  const editCategories = useMemo(() => {
+    const map = new Map();
+
+    editProducts.forEach((product) => {
+      const categoryName =
+        getItemCategoryName(product);
+
+      const categoryObject =
+        product?.category &&
+        typeof product.category === "object"
+          ? product.category
+          : null;
+
+      const categoryId =
+        product?.outletCategoryId ??
+        categoryObject?.outletCategoryId ??
+        categoryObject?.categoryId ??
+        categoryObject?.id ??
+        categoryName;
+
+      if (!map.has(String(categoryId))) {
+        map.set(String(categoryId), {
+          id: categoryId,
+          name: categoryName,
+        });
+      }
+    });
+
+    return Array.from(map.values());
+  }, [editProducts]);
+
+  /* =========================================================
+     EDIT — NAMES FOR CHIPS ("All Products" / "All
+     Categories" when nothing specific is selected)
+  ========================================================= */
+
+  const editSelectedProductNames = useMemo(() => {
+    return editSelectedProducts
+      .map((id) => {
+        const product = editProducts.find(
+          (item) =>
+            String(getItemId(item)) === String(id)
+        );
+
+        return product
+          ? { id, name: getItemName(product) }
+          : null;
+      })
+      .filter(Boolean);
+  }, [editSelectedProducts, editProducts]);
+
+  const editSelectedCategoryNames = useMemo(() => {
+    return editSelectedCategories
+      .map((id) => {
+        const category = editCategories.find(
+          (item) => String(item.id) === String(id)
+        );
+
+        return category
+          ? { id, name: category.name }
+          : null;
+      })
+      .filter(Boolean);
+  }, [editSelectedCategories, editCategories]);
+
+  /* =========================================================
+     EDIT — TOGGLE CATEGORY / PRODUCT
+  ========================================================= */
+
+  const toggleEditCategory = (categoryId) => {
+    setEditSelectedCategories((previous) => {
+      const exists = previous.some(
+        (id) => String(id) === String(categoryId)
+      );
+
+      if (exists) {
+        return previous.filter(
+          (id) => String(id) !== String(categoryId)
+        );
+      }
+
+      return [...previous, categoryId];
+    });
+  };
+
+  const toggleEditProduct = (productId) => {
+    setEditSelectedProducts((previous) => {
+      const exists = previous.some(
+        (id) => String(id) === String(productId)
+      );
+
+      if (exists) {
+        return previous.filter(
+          (id) => String(id) !== String(productId)
+        );
+      }
+
+      return [...previous, productId];
+    });
+  };
+
+  /* =========================================================
      EDIT FIELD
   ========================================================= */
 
@@ -630,6 +892,20 @@ const PlansStatus = ({
   };
 
   /* =========================================================
+     EDIT — CLOSE / RESET
+  ========================================================= */
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingPlan(null);
+
+    setEditApplyTo("ALL");
+    setEditProducts([]);
+    setEditSelectedCategories([]);
+    setEditSelectedProducts([]);
+  };
+
+  /* =========================================================
      SAVE EDIT
   ========================================================= */
 
@@ -640,12 +916,28 @@ const PlansStatus = ({
       return;
     }
 
+    if (
+      editApplyTo === "CATEGORY" &&
+      editSelectedCategories.length === 0
+    ) {
+      alert("Please select at least one category.");
+      return;
+    }
+
+    if (
+      editApplyTo === "PRODUCT" &&
+      editSelectedProducts.length === 0
+    ) {
+      alert("Please select at least one product.");
+      return;
+    }
+
     try {
       setSavingEdit(true);
 
       const payload = {
         outletId: Number(
-          editingPlan.outletId
+          editingPlan.outletId ?? selectedOutlet
         ),
 
         promotionPlanTypeId: Number(
@@ -679,11 +971,14 @@ const PlansStatus = ({
           editingPlan.offerType,
 
         productIds:
-          editingPlan.productIds || [],
+          editApplyTo === "PRODUCT"
+            ? editSelectedProducts.map(Number)
+            : [],
 
         outletCategoryIds:
-          editingPlan.outletCategoryIds ||
-          [],
+          editApplyTo === "CATEGORY"
+            ? editSelectedCategories.map(Number)
+            : [],
 
         maxSelection: Number(
           editingPlan.maxSelection ?? -1
@@ -695,8 +990,7 @@ const PlansStatus = ({
         payload
       );
 
-      setShowEditModal(false);
-      setEditingPlan(null);
+      closeEditModal();
 
       await fetchStatus(
         selectedOutlet,
@@ -1192,7 +1486,10 @@ const PlansStatus = ({
                         }
                       </td>
 
-                      <td className="plan-type-cell">
+                      <td
+                        className="plan-type-cell"
+                        title={getPlanTypeName(plan)}
+                      >
                         {getPlanTypeName(
                           plan
                         )}
@@ -1284,7 +1581,7 @@ const PlansStatus = ({
                             Edit
                           </button>
 
-                          <button
+                          {/* <button
                             type="button"
                             className="plans-delete-btn"
                             onClick={() =>
@@ -1301,7 +1598,7 @@ const PlansStatus = ({
                             plan.promotionPlanId
                               ? "..."
                               : "Delete"}
-                          </button>
+                          </button> */}
 
                         </div>
 
@@ -1413,6 +1710,9 @@ const PlansStatus = ({
 
       {/* =====================================================
           EDIT MODAL
+          (Styling only, below, is restyled to the colorful
+          mockup — icon badges + tinted cards per field group.
+          No state, handlers, or payload logic changed.)
       ===================================================== */}
 
       {showEditModal &&
@@ -1424,9 +1724,7 @@ const PlansStatus = ({
                 e.target ===
                 e.currentTarget
               ) {
-                setShowEditModal(
-                  false
-                );
+                closeEditModal();
               }
             }}
           >
@@ -1435,27 +1733,32 @@ const PlansStatus = ({
 
               <div className="plans-modal-header">
 
-                <div>
-                  <h3>
-                    Edit Promotion Plan
-                  </h3>
+                <div className="plans-modal-header-inner">
 
-                  <p>
-                    Plan #
-                    {
-                      editingPlan.promotionPlanId
-                    }
-                  </p>
+                  <div className="plans-modal-header-icon">
+                    🏷️
+                  </div>
+
+                  <div>
+                    <h3>
+                      Edit Promotion Plan
+                    </h3>
+
+                    <p>
+                      Plan #
+                      {
+                        editingPlan.promotionPlanId
+                      }
+                      {" "}· Update promotion details
+                    </p>
+                  </div>
+
                 </div>
 
                 <button
                   type="button"
                   className="plans-modal-close"
-                  onClick={() =>
-                    setShowEditModal(
-                      false
-                    )
-                  }
+                  onClick={closeEditModal}
                 >
                   ×
                 </button>
@@ -1472,296 +1775,680 @@ const PlansStatus = ({
 
                   {/* PLAN TYPE */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-orange">
 
-                    <label>
-                      Plan Type
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      🏷️
+                    </div>
 
-                    <select
-                      value={
-                        editingPlan.promotionPlanTypeId ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "promotionPlanTypeId",
-                          e.target.value
-                        )
-                      }
-                      required
-                    >
+                    <div className="plans-edit-field">
 
-                      <option value="">
-                        Select Plan Type
-                      </option>
+                      <label>
+                        Plan Type
+                      </label>
 
-                      {planTypes.map(
-                        (type) => (
-                          <option
-                            key={
-                              type.promotionPlanTypesId
-                            }
-                            value={
-                              type.promotionPlanTypesId
-                            }
-                          >
-                            {
-                              type.planName
-                            }
-                          </option>
-                        )
-                      )}
+                      <select
+                        value={
+                          editingPlan.promotionPlanTypeId ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "promotionPlanTypeId",
+                            e.target.value
+                          )
+                        }
+                        required
+                      >
 
-                    </select>
+                        <option value="">
+                          Select Plan Type
+                        </option>
+
+                        {planTypes.map(
+                          (type) => (
+                            <option
+                              key={
+                                type.promotionPlanTypesId
+                              }
+                              value={
+                                type.promotionPlanTypesId
+                              }
+                            >
+                              {
+                                type.planName
+                              }
+                            </option>
+                          )
+                        )}
+
+                      </select>
+
+                    </div>
 
                   </div>
 
                   {/* OFFER NAME */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-pink">
 
-                    <label>
-                      Offer Name
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      🎁
+                    </div>
 
-                    <input
-                      type="text"
-                      value={
-                        editingPlan.offerName ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "offerName",
-                          e.target.value
-                        )
-                      }
-                      required
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        Offer Name
+                      </label>
+
+                      <input
+                        type="text"
+                        value={
+                          editingPlan.offerName ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "offerName",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* START DATE */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-green">
 
-                    <label>
-                      Start Date
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      📅
+                    </div>
 
-                    <input
-                      type="date"
-                      value={
-                        editingPlan.planStartDate ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "planStartDate",
-                          e.target.value
-                        )
-                      }
-                      required
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        Start Date
+                      </label>
+
+                      <input
+                        type="date"
+                        value={
+                          editingPlan.planStartDate ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "planStartDate",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* END DATE */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-green">
 
-                    <label>
-                      End Date
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      📅
+                    </div>
 
-                    <input
-                      type="date"
-                      value={
-                        editingPlan.planEndDate ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "planEndDate",
-                          e.target.value
-                        )
-                      }
-                      required
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        End Date
+                      </label>
+
+                      <input
+                        type="date"
+                        value={
+                          editingPlan.planEndDate ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "planEndDate",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* START TIME */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-blue">
 
-                    <label>
-                      Start Time
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      🕐
+                    </div>
 
-                    <input
-                      type="time"
-                      value={
-                        editingPlan.planStartTime
-                          ? String(
-                              editingPlan.planStartTime
-                            ).slice(
-                              0,
-                              5
-                            )
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "planStartTime",
-                          `${e.target.value}:00`
-                        )
-                      }
-                      required
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        Start Time
+                      </label>
+
+                      <input
+                        type="time"
+                        value={
+                          editingPlan.planStartTime
+                            ? String(
+                                editingPlan.planStartTime
+                              ).slice(
+                                0,
+                                5
+                              )
+                            : ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "planStartTime",
+                            `${e.target.value}:00`
+                          )
+                        }
+                        required
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* END TIME */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-blue">
 
-                    <label>
-                      End Time
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      🕐
+                    </div>
 
-                    <input
-                      type="time"
-                      value={
-                        editingPlan.planEndTime
-                          ? String(
-                              editingPlan.planEndTime
-                            ).slice(
-                              0,
-                              5
-                            )
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "planEndTime",
-                          `${e.target.value}:00`
-                        )
-                      }
-                      required
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        End Time
+                      </label>
+
+                      <input
+                        type="time"
+                        value={
+                          editingPlan.planEndTime
+                            ? String(
+                                editingPlan.planEndTime
+                              ).slice(
+                                0,
+                                5
+                              )
+                            : ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "planEndTime",
+                            `${e.target.value}:00`
+                          )
+                        }
+                        required
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* MIN ORDER */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-orange">
 
-                    <label>
-                      Minimum Order Value
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      🛒
+                    </div>
 
-                    <input
-                      type="number"
-                      min="0"
-                      value={
-                        editingPlan.minimumOrderValue ??
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "minimumOrderValue",
-                          e.target.value
-                        )
-                      }
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        Minimum Order Value
+                      </label>
+
+                      <input
+                        type="number"
+                        min="0"
+                        value={
+                          editingPlan.minimumOrderValue ??
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "minimumOrderValue",
+                            e.target.value
+                          )
+                        }
+                        onWheel={(e) => e.currentTarget.blur()}
+                      />
+
+                    </div>
 
                   </div>
 
                   {/* OFFER TYPE */}
 
-                  <div className="plans-edit-field">
+                  {/* <div className="plans-edit-field-colored plans-edit-color-orange">
 
-                    <label>
-                      Offer Type
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      %
+                    </div>
 
-                    <select
-                      value={
-                        editingPlan.offerType ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "offerType",
-                          e.target.value
-                        )
-                      }
-                    >
+                    <div className="plans-edit-field">
 
-                      <option value="">
-                        Select Offer Type
-                      </option>
+                      <label>
+                        Offer Type
+                      </label>
 
-                      <option value="FLAT">
-                        Flat
-                      </option>
+                      <select
+                        value={
+                          editingPlan.offerType ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "offerType",
+                            e.target.value
+                          )
+                        }
+                      >
 
-                      <option value="% OFF">
-                        % Off
-                      </option>
+                        <option value="">
+                          Select Offer Type
+                        </option>
 
-                    </select>
+                        <option value="FLAT">
+                          Flat
+                        </option>
 
-                  </div>
+                        <option value="% OFF">
+                          % Off
+                        </option>
+
+                      </select>
+
+                    </div>
+
+                  </div> */}
+
+
+                  {/* OFFER TYPE */}
+
+<div className="plans-edit-field-colored plans-edit-color-orange">
+
+  <div className="plans-edit-field-icon">
+    %
+  </div>
+
+  <div className="plans-edit-field">
+
+    <label>
+      Offer Type
+    </label>
+
+    <select
+      value={editingPlan.offerType || ""}
+      onChange={(e) =>
+        handleEditChange(
+          "offerType",
+          e.target.value
+        )
+      }
+    >
+
+      <option value="">
+        Select Offer Type
+      </option>
+
+      <option value="FLAT">
+        Offer Amount
+      </option>
+
+      <option value="% OFF">
+        % Off
+      </option>
+
+    </select>
+
+  </div>
+
+</div>
 
                   {/* OFFER AMOUNT */}
 
-                  <div className="plans-edit-field">
+                  {/* <div className="plans-edit-field-colored plans-edit-color-purple">
 
-                    <label>
-                      Offer Amount
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      ₹
+                    </div>
 
-                    <input
-                      type="number"
-                      min="0"
-                      value={
-                        editingPlan.offerAmount ??
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "offerAmount",
-                          e.target.value
-                        )
-                      }
-                    />
+                    <div className="plans-edit-field">
 
-                  </div>
+                      <label>
+                        Offer Amount
+                      </label>
+
+                      <input
+                        type="number"
+                        min="0"
+                        value={
+                          editingPlan.offerAmount ??
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "offerAmount",
+                            e.target.value
+                          )
+                        }
+                        onWheel={(e) => e.currentTarget.blur()}
+                      />
+
+                    </div>
+
+                  </div> */}
+
+
+                  {/* OFFER AMOUNT */}
+
+<div className="plans-edit-field-colored plans-edit-color-purple">
+
+  <div className="plans-edit-field-icon">
+    {editingPlan.offerType === "% OFF" ? "%" : "₹"}
+  </div>
+
+  <div className="plans-edit-field">
+
+    <label>
+      {editingPlan.offerType === "% OFF"
+        ? "Percentage Off"
+        : "Offer Amount"}
+    </label>
+
+    <input
+      type="number"
+      min="0"
+      max={
+        editingPlan.offerType === "% OFF"
+          ? "100"
+          : undefined
+      }
+      value={
+        editingPlan.offerAmount ?? ""
+      }
+      onChange={(e) =>
+        handleEditChange(
+          "offerAmount",
+          e.target.value
+        )
+      }
+      onWheel={(e) =>
+        e.currentTarget.blur()
+      }
+    />
+
+  </div>
+
+</div>
 
                   {/* MAX SELECTION */}
 
-                  <div className="plans-edit-field">
+                  <div className="plans-edit-field-colored plans-edit-color-purple">
 
-                    <label>
-                      Max Selection
-                    </label>
+                    <div className="plans-edit-field-icon">
+                      📚
+                    </div>
 
-                    <input
-                      type="number"
-                      value={
-                        editingPlan.maxSelection ??
-                        -1
-                      }
-                      onChange={(e) =>
-                        handleEditChange(
-                          "maxSelection",
-                          e.target.value
-                        )
-                      }
-                    />
+                    <div className="plans-edit-field">
+
+                      <label>
+                        Max Selection
+                      </label>
+
+                      <input
+                        type="number"
+                        value={
+                          editingPlan.maxSelection ??
+                          -1
+                        }
+                        onChange={(e) =>
+                          handleEditChange(
+                            "maxSelection",
+                            e.target.value
+                          )
+                        }
+                        onWheel={(e) => e.currentTarget.blur()}
+                      />
+
+                    </div>
+
+                  </div>
+
+                  {/* =============================================
+                      APPLIES ON — products / categories,
+                      shown by NAME, with "All Products" shown
+                      plainly instead of an empty id list
+                  ============================================= */}
+
+                  <div className="plans-edit-field-colored plans-edit-color-teal plans-edit-full plans-edit-applies-card">
+
+                    <div className="plans-edit-applies-header">
+
+                      <div className="plans-edit-field-icon">
+                        🔲
+                      </div>
+
+                      <div>
+                        <label>
+                          Applies On
+                        </label>
+
+                        <p className="plans-edit-apply-subtitle">
+                          Choose where this promotion will be applicable
+                        </p>
+                      </div>
+
+                    </div>
+
+                    <div className="plans-edit-apply-options">
+
+                      <button
+                        type="button"
+                        className={`plans-edit-apply-btn ${
+                          editApplyTo === "ALL"
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          setEditApplyTo("ALL")
+                        }
+                      >
+                        All Products
+                      </button>
+
+                      <button
+                        type="button"
+                        className={`plans-edit-apply-btn ${
+                          editApplyTo === "CATEGORY"
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          setEditApplyTo("CATEGORY")
+                        }
+                      >
+                        Categories
+                      </button>
+
+                      <button
+                        type="button"
+                        className={`plans-edit-apply-btn ${
+                          editApplyTo === "PRODUCT"
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          setEditApplyTo("PRODUCT")
+                        }
+                      >
+                        Products
+                      </button>
+
+                    </div>
+
+                    {editApplyTo === "ALL" && (
+                      <div className="plans-edit-apply-summary">
+                        This plan applies to all products in the outlet.
+                      </div>
+                    )}
+
+                    {editApplyTo === "CATEGORY" && (
+                      <div className="plans-edit-apply-picker">
+
+                        {editSelectedCategoryNames.length > 0 && (
+                          <div className="plans-edit-apply-chips">
+                            {editSelectedCategoryNames.map(
+                              ({ id, name }) => (
+                                <span
+                                  key={id}
+                                  className="plans-edit-apply-chip"
+                                >
+                                  {name}
+                                  <button
+                                    type="button"
+                                    className="plans-edit-apply-chip-remove"
+                                    onClick={() =>
+                                      toggleEditCategory(id)
+                                    }
+                                    aria-label={`Remove ${name}`}
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              )
+                            )}
+                          </div>
+                        )}
+
+                        {editLoadingProducts ? (
+                          <div className="plans-edit-apply-loading">
+                            Loading categories...
+                          </div>
+                        ) : editCategories.length === 0 ? (
+                          <div className="plans-edit-apply-loading">
+                            No categories found for this outlet.
+                          </div>
+                        ) : (
+                          <div className="plans-edit-apply-checklist">
+                            {editCategories.map((category) => {
+                              const checked = editSelectedCategories.some(
+                                (id) => String(id) === String(category.id)
+                              );
+
+                              return (
+                                <label
+                                  key={category.id}
+                                  className={`plans-edit-apply-check-row ${
+                                    checked ? "checked" : ""
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={() =>
+                                      toggleEditCategory(category.id)
+                                    }
+                                  />
+                                  <span>{category.name}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {editApplyTo === "PRODUCT" && (
+                      <div className="plans-edit-apply-picker">
+
+                        {editSelectedProductNames.length > 0 && (
+                          <div className="plans-edit-apply-chips">
+                            {editSelectedProductNames.map(
+                              ({ id, name }) => (
+                                <span
+                                  key={id}
+                                  className="plans-edit-apply-chip"
+                                >
+                                  {name}
+                                  <button
+                                    type="button"
+                                    className="plans-edit-apply-chip-remove"
+                                    onClick={() =>
+                                      toggleEditProduct(id)
+                                    }
+                                    aria-label={`Remove ${name}`}
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              )
+                            )}
+                          </div>
+                        )}
+
+                        {editLoadingProducts ? (
+                          <div className="plans-edit-apply-loading">
+                            Loading products...
+                          </div>
+                        ) : editProducts.length === 0 ? (
+                          <div className="plans-edit-apply-loading">
+                            No products found for this outlet.
+                          </div>
+                        ) : (
+                          <div className="plans-edit-apply-checklist">
+                            {editProducts.map((product) => {
+                              const id = getItemId(product);
+
+                              const checked = editSelectedProducts.some(
+                                (selectedId) =>
+                                  String(selectedId) === String(id)
+                              );
+
+                              return (
+                                <label
+                                  key={id}
+                                  className={`plans-edit-apply-check-row ${
+                                    checked ? "checked" : ""
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={() =>
+                                      toggleEditProduct(id)
+                                    }
+                                  />
+                                  <span>{getItemName(product)}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                   </div>
 
@@ -1769,35 +2456,36 @@ const PlansStatus = ({
 
                 <div className="plans-modal-actions">
 
-                  <button
-                    type="button"
-                    className="plans-cancel-btn"
-                    onClick={() => {
-                      setShowEditModal(
-                        false
-                      );
-                      setEditingPlan(
-                        null
-                      );
-                    }}
-                    disabled={
-                      savingEdit
-                    }
-                  >
-                    Cancel
-                  </button>
+                  <span className="plans-modal-actions-tagline">
+                    Good Food Brings Happiness!
+                  </span>
 
-                  <button
-                    type="submit"
-                    className="plans-save-btn"
-                    disabled={
-                      savingEdit
-                    }
-                  >
-                    {savingEdit
-                      ? "Updating..."
-                      : "Update Plan"}
-                  </button>
+                  <div className="plans-modal-actions-buttons">
+
+                    <button
+                      type="button"
+                      className="plans-cancel-btn"
+                      onClick={closeEditModal}
+                      disabled={
+                        savingEdit
+                      }
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="plans-save-btn"
+                      disabled={
+                        savingEdit
+                      }
+                    >
+                      {savingEdit
+                        ? "Updating..."
+                        : "Update Plan"}
+                    </button>
+
+                  </div>
 
                 </div>
 
