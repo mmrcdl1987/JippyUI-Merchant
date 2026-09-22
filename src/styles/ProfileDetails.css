@@ -1,0 +1,950 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ---------------------------------------------------------
+   Tokens
+--------------------------------------------------------- */
+.profile-details-page {
+  --bg: #f6f5fc;
+  --surface: #ffffff;
+  --border: #ebe8f7;
+  --ink: #221f3b;
+  --muted: #6f6c8a;
+  --faint: #a7a4c0;
+
+  --purple: #6d5bd0;
+  --purple-dark: #5847b8;
+  --purple-light: #efecfd;
+  --purple-100: #e2ddfa;
+
+  --error: #d6432c;
+  --error-bg: #fcecea;
+  --success: #1f9d5c;
+  --success-bg: #e7f7ef;
+  --amber: #b7791f;
+  --amber-bg: #fdf3e2;
+  --teal: #0f9488;
+  --teal-bg: #e4f7f5;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-card: 0 2px 4px rgba(76, 60, 150, 0.04), 0 16px 32px -20px rgba(76, 60, 150, 0.18);
+
+  position: relative;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100%;
+  padding: 20px 28px 48px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.profile-details-page *,
+.profile-details-page *::before,
+.profile-details-page *::after {
+  box-sizing: border-box;
+}
+
+/* Soft decorative blobs, like the reference design's hero backdrop */
+.page-blob {
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 480px;
+  height: 340px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(224, 154, 210, 0.35), transparent 60%),
+    radial-gradient(circle at 30% 60%, rgba(139, 124, 246, 0.28), transparent 55%);
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.profile-details-page > *:not(.page-blob) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------
+   Loading state
+--------------------------------------------------------- */
+.profile-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------------------------------------------------------
+   Breadcrumb
+--------------------------------------------------------- */
+.profile-breadcrumb {
+  max-width: 1200px;
+  margin: 0 auto 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--faint);
+}
+
+.profile-breadcrumb svg {
+  font-size: 0.6rem;
+}
+
+.profile-breadcrumb-current {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------
+   Page header
+--------------------------------------------------------- */
+.profile-page-header {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.profile-page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-header-icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #8f7ff6, var(--purple-dark));
+  color: #fff;
+  font-size: 1.6rem;
+  box-shadow: 0 10px 24px -10px rgba(109, 91, 208, 0.55);
+}
+
+.profile-page-header h1 {
+  margin: 0 0 3px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.profile-page-header > .profile-page-header-left p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.profile-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #efecfd, #f7eefc);
+  border: 1px solid var(--purple-100);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+}
+
+.profile-banner-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--purple);
+  font-size: 1rem;
+  box-shadow: 0 4px 10px -4px rgba(109, 91, 208, 0.3);
+}
+
+.profile-banner strong {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+
+.profile-banner p {
+  margin: 1px 0 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------
+   Form + cards
+--------------------------------------------------------- */
+.profile-details-page form {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 26px 30px;
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8f7ff6, var(--purple-dark));
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.profile-card-header h2 {
+  margin: 0 0 2px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.profile-card-header p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------
+   Status badge (Approved / Pending)
+--------------------------------------------------------- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-badge--approved {
+  color: var(--success);
+  background: var(--success-bg);
+}
+
+.status-badge--pending {
+  color: var(--amber);
+  background: var(--amber-bg);
+}
+
+/* ---------------------------------------------------------
+   Fields
+--------------------------------------------------------- */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px 22px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 7px;
+}
+
+.required-mark {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+.field-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #faf9fe;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.field-input:focus-within {
+  background: var(--surface);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(109, 91, 208, 0.14);
+}
+
+.field-input--error {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.field-input--error:focus-within {
+  box-shadow: 0 0 0 3px rgba(214, 67, 44, 0.14);
+}
+
+.field-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 6px;
+  border-radius: 8px;
+  background: var(--purple-light);
+  color: var(--purple);
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.field-input--error .field-icon {
+  background: #f7dcd7;
+  color: var(--error);
+}
+
+.field-input input,
+.field-input select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--ink);
+  padding: 10px 12px;
+}
+
+.field-input input::placeholder {
+  color: var(--faint);
+}
+
+.field-input input:disabled {
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.field-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: var(--error);
+  line-height: 1.3;
+}
+
+/* Native select styling (State / City / Area / User Type) */
+.select-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.select-wrap select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+.select-wrap select:disabled {
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 12px;
+  font-size: 0.72rem;
+  color: var(--faint);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+   Document uploads
+--------------------------------------------------------- */
+.document-upload-grid {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.document-upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  padding: 26px 18px;
+  border: 1.5px dashed var(--purple-100);
+  border-radius: var(--radius-md);
+  background: var(--purple-light);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.document-upload-box--error {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.upload-icon-circle {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.upload-icon-circle--aadhaar {
+  background: linear-gradient(135deg, #8f7ff6, var(--purple-dark));
+}
+
+.upload-icon-circle--fssai {
+  background: linear-gradient(135deg, #34c9a3, var(--teal));
+}
+
+.document-upload-box h3 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+
+.document-upload-box:nth-of-type(2) h3 {
+  color: var(--teal);
+}
+
+.document-upload-box p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.upload-hint {
+  font-size: 0.7rem;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--purple);
+  background: var(--surface);
+  border: 1px solid var(--purple-100);
+  border-radius: 999px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.upload-button:hover {
+  background: var(--purple);
+  color: #fff;
+}
+
+.upload-button--fssai {
+  color: var(--teal);
+  border-color: #bfe9e2;
+}
+
+.upload-button--fssai:hover {
+  background: var(--teal);
+  color: #fff;
+}
+
+.upload-button input[type="file"] {
+  display: none;
+}
+
+.selected-file {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--success);
+  background: var(--success-bg);
+  padding: 3px 10px;
+  border-radius: 999px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-preview-img {
+  width: 100%;
+  max-width: 180px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--purple-100);
+  margin-bottom: 6px;
+}
+
+.upload-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.upload-link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--purple);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--purple-100);
+  background: var(--surface);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.upload-link:hover {
+  background: var(--purple);
+  color: #fff;
+}
+
+.upload-remove-btn {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--error);
+  background: var(--surface);
+  border: 1px solid #f0c9c2;
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.upload-remove-btn:hover {
+  background: var(--error);
+  color: #fff;
+}
+
+.document-note-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  background: var(--purple-light);
+  color: var(--purple-dark);
+}
+
+.document-note-box svg {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.document-note-box p {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------
+   Footer bar
+--------------------------------------------------------- */
+.profile-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: var(--purple-light);
+  border: 1px solid var(--purple-100);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+}
+
+.profile-footer-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--purple-dark);
+}
+
+.profile-footer-note svg {
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: var(--purple);
+}
+
+.profile-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.reset-btn:hover:not(:disabled) {
+  background: #f3f1fb;
+  border-color: var(--purple-100);
+}
+
+.reset-btn:disabled {
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.save-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #7c6cf0, var(--purple-dark));
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 22px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -10px rgba(109, 91, 208, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.save-profile-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.save-profile-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.save-profile-btn:disabled {
+  background: #c6bff0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+--------------------------------------------------------- */
+@media (max-width: 720px) {
+  .profile-details-page {
+    padding: 16px 16px 40px;
+  }
+
+  .profile-card {
+    padding: 20px 18px;
+  }
+
+  .profile-page-header {
+    align-items: flex-start;
+  }
+
+  .profile-footer-bar {
+    align-items: flex-start;
+  }
+
+  .profile-footer-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .profile-footer-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+
+
+
+/* =========================================================
+   REMOVE CONFIRMATION MODAL
+========================================================= */
+
+.remove-confirm-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(30, 25, 45, 0.42);
+
+  backdrop-filter: blur(4px);
+
+  -webkit-backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.remove-confirm-modal {
+  width: 100%;
+
+  max-width: 400px;
+
+  padding: 28px 26px 24px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #eeeaf6;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 20px 60px rgba(35, 27, 55, 0.18);
+
+  animation: removeModalIn 0.2s ease-out;
+}
+
+
+@keyframes removeModalIn {
+
+  from {
+    opacity: 0;
+
+    transform: scale(0.94) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: scale(1) translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   MODAL ICON
+========================================================= */
+
+.remove-confirm-icon {
+  width: 52px;
+
+  height: 52px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff1f1;
+
+  color: #e05252;
+
+  font-size: 22px;
+}
+
+
+/* =========================================================
+   MODAL TEXT
+========================================================= */
+
+.remove-confirm-modal h3 {
+  margin: 0;
+
+  font-size: 19px;
+
+  font-weight: 700;
+
+  color: #292638;
+}
+
+
+.remove-confirm-modal p {
+  margin: 9px auto 23px;
+
+  max-width: 310px;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  color: #858091;
+}
+
+
+/* =========================================================
+   MODAL BUTTONS
+========================================================= */
+
+.remove-confirm-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+.remove-cancel-btn,
+.remove-confirm-btn {
+  height: 40px;
+
+  min-width: 105px;
+
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+/* CANCEL */
+
+.remove-cancel-btn {
+  border: 1px solid #ddd9e7;
+
+  background: #ffffff;
+
+  color: #625d70;
+}
+
+
+.remove-cancel-btn:hover {
+  background: #f7f6fa;
+
+  transform: translateY(-1px);
+}
+
+
+/* REMOVE */
+
+.remove-confirm-btn {
+  border: none;
+
+  background: #e05252;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 13px rgba(224, 82, 82, 0.18);
+}
+
+
+.remove-confirm-btn:hover {
+  background: #d64242;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 17px rgba(224, 82, 82, 0.24);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .remove-confirm-modal {
+    max-width: 350px;
+
+    padding: 24px 20px 21px;
+  }
+
+  .remove-confirm-actions {
+    width: 100%;
+  }
+
+  .remove-cancel-btn,
+  .remove-confirm-btn {
+    flex: 1;
+  }
+
+}

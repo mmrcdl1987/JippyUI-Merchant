@@ -10,6 +10,8 @@ import OrderDetails from "../pages/orders/OrderDetails";
 
 
 
+
+
 const pageRegistry = {
   Dashboard,
   Outlets,

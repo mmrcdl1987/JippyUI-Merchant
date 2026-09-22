@@ -26,6 +26,8 @@ import Subscription from "../pages/subscription/Subscription";
 
 import OrderDetails from "../pages/orders/OrderDetails";
 
+import ProfileDetails from "../pages/auth/ProfileDetails";
+
 
 
 const AppRoutes = () => {
@@ -153,6 +155,12 @@ const AppRoutes = () => {
     path="/subscription"
     element={<Subscription />}
   />
+
+  {/* PROFILE */}
+<Route
+  path="/profile"
+  element={<ProfileDetails />}
+/>
 
 </Route>
 

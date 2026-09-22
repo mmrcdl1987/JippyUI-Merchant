@@ -1,395 +1,460 @@
-.advertisement-page{
-    padding:24px;
-    background:#f5f7fb;
-    min-height:100vh;
+/* =========================================================
+   Subscription / Advertisement Outlets — styles
+   Palette: deep teal (primary) + warm coral (accent)
+   ========================================================= */
+
+:root {
+  --sub-bg: #F4F7F7;
+  --sub-surface: #FFFFFF;
+  --sub-border: #E1E8E7;
+
+  --sub-teal-900: #0B3B38;
+  --sub-teal-700: #0F6B62;
+  --sub-teal-600: #148578;
+  --sub-teal-100: #E3F3F0;
+  --sub-teal-50:  #F0F9F7;
+
+  --sub-coral-600: #E8683D;
+  --sub-coral-500: #F0774C;
+  --sub-coral-100: #FDE7DC;
+
+  --sub-text: #1D2B29;
+  --sub-text-muted: #5C6D6A;
+  --sub-text-faint: #8CA09C;
+
+  --sub-danger: #C4453A;
+  --sub-danger-bg: #FBEAE8;
+
+  --sub-radius-lg: 14px;
+  --sub-radius-md: 10px;
+  --sub-radius-sm: 7px;
+
+  --sub-shadow-card: 0 1px 2px rgba(11, 59, 56, 0.04), 0 8px 24px -12px rgba(11, 59, 56, 0.12);
+  --sub-shadow-pop: 0 10px 30px -8px rgba(11, 59, 56, 0.25);
 }
 
-.page-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:24px;
+/* ---------------------------------------------------------
+   Page shell
+--------------------------------------------------------- */
+
+.advertisement-page {
+  min-height: 100%;
+  padding: 32px 36px 64px;
+  background:
+    radial-gradient(1100px 420px at 100% -10%, rgba(20, 133, 120, 0.06), transparent 60%),
+    var(--sub-bg);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--sub-text);
 }
 
-.page-header h2{
-    margin:0;
-    font-size:30px;
-    font-weight:700;
-    color:#222;
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--sub-border);
 }
 
-.page-header p{
-    margin-top:6px;
-    color:#777;
-    font-size:14px;
+.page-header h2 {
+  margin: 0 0 4px;
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--sub-teal-900);
 }
 
-.advertisement-card{
-    background:#fff;
-    border-radius:12px;
-    padding:24px;
-    margin-bottom:24px;
-    box-shadow:0 2px 12px rgba(0,0,0,.07);
-    transition:all .3s ease;
+.page-header p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sub-text-muted);
 }
 
-.advertisement-card:hover{
-    box-shadow:0 8px 24px rgba(0,0,0,.08);
+/* ---------------------------------------------------------
+   Cards
+--------------------------------------------------------- */
+
+.advertisement-card {
+  position: relative;
+  background: var(--sub-surface);
+  border: 1px solid var(--sub-border);
+  border-radius: var(--sub-radius-lg);
+  box-shadow: var(--sub-shadow-card);
+  padding: 26px 28px 28px;
+  margin-bottom: 22px;
+  /* intentionally NOT overflow:hidden — clipping here also clips
+     the dropdown menus below, which is what broke the selects */
 }
 
-.advertisement-card h3{
-    margin:0 0 22px;
-    font-size:22px;
-    font-weight:600;
-    color:#333;
-    padding-bottom:12px;
-    border-bottom:1px solid #ececec;
+.advertisement-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-top-left-radius: var(--sub-radius-lg);
+  border-top-right-radius: var(--sub-radius-lg);
+  background: linear-gradient(90deg, var(--sub-teal-600), var(--sub-coral-500));
 }
 
-.required-star{
-    color:#d32f2f;
-    margin-left:3px;
+.advertisement-card h3 {
+  margin: 0 0 20px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--sub-teal-900);
 }
 
-/* ================= FORM ================= */
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(280px,1fr));
-    gap:22px;
+.advertisement-bottom-grid {
+  display: grid;
+  gap: 20px;
 }
 
-.form-group{
-    display:flex;
-    flex-direction:column;
+/* ---------------------------------------------------------
+   Form grid
+--------------------------------------------------------- */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 18px 20px;
 }
 
-.form-group label{
-    margin-bottom:8px;
-    font-size:14px;
-    font-weight:600;
-    color:#444;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
 }
 
-.form-group select,
-.form-group input{
-    width:100%;
-    height:46px;
-    padding:0 14px;
-    border:1px solid #d8d8d8;
-    border-radius:8px;
-    background:#fff;
-    font-size:14px;
-    outline:none;
-    transition:.25s;
-    box-sizing:border-box;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+.form-group label {
+  display: block;
+  height: 16px;
+  line-height: 16px;
+  font-size: 17.5px;
+  font-weight: 600;
+  color: var(--sub-text-muted);
+  white-space: nowrap;
 }
 
-
-.form-group select{
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    padding-right: 40px;
-    cursor: pointer;
+.required-star {
+  color: var(--sub-coral-600);
+  font-weight: 700;
 }
 
-.form-group select:hover,
-.form-group input:hover{
-    border-color:#bdbdbd;
+/* ---------------------------------------------------------
+   react-select  (classNamePrefix="rs")
+--------------------------------------------------------- */
+
+/* Fixed-height shell for every select so all four columns line up
+   pixel-for-pixel regardless of which one has a value/clear icon. */
+.form-group > div {
+  box-sizing: border-box;
 }
 
-.form-group select:focus,
-.form-group input:focus{
-    border-color:#8b3a3a;
-    box-shadow:0 0 0 3px rgba(139,58,58,.12);
+.rs__control {
+  box-sizing: border-box !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: var(--sub-radius-sm) !important;
+  border: 1.5px solid var(--sub-border) !important;
+  background-color: var(--sub-surface) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%238CA09C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.form-group input[type="date"]{
-    cursor:pointer;
+.rs__control:hover {
+  border-color: var(--sub-teal-600) !important;
 }
 
-.form-group input[type="number"]::-webkit-inner-spin-button,
-.form-group input[type="number"]::-webkit-outer-spin-button{
-    margin:0;
+.rs__control--is-focused {
+  border-color: var(--sub-teal-600) !important;
+  box-shadow: 0 0 0 3px var(--sub-teal-100) !important;
 }
 
-/* ================= TABLE ================= */
-
-.plans-table-wrapper{
-    width:100%;
-    overflow-x:auto;
-    border:1px solid #ececec;
-    border-radius:10px;
+.rs__value-container {
+  height: 100% !important;
+  padding: 2px 10px 2px 32px !important;
+  flex-wrap: nowrap !important;
 }
 
-.plans-table{
-    width:100%;
-    min-width:0;
-    border-collapse:collapse;
-    border-spacing:0;
-    table-layout:fixed;
+.rs__placeholder {
+  color: var(--sub-text-faint) !important;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
-.plans-table thead{
-    background:#8b3a3a;
+.rs__single-value {
+  color: var(--sub-text) !important;
+  font-size: 14px;
 }
 
-.plans-table th,
-.plans-table td {
-    box-sizing: border-box;
-    text-align: center;
-    vertical-align: center;
+.rs__input-container {
+  color: var(--sub-text) !important;
+  margin: 0 !important;
 }
 
-.plans-table th {
-    padding: 12px 6px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 17px;
-    white-space: normal;
+.rs__indicators {
+  height: 100% !important;
 }
 
-.plans-table td {
-    padding: 12px 6px;
-    font-size: 14px;
-    color: #222;
-    font-weight: 500;
-    border-bottom: 1px solid #efefef;
-    white-space: nowrap;
+.rs__indicator {
+  padding: 8px !important;
 }
 
-.plans-table tbody tr{
-    transition:.25s;
+.rs__indicator-separator {
+  background-color: var(--sub-border) !important;
+  margin: 10px 0 !important;
 }
 
-.plans-table tbody tr:hover td{
-    background:#fff8f4;
+.rs__dropdown-indicator,
+.rs__clear-indicator {
+  color: var(--sub-text-faint) !important;
 }
 
-.selected-plan-row td{
-    background:#fff3ec;
+.rs__dropdown-indicator:hover,
+.rs__clear-indicator:hover {
+  color: var(--sub-teal-700) !important;
 }
 
-.selected-plan-row td:first-child{
-    border-left:4px solid #8b3a3a;
+.rs__menu,
+.rs__menu-portal .rs__menu {
+  border-radius: var(--sub-radius-md) !important;
+  overflow: hidden;
+  box-shadow: var(--sub-shadow-pop) !important;
+  border: 1px solid var(--sub-border) !important;
 }
 
-.plan-price{
-    color:#1565c0;
-    font-weight:700;
+.rs__menu-list {
+  padding: 6px !important;
 }
 
-.plans-table input[type="radio"]{
-    width:18px;
-    height:18px;
-    cursor:pointer;
+.rs__option {
+  border-radius: var(--sub-radius-sm) !important;
+  font-size: 14px !important;
+  color: var(--sub-text) !important;
+  padding: 9px 10px !important;
 }
 
-/* ================= DATES CARD ================= */
-
-.advertisement-bottom-grid{
-    display:flex;
-    justify-content:center;
-    margin-top:30px;
+.rs__option--is-focused {
+  background-color: var(--sub-teal-50) !important;
 }
 
-.advertisement-bottom-grid .advertisement-card{
-    width:100%;
-    max-width:700px;
+.rs__option--is-selected {
+  background-color: var(--sub-teal-600) !important;
+  color: #fff !important;
 }
 
-.advertisement-bottom-grid .form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:20px;
-}
-/* ================= BUTTONS ================= */
-
-.advertisement-buttons{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
-    width:100%;
-    margin:45px 0 0;
-    padding-bottom:50px;
+.rs__no-options-message {
+  font-size: 13.5px !important;
+  color: var(--sub-text-faint) !important;
 }
 
-.save-btn,
-.cancel-btn{
-    width:190px;
-    height:48px;
-    border-radius:8px;
-    font-size:12px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.25s;
+/* ---------------------------------------------------------
+   Date inputs
+--------------------------------------------------------- */
+
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.cancel-btn{
-    background:#fff;
-    border:1px solid #d5d5d5;
-    color:#555;
+.date-input-wrapper input[type="date"] {
+  width: 100%;
+  height: 42px;
+  padding: 0 38px 0 12px;
+  border: 1.5px solid var(--sub-border);
+  border-radius: var(--sub-radius-sm);
+  background-color: var(--sub-surface);
+  color: var(--sub-text);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.save-btn{
-    background:#8b3a3a;
-    color:#fff;
-    border:none;
+.date-input-wrapper input[type="date"]:focus {
+  outline: none;
+  border-color: var(--sub-teal-600);
+  box-shadow: 0 0 0 3px var(--sub-teal-100);
 }
 
-/* Cancel */
-
-.cancel-btn{
-    background:#ffffff;
-    color:#555;
-    border:1px solid #d6d6d6;
+.date-input-wrapper input[type="date"][readonly] {
+  background-color: var(--sub-teal-50);
+  color: var(--sub-teal-900);
+  font-weight: 600;
+  cursor: default;
 }
 
-.cancel-btn:hover{
-    background:#f4f4f4;
-    border-color:#bcbcbc;
+.date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 38px;
+  height: 42px;
+  cursor: pointer;
 }
 
-/* Save */
-
-.save-btn{
-    background:#8b3a3a;
-    color:#fff;
+.calendar-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 16px;
+  pointer-events: none;
+  filter: grayscale(1) opacity(0.55);
 }
 
-.save-btn:hover{
-    background:#742d2d;
+/* ---------------------------------------------------------
+   Plans table
+--------------------------------------------------------- */
+
+.plans-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--sub-border);
+  border-radius: var(--sub-radius-md);
 }
 
-@media (max-width:768px){
-
-    .button-group{
-        flex-direction:column;
-        gap:14px;
-        margin-bottom:40px;
-    }
-
-    .save-btn,
-    .cancel-btn{
-        width:100%;
-        max-width:300px;
-    }
-
+.plans-table {
+  width: 100%;
+  min-width: 1080px;
+  border-collapse: collapse;
+  font-size: 13.5px;
 }
-
-.advertisement-page{
-    padding:24px 24px 100px;
-    background:#f5f7fb;
-    min-height:100vh;
-    box-sizing:border-box;
-}
-/* ================= SCROLLBAR ================= */
-
-.plans-table-wrapper::-webkit-scrollbar{
-    height:8px;
-}
-
-.plans-table-wrapper::-webkit-scrollbar-track{
-    background:#f1f1f1;
-    border-radius:10px;
-}
-
-.plans-table-wrapper::-webkit-scrollbar-thumb{
-    background:#b8b8b8;
-    border-radius:10px;
-}
-
-.plans-table-wrapper::-webkit-scrollbar-thumb:hover{
-    background:#8b3a3a;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width:1200px){
-
-    .advertisement-bottom-grid{
-        display:block;
-    }
-
-    .advertisement-bottom-grid .advertisement-card{
-        max-width:100%;
-    }
-
-}
-
-@media (max-width:768px){
-
-    .advertisement-page{
-        padding:15px;
-    }
-
-    .page-header{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:10px;
-    }
-
-    .page-header h2{
-        font-size:24px;
-    }
-
-    .advertisement-card{
-        padding:18px;
-    }
-
-    .advertisement-card h3{
-        font-size:20px;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-        gap:18px;
-    }
-
-    .advertisement-bottom-grid .form-grid{
-        grid-template-columns:1fr;
-    }
-
-  
-
-    .button-group{
-        flex-direction:column;
-        gap:14px;
-        margin-bottom:25px;
-    }
-
-    .save-btn,
-    .cancel-btn{
-        width:100%;
-        max-width:320px;
-    }
-
-}
-
-
-
-.form-group option{
-    white-space: normal;
-    word-break: break-word;
-}
-
 
 .plans-table thead th {
-    font-size: 13px !important;
-    color: orangered !important;
-    font-weight: 900 !important;
-
+  position: sticky;
+  top: 0;
+  background: var(--sub-teal-900);
+  color: #EFFAF8;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px 14px;
+  white-space: nowrap;
 }
 
+.plans-table thead th:first-child {
+  border-top-left-radius: var(--sub-radius-md);
+}
+
+.plans-table thead th:last-child {
+  border-top-right-radius: var(--sub-radius-md);
+}
 
 .plans-table tbody td {
-    font-size: 13px !important;
-    color: black !important;
-    font-weight: 900 !important;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--sub-border);
+  color: var(--sub-text);
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.plans-table tbody tr:nth-child(even) {
+  background-color: var(--sub-teal-50);
+}
+
+.plans-table tbody tr:hover {
+  background-color: var(--sub-teal-100);
+}
+
+.plans-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.plans-table tbody tr.selected-plan-row {
+  background-color: var(--sub-coral-100) !important;
+  box-shadow: inset 3px 0 0 var(--sub-coral-600);
+}
+
+.plan-price {
+  font-weight: 700;
+  color: var(--sub-teal-700);
+}
+
+.plans-table input[type="radio"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--sub-teal-600);
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------
+   Action buttons
+--------------------------------------------------------- */
+
+.advertisement-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 11px 26px;
+  border-radius: var(--sub-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.cancel-btn {
+  background: var(--sub-surface);
+  border-color: var(--sub-border);
+  color: var(--sub-text-muted);
+}
+
+.cancel-btn:hover {
+  border-color: var(--sub-danger);
+  color: var(--sub-danger);
+  background: var(--sub-danger-bg);
+}
+
+.save-btn {
+  background: linear-gradient(135deg, var(--sub-teal-600), var(--sub-teal-700));
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(15, 107, 98, 0.55);
+}
+
+.save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -6px rgba(15, 107, 98, 0.6);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------
+   Responsive
+--------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .advertisement-page {
+    padding: 20px 16px 48px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advertisement-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
+  }
 }

@@ -191,6 +191,7 @@
     width:100%;
     border:none;
     background:#fff;
+    color: red;
     padding:15px 20px;
     display:flex;
     align-items:center;
@@ -215,3 +216,5 @@
 .dropdown-icon.rotate{
     transform:rotate(180deg);
 }
+
+
