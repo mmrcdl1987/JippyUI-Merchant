@@ -1921,6 +1921,19 @@ function OutletProfileDetails({ setActivePage }) {
                 </strong>
               </div>
 
+                <div>
+                <span>
+                  GST Number
+                </span>
+
+                <strong>
+                  {displayValue(
+                    outlet?.gstno
+                  )}
+                </strong>
+              </div>
+
+
 
              {/* <div>
                   <span>

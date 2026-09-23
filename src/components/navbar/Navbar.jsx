@@ -156,10 +156,13 @@ const Navbar = () => {
 
               <hr />
 
-              <button className="dropdown-item">
-                <FaUserCog />
-                My Profile
-              </button>
+              <button
+  className="dropdown-item"
+  onClick={() => navigate("/profile")}
+>
+  <FaUserCog />
+  My Profile
+</button>
 
               <button className="dropdown-item">
                 <FaCog />

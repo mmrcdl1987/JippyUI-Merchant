@@ -294,8 +294,8 @@ const Register = () => {
               </div>
             </div>
 
-            {/* 2. Business Information */}
-            <div className="form-section">
+            {/* Business Information */}
+            {/* <div className="form-section">
               <h3>Business Information</h3>
             </div>
 
@@ -379,10 +379,10 @@ const Register = () => {
                   })
                 }
               />
-            </div>
+            </div> */}
 
             {/* 3. Bank Information */}
-            <div className="form-section">
+            {/* <div className="form-section">
               <h3>Bank Information</h3>
             </div>
 
@@ -431,7 +431,7 @@ const Register = () => {
                 value={formData.nameInBankAccount}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="button-row">

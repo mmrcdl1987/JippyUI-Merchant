@@ -256,6 +256,7 @@ const areaOptions = areas.map((area) => ({
               State <span className="required-star">*</span>
             </label>
            <Select
+  classNamePrefix="rs"
   options={stateOptions}
   placeholder="Select State"
   value={
@@ -270,6 +271,9 @@ const areaOptions = areas.map((area) => ({
   }
   isSearchable
   isClearable
+  menuPortalTarget={document.body}
+  menuPosition="fixed"
+  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
 />
           </div>
 
@@ -278,6 +282,7 @@ const areaOptions = areas.map((area) => ({
               City <span className="required-star">*</span>
             </label>
            <Select
+  classNamePrefix="rs"
   options={cityOptions}
   placeholder="Select City"
   value={
@@ -292,6 +297,9 @@ const areaOptions = areas.map((area) => ({
   }
   isSearchable
   isClearable
+  menuPortalTarget={document.body}
+  menuPosition="fixed"
+  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
 />
           </div>
 
@@ -300,6 +308,7 @@ const areaOptions = areas.map((area) => ({
               Area <span className="required-star">*</span>
             </label>
             <Select
+  classNamePrefix="rs"
   options={areaOptions}
   placeholder="Select Area"
   value={
@@ -314,6 +323,9 @@ const areaOptions = areas.map((area) => ({
   }
   isSearchable
   isClearable
+  menuPortalTarget={document.body}
+  menuPosition="fixed"
+  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
 />
           </div>
 
@@ -322,6 +334,7 @@ const areaOptions = areas.map((area) => ({
               Outlet <span className="required-star">*</span>
             </label>
             <Select
+              classNamePrefix="rs"
               options={outletOptions}
               placeholder="Select Outlet"
               value={
@@ -334,6 +347,10 @@ const areaOptions = areas.map((area) => ({
                 setSelectedOutlet(selectedOption?.value || "")
               }
               isSearchable
+              isClearable
+              menuPortalTarget={document.body}
+              menuPosition="fixed"
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </div>
         </div>

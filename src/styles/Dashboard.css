@@ -1,0 +1,693 @@
+/* =====================================================================
+   JippyMart Merchant Dashboard — content only.
+   This renders INSIDE your app's existing sidebar/topbar shell, so it
+   intentionally does not define any of its own page chrome.
+===================================================================== */
+:root {
+  --jmdash-bg: #f4f6fb;
+  --jmdash-card: #ffffff;
+  --jmdash-border: #ecedf3;
+  --jmdash-ink: #1c1533;
+  --jmdash-ink-soft: #6b7290;
+  --jmdash-ink-faint: #9aa0b8;
+
+  --jmdash-purple: #6c3ce9;
+  --jmdash-blue: #2f6fed;
+  --jmdash-green: #1fb87a;
+
+  --jmdash-status-placed: #f5943c;
+  --jmdash-status-accepted: #1fb87a;
+  --jmdash-status-completed: #f5943c;
+  --jmdash-status-rejected: #ef4b52;
+  --jmdash-status-canceled: #9aa0b8;
+
+  --jmdash-donut-green: #3ccf8e;
+  --jmdash-donut-purple: #6c3ce9;
+  --jmdash-donut-orange: #f5943c;
+  --jmdash-donut-orange-light: #ffe1bd;
+
+  --jmdash-radius-lg: 20px;
+  --jmdash-radius-md: 14px;
+  --jmdash-radius-sm: 10px;
+  --jmdash-shadow: 0 10px 30px rgba(28, 21, 51, 0.05);
+}
+
+/* Scope box-sizing to this component only — never touch html/body or
+   other parts of the host app. */
+.jmdash-page,
+.jmdash-page * {
+  box-sizing: border-box;
+}
+
+.jmdash-page {
+  background: var(--jmdash-bg);
+  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--jmdash-ink);
+  padding: 28px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- Welcome row ---------- */
+.jmdash-welcome-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(260px, 420px) auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.jmdash-welcome-title {
+  margin: 0 0 6px;
+  font-size: 34px;
+  font-weight: 800;
+  color: black;
+}
+
+.jmdash-welcome-sub {
+  margin: 0;
+  color: var(--jmdash-ink-soft);
+  font-size: 14px;
+}
+
+.jmdash-welcome-banner {
+  border-radius: var(--jmdash-radius-md);
+  padding: 18px 24px;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.35), transparent 55%),
+    linear-gradient(120deg, #f3d9a0, #eab766 55%, #e0995a);
+  color: #4a2c0b;
+}
+
+.jmdash-banner-line1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.jmdash-banner-line2 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  font-weight: 800;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a12b3f;
+}
+
+.jmdash-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--jmdash-card);
+  border: 1px solid var(--jmdash-border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  box-shadow: var(--jmdash-shadow);
+  white-space: nowrap;
+  width: 150px;
+}
+
+.jmdash-filter-calendar {
+  color: var(--jmdash-ink-soft);
+  font-size: 13px;
+}
+
+.jmdash-filter-select {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--jmdash-ink);
+  appearance: none;
+}
+
+.jmdash-filter-chevron {
+  font-size: 10px;
+  color: var(--jmdash-ink-faint);
+}
+
+/* ---------- Stat cards ---------- */
+.jmdash-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.jmdash-stat-card {
+  border-radius: var(--jmdash-radius-lg);
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.jmdash-stat-card--purple {
+  background: linear-gradient(135deg, #efe8fd, #e3d8fc);
+}
+
+.jmdash-stat-card--blue {
+  background: linear-gradient(135deg, #e5eefe, #d9e6fd);
+}
+
+.jmdash-stat-card--green {
+  background: linear-gradient(135deg, #e2f8ee, #d3f2e2);
+}
+
+.jmdash-stat-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  flex: none;
+  color: #fff;
+}
+
+.jmdash-stat-card--purple .jmdash-stat-circle {
+  background: var(--jmdash-purple);
+}
+
+.jmdash-stat-card--blue .jmdash-stat-circle {
+  background: var(--jmdash-blue);
+}
+
+.jmdash-stat-card--green .jmdash-stat-circle {
+  background: var(--jmdash-green);
+}
+
+.jmdash-stat-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jmdash-stat-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.jmdash-stat-label {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-stat-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--jmdash-ink);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex: none;
+}
+
+.jmdash-stat-figure {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--jmdash-ink);
+  line-height: 1.1;
+}
+
+.jmdash-stat-change {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1fb87a;
+}
+
+/* ---------- Order status row ---------- */
+.jmdash-status-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.jmdash-status-card {
+  background: var(--jmdash-card);
+  border: 1px solid var(--jmdash-border);
+  border-radius: var(--jmdash-radius-md);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  box-shadow: var(--jmdash-shadow);
+}
+
+.jmdash-status-card--placed {
+  background: #fef5ea;
+  border-color: #fbe7cc;
+}
+
+.jmdash-status-card--accepted {
+  background: #eaf9f1;
+  border-color: #cdeedd;
+}
+
+.jmdash-status-card--completed {
+  background: #fef1e3;
+  border-color: #fbdfb9;
+}
+
+.jmdash-status-card--rejected {
+  background: #fdecec;
+  border-color: #f8cfcf;
+}
+
+.jmdash-status-card--canceled {
+  background: #f1f2f6;
+  border-color: #e4e6ee;
+}
+
+.jmdash-status-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+}
+
+.jmdash-status-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-status-count {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* ---------- Charts ---------- */
+.jmdash-charts-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.jmdash-chart-card {
+  background: var(--jmdash-card);
+  border: 1px solid var(--jmdash-border);
+  border-radius: var(--jmdash-radius-lg);
+  padding: 22px;
+  box-shadow: var(--jmdash-shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.jmdash-chart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.jmdash-chart-title {
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: black;
+}
+
+.jmdash-chart-head .jmdash-chart-title {
+  margin-bottom: 0;
+}
+
+.jmdash-chart-title-icon {
+  color: var(--jmdash-purple);
+  font-size: 13px;
+}
+
+.jmdash-chart-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--jmdash-border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-chart-select select {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--jmdash-ink);
+}
+
+/* Bar chart */
+.jmdash-sales-chart {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-height: 220px;
+}
+
+.jmdash-sales-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--jmdash-ink-faint);
+  padding: 2px 0 22px;
+  text-align: right;
+}
+
+.jmdash-sales-bars {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  border-left: 1px solid var(--jmdash-border);
+  border-bottom: 1px solid var(--jmdash-border);
+  padding: 0 6px;
+}
+
+.jmdash-sales-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 8px;
+}
+
+.jmdash-sales-bar {
+  width: 60%;
+  min-height: 3px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #8a5cf5, #6c3ce9);
+}
+
+.jmdash-sales-bar-item small {
+  font-size: 10px;
+  color: var(--jmdash-ink-faint);
+  letter-spacing: 0.3px;
+}
+
+/* Legends */
+.jmdash-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-chart-legend--col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.jmdash-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.jmdash-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.jmdash-legend-swatch--purple {
+  background: var(--jmdash-purple);
+}
+
+.jmdash-legend-swatch--green {
+  background: var(--jmdash-donut-green);
+}
+
+.jmdash-legend-swatch--violet {
+  background: var(--jmdash-donut-purple);
+}
+
+.jmdash-legend-swatch--orange {
+  background: var(--jmdash-donut-orange);
+}
+
+/* Donut charts */
+.jmdash-donut-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  flex: 1;
+}
+
+.jmdash-donut-wrap {
+  flex: none;
+}
+
+.jmdash-donut {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.jmdash-donut-hole {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--jmdash-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+}
+
+.jmdash-donut-figure {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--jmdash-ink);
+  line-height: 1.2;
+}
+
+.jmdash-donut-caption {
+  font-size: 11px;
+  color: var(--jmdash-ink-faint);
+}
+
+/* ---------- Recent orders ---------- */
+.jmdash-recent-card {
+  background: var(--jmdash-card);
+  border: 1px solid var(--jmdash-border);
+  border-radius: var(--jmdash-radius-lg);
+  padding: 22px 22px 8px;
+  box-shadow: var(--jmdash-shadow);
+}
+
+.jmdash-recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.jmdash-recent-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: black;
+}
+
+.jmdash-recent-title-icon {
+  color: var(--jmdash-purple);
+  font-size: 13px;
+}
+
+.jmdash-view-all-btn {
+  border: none;
+  background: transparent;
+  color: var(--jmdash-purple);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.jmdash-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Table: table-layout is fixed and every column width comes from the
+   <colgroup> in the JSX, so the header row and the data rows are
+   physically forced to share the same column widths — they cannot
+   drift apart no matter what global table/th/td rules your app's
+   stylesheet defines elsewhere. Every alignment rule below carries
+   !important for the same reason: to win over a host stylesheet that
+   loads after this one. */
+.jmdash-page .jmdash-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  min-width: 760px;
+  margin: 0 !important;
+}
+
+.jmdash-page .jmdash-table th,
+.jmdash-page .jmdash-table td {
+  box-sizing: border-box !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  border: none;
+  border-bottom: 1px solid var(--jmdash-border);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jmdash-page .jmdash-table thead th {
+  font-size: 15px;
+  font-weight: 700;
+  /* color: var(--jmdash-ink-faint); */
+  color: #ef4b52;
+  padding: 12px 10px !important;
+  white-space: nowrap;
+}
+
+.jmdash-page .jmdash-table tbody td {
+  padding: 14px 10px !important;
+  font-size: 13px;
+  color: var(--jmdash-ink);
+  white-space: nowrap;
+}
+
+.jmdash-page .jmdash-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.jmdash-cell-id {
+  color: #e0663c;
+  font-weight: 700;
+}
+
+.jmdash-cell-client {
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-cell-type,
+.jmdash-cell-qty {
+  color: var(--jmdash-ink-soft);
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.jmdash-cell-amount {
+  font-weight: 700;
+}
+
+.jmdash-cell-date {
+  color: var(--jmdash-ink-soft);
+}
+
+.jmdash-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.jmdash-badge--completed {
+  background: #1fb87a;
+  color: #fff;
+}
+
+.jmdash-badge--rejected {
+  background: #ef4b52;
+  color: #fff;
+}
+
+.jmdash-badge--pending {
+  background: #e4e6ee;
+  color: var(--jmdash-ink-soft);
+  text-transform: uppercase;
+}
+
+/* =====================================================================
+   Responsive
+===================================================================== */
+@media (max-width: 1200px) {
+  .jmdash-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .jmdash-charts-grid .jmdash-chart-card:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 992px) {
+  .jmdash-welcome-row {
+    grid-template-columns: 1fr;
+  }
+  .jmdash-stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .jmdash-status-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .jmdash-page {
+    padding: 20px 16px 32px;
+  }
+  .jmdash-charts-grid {
+    grid-template-columns: 1fr;
+  }
+  .jmdash-charts-grid .jmdash-chart-card:first-child {
+    grid-column: auto;
+  }
+  .jmdash-status-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
